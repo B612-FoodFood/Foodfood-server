@@ -14,4 +14,4 @@ https://www.data.go.kr/data/15057436/openapi.do#/tab_layer_detail_function
 [IROS_49_식품_영양성분_DB__서비스_v1.0.pdf](https://github.com/riceCakeSsamanKo/food-customization-service/files/13799702/IROS_49_._._DB__._v1.0.pdf)
 
 ## 도메인 설계 다이어그램
-![image](https://github.com/B612-FoodFood/Foodfood-server/assets/121627245/8cf0bb83-8a5a-4234-8eb7-9977106200e8)
+![백엔드 설계](https://github.com/B612-FoodFood/Foodfood-server/assets/121627245/b36e66dd-759c-4526-9ff2-f22c36f7564d)
