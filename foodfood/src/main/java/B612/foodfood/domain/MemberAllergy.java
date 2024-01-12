@@ -1,11 +1,18 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 public class MemberAllergy {
     @Id
     @GeneratedValue
@@ -14,9 +21,17 @@ public class MemberAllergy {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
+    @Setter(PROTECTED)
     private Member member;
 
     @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "allergy_id")
+    @Setter(PROTECTED)
     private Allergy allergy;
+
+    static MemberAllergy createMemberAllergy(Allergy allergy) {
+        MemberAllergy memberAllergy = new MemberAllergy();
+        allergy.addMemberAllergy(memberAllergy);
+        return memberAllergy;
+    }
 }

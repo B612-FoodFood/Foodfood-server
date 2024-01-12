@@ -1,14 +1,19 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class BodyComposition {
     @Id
     @GeneratedValue
@@ -22,6 +27,13 @@ public class BodyComposition {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
+    @Setter(value = PROTECTED)
     private Member member;
 
+    public BodyComposition(double weight, double muscle, double bodyFat) {
+        this.weight = weight;
+        this.muscle = muscle;
+        this.bodyFat = bodyFat;
+        date = LocalDateTime.now();
+    }
 }
