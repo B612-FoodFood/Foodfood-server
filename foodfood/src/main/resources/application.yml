@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/foodfood
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000 #최적화 옵션
+
+logging.level:
+  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
+
+  deserialization:
+    fail-on-unknown-properties: false # @JsonIgnoreProperties 프로젝트 전체 적용
+
+# api 조회시 필요한 정보들(외부에 노출되서는 안되거나 변하지 않는값들)
+openApi:
+  baseUrl: http://apis.data.go.kr/1471000/FoodNtrIrdntInfoService1/getFoodNtrItdntList1?
+  ServiceKey: RRAZ7WfqxV7iXm8KE6cMuImCqAiHG%2Fn1fVI6E%2FbnzlmWxRNU1l%2FEsHQ8794sz47WFNlM1HMaQCv8%2FtWAH2gBqQ%3D%3D
+  type: json
