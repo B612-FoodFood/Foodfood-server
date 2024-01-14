@@ -22,7 +22,7 @@ public class Meal {
     @Column(name = "meal_id")
     private Long id;
 
-    private LocalDateTime date;  // 식사 기록 날짜
+    private LocalDate date;  // 식사 기록 날짜
 
     @Embedded
     private ConsumedNutrients nutritionPerDay;  // 하룻동안 섭취한 영양소 정보
@@ -45,34 +45,38 @@ public class Meal {
     private List<MealFood> snack;
 
     public Meal() {
-        this.date = LocalDateTime.now();
+        this.date = LocalDate.now();
     }
 
     /**
      * 연관관계 편의 메서드
      */
-    public void addBreakFast(MealFood breakFastFood) {
+    public void addBreakFast(Food food, double weight) {
+        MealFood breakFastFood = MealFood.createMealFood(food, weight);
         breakFastFood.setMeal(this);
         this.breakFast.add(breakFastFood);
 
         sumFoodNutritionData(breakFastFood);
     }
 
-    public void addLunch(MealFood lunchFood) {
+    public void addLunch(Food food, double weight) {
+        MealFood lunchFood = MealFood.createMealFood(food, weight);
         lunchFood.setMeal(this);
         this.lunch.add(lunchFood);
 
         sumFoodNutritionData(lunchFood);
     }
 
-    public void addDinner(MealFood dinnerFood) {
+    public void addDinner(Food food, double weight) {
+        MealFood dinnerFood = MealFood.createMealFood(food, weight);
         dinnerFood.setMeal(this);
         this.dinner.add(dinnerFood);
 
         sumFoodNutritionData(dinnerFood);
     }
 
-    public void addSnack(MealFood snackFood) {
+    public void addSnack(Food food, double weight) {
+        MealFood snackFood = MealFood.createMealFood(food, weight);
         snackFood.setMeal(this);
         this.snack.add(snackFood);
 
@@ -85,7 +89,7 @@ public class Meal {
 
     // 먹은 음식에 대한 영양소를 계산해서 하룻동안 섭취한 영양소에 더해줌
     private void sumFoodNutritionData(MealFood mealFood) {
-        int gram = mealFood.getFoodWeight();  // 해당 음식을 섭취한 그램수
+        double gram = mealFood.getFoodWeight();  // 해당 음식을 섭취한 그램수
         Nutrition foodNutrition = mealFood.getFood().getNutrition(); // 해당 음식의 영양 정보
 
         double gramPerServeWeight = gram / foodNutrition.getServingWeight();  // (섭취한 무게 / 일 회 제공량) => 섭취한 무게에 따른 영양소를 계산하기 위함

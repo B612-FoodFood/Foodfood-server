@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -23,7 +24,7 @@ public class BodyComposition {
     private double weight; // 체중: 단위(kg)
     private double muscle; // 골격근량: 단위(kg)
     private double bodyFat; // 체지방률: 단위(%)
-    private LocalDateTime date;  // 기록 시간
+    private LocalDate date;  // 기록 시간
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -34,6 +35,6 @@ public class BodyComposition {
         this.weight = weight;
         this.muscle = muscle;
         this.bodyFat = bodyFat;
-        date = LocalDateTime.now();
+        date = LocalDate.now();
     }
 }

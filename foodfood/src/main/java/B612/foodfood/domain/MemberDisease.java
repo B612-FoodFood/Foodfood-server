@@ -1,12 +1,14 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Setter;
+import lombok.*;
 
 import static lombok.AccessLevel.*;
 
 @Entity
+@Getter
+@ToString
+@NoArgsConstructor(access = PROTECTED)
 public class MemberDisease {
 
     @Id

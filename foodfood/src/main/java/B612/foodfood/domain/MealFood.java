@@ -18,7 +18,7 @@ public class MealFood {
     @Column(name = "meal_food_id")
     private Long id;
 
-    private int foodWeight; // 먹은 음식 무게(g)
+    private double foodWeight; // 먹은 음식 무게(g)
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "meal_id")
@@ -31,8 +31,11 @@ public class MealFood {
     private Food food;
 
     // MealFood는 Meal의 연관관계 편의 메서드(eg.addBreakFast())로 추가되어야함.
-    public MealFood(Food food, int foodWeight) {
-        food.addMealFood(this);
-        this.foodWeight = foodWeight;
+    protected static MealFood createMealFood(Food food, double foodWeight) {
+        MealFood mealFood = new MealFood();
+        food.addMealFood(mealFood);
+        mealFood.foodWeight = foodWeight;
+
+        return mealFood;
     }
 }
