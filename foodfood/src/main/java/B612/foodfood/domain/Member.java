@@ -1,7 +1,7 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,20 +9,25 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@ToString(exclude = {"personalInformation", "goals", "bodyCompositions", "memberAllergies", "memberDiseases", "meals"})
+@NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
+    private String name;
     private Date birthDate;
     private double height;
 
     @Enumerated
     private Sex sex;
+
     @Enumerated
     private Activity activity;
     @Enumerated
@@ -30,12 +35,22 @@ public class Member {
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "personal_information_id")
+    @Setter
     private PersonalInformation personalInformation;
+
+    public Member(String name, Date birthDate, double height, Sex sex, Activity activity, AccountType accountType) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.height = height;
+        this.sex = sex;
+        this.activity = activity;
+        this.accountType = accountType;
+    }
 
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Goal> goals = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = ALL)
+    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<BodyComposition> bodyCompositions = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
