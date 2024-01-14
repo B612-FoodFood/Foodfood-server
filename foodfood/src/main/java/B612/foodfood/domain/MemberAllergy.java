@@ -1,10 +1,7 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
@@ -12,6 +9,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class MemberAllergy {
     @Id
