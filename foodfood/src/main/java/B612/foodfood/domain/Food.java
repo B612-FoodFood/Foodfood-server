@@ -1,10 +1,7 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@ToString(exclude = "mealFoods")
 @NoArgsConstructor(access = PROTECTED)
 public class Food {
     @Id
