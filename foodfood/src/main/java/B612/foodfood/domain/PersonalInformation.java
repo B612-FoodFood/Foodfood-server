@@ -34,4 +34,23 @@ public class PersonalInformation {
         this.address = address;
         this.logIn = logIn;
     }
+
+    /**
+     * 업데이트 로직
+     */
+    protected void updateAddress(Address address) {
+        this.address = address;
+    }
+
+    protected void updatePassword(String password) {
+        this.logIn = new LogIn(logIn.getLogin_id(), password);
+    }
+
+    protected void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    protected void updateEmail(String email) {
+        this.email = email;
+    }
 }
