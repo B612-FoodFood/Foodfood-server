@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static B612.foodfood.domain.AccountType.*;
@@ -33,15 +34,15 @@ class MemberRepositoryTest {
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
         PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
-        Member member = new Member("user",new Date(2000, 05, 04), 172, MALE, LOT, USER);
-        
+        Member member = new Member("user", new Date(2000, 05, 04), 172, MALE, LOT, USER);
+
         member.setPersonalInformation(personalInformation);
         memberRepository.save(member);
     }
-    
+
     @Test
     @DisplayName("로그인 아이디로 멤버 조회")
-    public void findTest() throws Exception{
+    public void findTest() throws Exception {
         //given
         //when
         Optional<Member> findMember = memberRepository.findByLogInId("id");
@@ -53,5 +54,41 @@ class MemberRepositoryTest {
 
         Member member = findMember.get();
         System.out.println("Name = " + member.getName());
+    }
+
+    @Test
+    public void test3() throws Exception {
+        //given
+        Member member = new Member("user", new Date(2000, 1, 1), 172, Sex.MALE, Activity.LOT, AccountType.USER);
+        memberRepository.save(member);
+
+        BodyComposition bc1 = new BodyComposition(65, 33, null);
+        BodyComposition bc2 = new BodyComposition(65, 33, null);
+        BodyComposition bc3 = new BodyComposition(65, 33, 10D);
+        BodyComposition bc4 = new BodyComposition(65, 33, 20D);
+        BodyComposition bc5 = new BodyComposition(65, 33, null);
+
+
+
+        //when
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        Member member1 = findMember.get();
+
+        member1.addBodyComposition(bc1);
+        System.out.println("member1.getObesity() = " + member1.getObesity());
+        member1.addBodyComposition(bc2);
+        System.out.println("member1.getObesity() = " + member1.getObesity());
+        member1.addBodyComposition(bc3);
+        System.out.println("member1.getObesity() = " + member1.getObesity());
+        member1.addBodyComposition(bc4);
+        System.out.println("member1.getObesity() = " + member1.getObesity());
+        member1.addBodyComposition(bc5);
+        System.out.println("member1.getObesity() = " + member1.getObesity());
+
+        //then
+        List<BodyComposition> bodyCompositions = member1.getBodyCompositions();
+        for (BodyComposition bodyComposition : bodyCompositions) {
+            System.out.println("bodyComposition = " + bodyComposition);
+        }
     }
 }
