@@ -16,7 +16,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString(exclude = {"personalInformation", "goals", "bodyCompositions", "memberAllergies", "memberDiseases", "meals"})
+@ToString(exclude = {"goals", "bodyCompositions", "memberAllergies", "memberDiseases", "meals"})
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
@@ -28,9 +28,11 @@ public class Member {
     private Date birthDate;
     private double height;
 
+    @Embedded
+    private AchieveBodyGoal achieveBodyGoal;
+
     @Enumerated
     private Sex sex;
-
     @Enumerated
     private Activity activity;
     @Enumerated
@@ -40,16 +42,17 @@ public class Member {
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "personal_information_id")
-    @Setter
-    private PersonalInformation personalInformation;
+    private PersonalInformation personalInformation;  // member는 persist 전에 반드시 personalInformation이 Member안에 있어야 함. 안 그러면 member 객체 생성 불가
 
-    public Member(String name, Date birthDate, double height, Sex sex, Activity activity, AccountType accountType) {
+    public Member(String name, Date birthDate, double height, Sex sex, Activity activity, AccountType accountType, AchieveBodyGoal achieveBodyGoal, PersonalInformation personalInformation) {
         this.name = name;
         this.birthDate = birthDate;
         this.height = height;
         this.sex = sex;
         this.activity = activity;
         this.accountType = accountType;
+        this.achieveBodyGoal = achieveBodyGoal;
+        this.personalInformation = personalInformation;
     }
 
     @OneToMany(mappedBy = "member", cascade = ALL)
@@ -65,12 +68,25 @@ public class Member {
     private List<MemberDisease> memberDiseases = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<MemberDrug> memberDrugs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Meal> meals = new ArrayList<>();
+
 
     /**
      * 연관관계 편의 메서드
      **/
     public void addMeal(Meal meal) {
+        // 한 유저의 동일한 날짜에 대한 Meal은 하나만 존재 가능
+        for (Meal memberMeal : meals) {
+            if (memberMeal.getDate().equals(meal.getDate())) {
+                throw new IllegalStateException("오류 발생\n" +
+                        "발생위치: Member.addMeal(Meal meal)\n" +
+                        "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
+            }
+        }
+        
         meal.setMember(this);
         meals.add(meal);
     }
@@ -129,6 +145,14 @@ public class Member {
                 MemberDisease.createMemberDisease(disease);
         memberDisease.setMember(this);
         memberDiseases.add(memberDisease);
+    }
+
+    // 이 메서드는 Member, MemberDrug, Drug간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
+    public void addDrug(Drug drug) {
+        MemberDrug memberDrug =
+                MemberDrug.createMemberDrug(drug);
+        memberDrug.setMember(this);
+        memberDrugs.add(memberDrug);
     }
 
     /**

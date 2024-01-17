@@ -3,7 +3,6 @@ package B612.foodfood.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
@@ -22,7 +21,7 @@ public class MemberAllergy {
     @Setter(PROTECTED)
     private Member member;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "allergy_id")
     @Setter(PROTECTED)
     private Allergy allergy;
