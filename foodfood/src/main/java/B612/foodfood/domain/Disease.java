@@ -23,6 +23,7 @@ public class Disease {
     private Long id;
 
     private String name;
+    // 추가할 부분 추가...
 
     @OneToMany(mappedBy = "disease", cascade = ALL)
     private List<MemberDisease> memberDiseases = new ArrayList<>();
