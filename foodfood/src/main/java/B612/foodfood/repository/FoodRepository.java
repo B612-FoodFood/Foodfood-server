@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
+
+    List<Food> findByName(String name);
+
     /**
      * 영양소별 검색 (칼로리+탄단지)
      */
-
     // 칼로리
     @Query("select f from Food f " +
             "where f.nutrition.calories >= :calories")
@@ -35,6 +37,9 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             "where f.nutrition.protein >= :protein")
     List<Food> findThatHasMoreProtein(@Param("protein") double protein);
 
+    @Query("select f from Food f " +
+            "where f.nutrition.protein <= :protein")
+    List<Food> findThatHasLessProtein(@Param("protein") double protein);
 
     //지방
     @Query("select f from Food f " +
@@ -45,5 +50,4 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             "where f.nutrition.fat <= :fat")
     List<Food> findThatHasLessFat(double fat);
 
-    List<Food> findByName(String name);
 }

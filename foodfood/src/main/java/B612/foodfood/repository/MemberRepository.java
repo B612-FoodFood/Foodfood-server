@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-
     @Query("select m from Member m " +
             "join fetch m.personalInformation p")
     List<Member> findAll();
