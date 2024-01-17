@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,32 +15,29 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString(exclude = "memberAllergies")
 @NoArgsConstructor(access = PROTECTED)
-public class Allergy {
+@ToString
+public class Drug {
     @Id
     @GeneratedValue
-    @JoinColumn(name = "allergy_id")
+    @Column(name = "drug_id")
     private Long id;
 
     private String name;
+
     // 추가할 부분 추가...
-
-    @OneToMany(mappedBy = "allergy", cascade = ALL)
-    private List<MemberAllergy> memberAllergies = new ArrayList<>();
-
-    public Allergy(String name) {
+    public Drug(String name) {
         this.name = name;
     }
+
+    @OneToMany(mappedBy = "drug", cascade = ALL)
+    private List<MemberDrug> memberDrugs = new ArrayList<>();
 
     /**
      * 연관관계 편의 메서드
      **/
-    protected void addMemberAllergy(MemberAllergy memberAllergy) {
-        memberAllergy.setAllergy(this);
-        memberAllergies.add(memberAllergy);
+    protected void addMemberDrug(MemberDrug memberDrug) {
+        memberDrug.setDrug(this);
+        memberDrugs.add(memberDrug);
     }
-
-    // 해당 알러지 대해 피해야할 식품들 구성 필요... 로직 구성
-
 }

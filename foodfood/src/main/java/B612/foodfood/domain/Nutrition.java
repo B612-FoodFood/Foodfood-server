@@ -17,15 +17,15 @@ import static lombok.AccessLevel.*;
 public class Nutrition {
 
     /** 음식의 영양 데이터 **/
-    private double servingWeight;
-    private double calories;
-    private double carbonHydrate;
-    private double protein;
-    private double fat;
-    private double sugar;
-    private double natrium;
-    private double cholesterol;
-    private double saturatedFattyAcid;
-    private double transFattyAcid;
+    private double servingWeight;  // 1회제공량 (g)
+    private double calories;  // 열량 (kcal)
+    private double carbonHydrate;  // 탄수화물 (g)
+    private double protein;  // 단백질 (g)
+    private double fat;  // 지방 (g)
+    private double sugar;  // 당류 (g)
+    private double natrium;  // 나트륨 (mg)
+    private double cholesterol; // 콜레스테롤 (mg)
+    private double saturatedFattyAcid; // 포화지방산 (g)
+    private double transFattyAcid;  // 트랜스지방산 (g)
 }
 
