@@ -1,8 +1,10 @@
 package B612.foodfood.service;
 
+import B612.foodfood.domain.Meal;
 import B612.foodfood.domain.Member;
-import B612.foodfood.exception.JoinException;
+import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.NoDataExistException;
+import B612.foodfood.repository.MealRepository;
 import B612.foodfood.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +20,23 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MealRepository mealRepository;
 
     @Transactional(readOnly = false)
-    public Long join(Member member) throws JoinException {
+    public Long join(Member member) throws DataSaveException {
 
         // 이미 가입된 멤버(동일한 아이디가 존재하는 경우) 회원 가입 불가
         Optional<Member> memberFindByLogInId = memberRepository.findByLogInId(member.getPersonalInformation().getLogIn().getLogin_id());
         if (memberFindByLogInId.isPresent()) {
-            throw new JoinException("오류 발생\n" +
+            throw new DataSaveException("오류 발생\n" +
                     "발생위치: MemberService.join(Member member)\n" +
                     "발생원인: 이미 가입된 아이디입니다.");
         }
+
+        /**
+         * 구현중...
+         * 아이디 비번을 해싱 처리해서 db에 저장 해야한다. hs256 알고리즘 사용하기
+         */
 
         memberRepository.save(member);
         return member.getId();
@@ -86,6 +94,7 @@ public class MemberService {
     /**
      * 업데이트 로직
      */
+    @Transactional(readOnly = false)
     public void updateMemberPassword(Long memberId, String password) throws NoDataExistException {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
@@ -98,6 +107,7 @@ public class MemberService {
         member.updatePassword(password);
     }
 
+    @Transactional(readOnly = false)
     public void updateMemberAddress(Long memberId, String city, String street, String zipcode) throws NoDataExistException {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
@@ -110,6 +120,7 @@ public class MemberService {
         member.updateAddress(city, street, zipcode);
     }
 
+    @Transactional(readOnly = false)
     public void updateMemberPhoneNumber(Long memberId, String phoneNumber) throws NoDataExistException {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
@@ -122,6 +133,7 @@ public class MemberService {
         member.updatePhoneNumber(phoneNumber);
     }
 
+    @Transactional(readOnly = false)
     public void updateMemberEmail(Long memberId, String email) throws NoDataExistException {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
