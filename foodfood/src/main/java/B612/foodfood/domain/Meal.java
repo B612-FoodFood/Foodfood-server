@@ -1,13 +1,11 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -16,6 +14,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@ToString
 public class Meal {
     @Id
     @GeneratedValue
@@ -33,18 +32,19 @@ public class Meal {
     private Member member;
 
     @OneToMany(mappedBy = "meal", cascade = ALL)
-    private List<MealFood> breakFast;
+    private List<MealFood> breakFast = new ArrayList<>();
 
     @OneToMany(mappedBy = "meal", cascade = ALL)
-    private List<MealFood> lunch;
+    private List<MealFood> lunch = new ArrayList<>();
 
     @OneToMany(mappedBy = "meal", cascade = ALL)
-    private List<MealFood> dinner;
+    private List<MealFood> dinner = new ArrayList<>();
 
     @OneToMany(mappedBy = "meal", cascade = ALL)
-    private List<MealFood> snack;
+    private List<MealFood> snack = new ArrayList<>();
 
     public Meal() {
+        this.nutritionPerDay = new ConsumedNutrients();
         this.date = LocalDate.now();
     }
 

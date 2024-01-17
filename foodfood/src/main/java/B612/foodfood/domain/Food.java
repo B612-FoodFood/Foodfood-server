@@ -3,6 +3,7 @@ package B612.foodfood.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -24,7 +25,7 @@ public class Food {
     private Nutrition nutrition;
 
     @OneToMany(mappedBy = "food", cascade = ALL)
-    private List<MealFood> mealFoods;
+    private List<MealFood> mealFoods = new ArrayList();
 
     public Food(String name, Nutrition nutrition) {
         this.name = name;
