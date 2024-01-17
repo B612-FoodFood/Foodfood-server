@@ -34,9 +34,9 @@ class MemberRepositoryTest {
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
         PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
-        Member member = new Member("user", new Date(2000, 05, 04), 172, MALE, LOT, USER);
+        AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
+        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
 
-        member.setPersonalInformation(personalInformation);
         memberRepository.save(member);
     }
 
@@ -59,7 +59,11 @@ class MemberRepositoryTest {
     @Test
     public void test3() throws Exception {
         //given
-        Member member = new Member("user", new Date(2000, 1, 1), 172, Sex.MALE, Activity.LOT, AccountType.USER);
+        Address address = new Address("Seoul", "Hongdae", "12345");
+        LogIn logIn = new LogIn("id", "password");
+        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
+        AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
+        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
         memberRepository.save(member);
 
         BodyComposition bc1 = new BodyComposition(65, 33, null);

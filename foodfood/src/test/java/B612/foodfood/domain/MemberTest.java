@@ -1,16 +1,17 @@
 package B612.foodfood.domain;
 
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+import static B612.foodfood.domain.AccountType.USER;
+import static B612.foodfood.domain.Activity.LOT;
+import static B612.foodfood.domain.Sex.MALE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,13 +19,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class MemberTest {
 
-    @Autowired
-    EntityManager em;
+    @Test
+    public void test1() throws Exception {
+        //given
+        Address address = new Address("Seoul", "Hongdae", "12345");
+        LogIn logIn = new LogIn("id", "password");
+        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
+        AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
+        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
 
-    @BeforeEach
-    public void init() {
-        Member member = new Member("user",new Date(2000,1,1),172,Sex.MALE,Activity.LOT,AccountType.USER);
-        em.persist(member);
+        Meal meal1 = new Meal();
+        Meal meal2 = new Meal();
+
+        //when
+        member.addMeal(meal1);
+
+        //then
+        IllegalStateException illegalStateException =
+                assertThrows(IllegalStateException.class, () -> member.addMeal(meal2));
+        System.out.println(illegalStateException.getMessage());
     }
-
 }
