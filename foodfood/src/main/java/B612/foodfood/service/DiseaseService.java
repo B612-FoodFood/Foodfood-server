@@ -1,6 +1,5 @@
 package B612.foodfood.service;
 
-import B612.foodfood.domain.Allergy;
 import B612.foodfood.domain.Disease;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.NoDataExistException;

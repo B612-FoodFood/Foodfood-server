@@ -2,11 +2,9 @@ package B612.foodfood.service;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.exception.DataSaveException;
-import B612.foodfood.repository.AllergyRepository;
 import B612.foodfood.repository.FoodRepository;
 import B612.foodfood.repository.MealRepository;
 import B612.foodfood.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,29 +113,4 @@ class MemberServiceTest {
         System.out.println("meal2 = " + meal2);
     }
 
-    @Autowired
-    AllergyRepository allergyRepository;
-    @Test
-    @DisplayName("Member에 allergy 추가")
-    public void test4() throws Exception{
-        //given
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "asfd@naver.com", new Address("seoul", "mapo", "12345"), new LogIn("id", "bb"));
-        AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
-        Long memberId = memberService.join(member);
-
-        Member findMember = memberService.findMemberById(memberId);
-
-        Allergy allergy = new Allergy("알러지");
-        allergyRepository.save(allergy);
-
-        //when
-        findMember.addAllergy(allergy);
-
-        //then
-        Optional<Allergy> findAllergy = allergyRepository.findByName("알러지");
-        System.out.println(findAllergy.get());
-
-        System.out.println(findMember.getMemberAllergies().get(0).getAllergy());
-    }
 }
