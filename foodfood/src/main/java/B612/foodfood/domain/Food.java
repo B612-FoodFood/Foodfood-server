@@ -27,7 +27,10 @@ public class Food {
     @OneToMany(mappedBy = "food", cascade = ALL)
     private List<MealFood> mealFoods = new ArrayList();
 
+    @OneToMany(mappedBy = "food")
+    private List<AvoidFood> avoidFoods = new ArrayList<>();
     public Food(String name, Nutrition nutrition) {
+
         this.name = name;
         this.nutrition = nutrition;
     }
@@ -38,5 +41,10 @@ public class Food {
     protected void addMealFood(MealFood mealFood) {
         mealFood.setFood(this);
         mealFoods.add(mealFood);
+    }
+
+    protected void addAvoidFood(AvoidFood avoidFood) {
+        avoidFood.setFood(this);
+        avoidFoods.add(avoidFood);
     }
 }
