@@ -11,12 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static B612.foodfood.domain.AccountType.*;
 import static B612.foodfood.domain.Activity.*;
+import static B612.foodfood.domain.BodyGoal.MUSCLE;
 import static B612.foodfood.domain.Sex.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,11 +33,13 @@ class MemberRepositoryTest {
 
     @BeforeEach
     public void init() {
+        double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
 
         memberRepository.save(member);
     }
@@ -56,22 +60,30 @@ class MemberRepositoryTest {
         System.out.println("Name = " + member.getName());
     }
 
+    @Autowired
+    BodyCompositionRepository bcRepository;
     @Test
     public void test3() throws Exception {
         //given
+        double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "email@gmail.com", address, logIn);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
         memberRepository.save(member);
 
-        BodyComposition bc1 = new BodyComposition(65, 33, null);
-        BodyComposition bc2 = new BodyComposition(65, 33, null);
-        BodyComposition bc3 = new BodyComposition(65, 33, 10D);
-        BodyComposition bc4 = new BodyComposition(65, 33, 20D);
-        BodyComposition bc5 = new BodyComposition(65, 33, null);
-
+        BodyComposition bc1 = new BodyComposition(65, 33D, null);
+        BodyComposition bc2 = new BodyComposition(65, 33D, null);
+        BodyComposition bc3 = new BodyComposition(65, 33D, 10D);
+        BodyComposition bc4 = new BodyComposition(65, 33D, 20D);
+        BodyComposition bc5 = new BodyComposition(65, 33D, null);
+        bcRepository.save(bc1);
+        bcRepository.save(bc2);
+        bcRepository.save(bc3);
+        bcRepository.save(bc4);
+        bcRepository.save(bc5);
 
 
         //when

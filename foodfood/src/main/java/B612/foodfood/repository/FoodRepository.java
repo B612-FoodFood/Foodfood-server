@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
 
-    List<Food> findByName(String name);
+    Optional<Food> findByName(String name);
 
     /**
      * 영양소별 검색 (칼로리+탄단지)

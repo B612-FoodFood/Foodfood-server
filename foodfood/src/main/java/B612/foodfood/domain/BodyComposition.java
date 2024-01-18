@@ -13,14 +13,14 @@ import static lombok.AccessLevel.*;
 @Getter
 @ToString(exclude = "member")
 @NoArgsConstructor(access = PROTECTED)
-public class   BodyComposition {
+public class BodyComposition {
     @Id
     @GeneratedValue
     @Column(name = "body_composition_id")
     private Long id;
 
     private double weight; // 체중: 단위(kg)
-    private double muscle; // 골격근량: 단위(kg)
+    private Double muscle; // 골격근량: 단위(kg)
 
     @Setter(value = PROTECTED)  // member의 obestiy 계산을 위하여 bodyFat만 별도로 setter를 허용함.
     private Double bodyFat; // 체지방률: 단위(%)
@@ -32,7 +32,7 @@ public class   BodyComposition {
     @Setter(value = PROTECTED)
     private Member member;
 
-    public BodyComposition(double weight, double muscle, Double bodyFat) {
+    public BodyComposition(double weight, Double muscle, Double bodyFat) {
         this.weight = weight;
         this.muscle = muscle;
         this.bodyFat = bodyFat;

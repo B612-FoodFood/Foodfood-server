@@ -3,6 +3,7 @@ package B612.foodfood.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +26,8 @@ public class Member {
     private Long id;
 
     private String name;
-    private Date birthDate;
+    private LocalDate birthDate;
     private double height;
-
-    @Embedded
-    private AchieveBodyGoal achieveBodyGoal;
 
     @Enumerated
     private Sex sex;
@@ -38,32 +36,35 @@ public class Member {
     @Enumerated
     private AccountType accountType;
     @Enumerated
+    private BodyGoal goal;
+    @Enumerated
     private Obesity obesity;
+
+    @Embedded
+    private AchieveBodyGoal achieveBodyGoal;
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "personal_information_id")
+    // 민감한 개인 정보
     private PersonalInformation personalInformation;  // member는 persist 전에 반드시 personalInformation이 Member안에 있어야 함. 안 그러면 member 객체 생성 불가
 
-    public Member(String name, Date birthDate, double height, Sex sex, Activity activity, AccountType accountType, AchieveBodyGoal achieveBodyGoal, PersonalInformation personalInformation) {
+    public Member(String name, Sex sex, LocalDate birthDate,
+                  PersonalInformation personalInformation, double height,
+                  Activity activity, BodyGoal goal,
+                  AchieveBodyGoal achieveBodyGoal, AccountType accountType) {
         this.name = name;
-        this.birthDate = birthDate;
-        this.height = height;
         this.sex = sex;
-        this.activity = activity;
-        this.accountType = accountType;
-        this.achieveBodyGoal = achieveBodyGoal;
+        this.birthDate = birthDate;
         this.personalInformation = personalInformation;
+        this.height = height;
+        this.activity = activity;
+        this.goal = goal;
+        this.achieveBodyGoal = achieveBodyGoal;
+        this.accountType = accountType;
     }
-
-    @OneToMany(mappedBy = "member", cascade = ALL)
-    private List<Goal> goals = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<BodyComposition> bodyCompositions = new ArrayList<>();
-
-    /* 제거)
-    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
-    private List<MemberAllergy> memberAllergies = new ArrayList<>();*/
 
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<AvoidFood> avoidFoods = new ArrayList<>();
@@ -90,14 +91,9 @@ public class Member {
                         "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
             }
         }
-        
+
         meal.setMember(this);
         meals.add(meal);
-    }
-
-    public void addGoals(Goal goal) {
-        goal.setMember(this);
-        goals.add(goal);
     }
 
     public void addBodyComposition(BodyComposition bodyComposition) {
@@ -118,7 +114,7 @@ public class Member {
         setObesityBySex(bodyComposition);
     }
 
-    public void addBodyComposition(double weight, double height, Double bodyFat) {
+    public void addBodyComposition(double weight, Double muscle, Double bodyFat) {
         if (bodyFat == null) {
             if (bodyCompositions.isEmpty()) {
                 // 회원가입시 체지방률 정보가 존재하지 않는 경우 체지방률을 0으로 설정
@@ -130,7 +126,7 @@ public class Member {
         }
 
         BodyComposition bodyComposition =
-                new BodyComposition(weight, height, bodyFat);
+                new BodyComposition(weight, muscle, bodyFat);
         bodyComposition.setMember(this);
         bodyCompositions.add(bodyComposition);
     }

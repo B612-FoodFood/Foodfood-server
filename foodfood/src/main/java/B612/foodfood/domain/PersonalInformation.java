@@ -19,16 +19,16 @@ public class PersonalInformation {
     @Column(name = "personal_information_id")
     private Long id;
 
+    @Embedded
+    private LogIn logIn;
+
     private String phoneNumber;
     private String email;
 
     @Embedded
     private Address address;
 
-    @Embedded
-    private LogIn logIn;
-
-    public PersonalInformation(String phoneNumber, String email, Address address, LogIn logIn) {
+    public PersonalInformation(LogIn logIn, String phoneNumber, String email, Address address) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;

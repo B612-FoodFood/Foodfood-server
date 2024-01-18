@@ -44,8 +44,14 @@ public class FoodService {
         return foodRepository.findAll();
     }
 
-    public List<Food> findFoodByName(String name) {
-        return foodRepository.findByName(name);
+    public Food findFoodByName(String name) throws NoDataExistException {
+        Optional<Food> findFood = foodRepository.findByName(name);
+        if (findFood.isEmpty()) {
+             throw new NoDataExistException("오류 발생\n" +
+                    "발생위치: FoodService.findFoodByName(String name)\n" +
+                    "발생원인: 존재하지 않는 음식입니다.");
+         }
+        return findFood.get();
     }
 
     public List<Food> findFoodThatHasMoreCarlories(double calories) {

@@ -62,12 +62,12 @@ class FoodRepositoryTest {
         //given
 
         //when
-        List<Food> food1 = foodRepository.findByName("food1");
-        List<Food> food2 = foodRepository.findByName("food2");
+        Optional<Food> food1 = foodRepository.findByName("food1");
+        Optional<Food> food2 = foodRepository.findByName("food2");
 
         //then
-        assertEquals(food1.size(), 2);
-        assertEquals(food2.size(), 1);
+        assertEquals(food1.get().getName(),"food1");
+        assertEquals(food2.get().getName(), "food2");
     }
 
     @Test

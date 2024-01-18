@@ -14,12 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static B612.foodfood.domain.AccountType.*;
 import static B612.foodfood.domain.Activity.*;
+import static B612.foodfood.domain.BodyGoal.MUSCLE;
 import static B612.foodfood.domain.Sex.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,9 +34,13 @@ class MemberServiceTest {
 
     @BeforeEach
     public void each() throws DataSaveException {
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "asfd@naver.com", new Address("seoul", "mapo", "12345"), new LogIn("aa", "bb"));
+       double height = 172;
+        Address address = new Address("Seoul", "Hongdae", "12345");
+        LogIn logIn = new LogIn("id", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
         memberService.join(member);
     }
 
@@ -42,9 +48,13 @@ class MemberServiceTest {
     @DisplayName("member 조회 테스트")
     public void test1() throws Exception {
         //given
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "asfd@naver.com", new Address("seoul", "mapo", "12345"), new LogIn("id", "bb"));
+        double height = 172;
+        Address address = new Address("Seoul", "Hongdae", "12345");
+        LogIn logIn = new LogIn("id1", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
 
         //when
         memberService.join(member);
@@ -61,7 +71,7 @@ class MemberServiceTest {
     @DisplayName("업데이트 로직 테스트")
     public void test2() throws Exception {
         //given
-        Member aa1 = memberService.findMemberByLogInId("aa");
+        Member aa1 = memberService.findMemberByLogInId("id");
 
         //when
         memberService.updateMemberPhoneNumber(aa1.getId(), "1111-1111");
@@ -83,9 +93,14 @@ class MemberServiceTest {
     @DisplayName("Member로 Meal 저장 테스트1")
     public void test3() throws Exception {
         //given
-        PersonalInformation personalInformation = new PersonalInformation("010-1234-5678", "asfd@naver.com", new Address("seoul", "mapo", "12345"), new LogIn("id", "bb"));
+        double height = 172;
+        Address address = new Address("Seoul", "Hongdae", "12345");
+        LogIn logIn = new LogIn("id", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
-        Member member = new Member("member", new Date(1, 1, 1), 172, MALE, LOT, USER, bodyGoal, personalInformation);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
+
         Long memberId = memberService.join(member);
 
         Member findMember = memberService.findMemberById(memberId);
@@ -112,5 +127,4 @@ class MemberServiceTest {
         Meal meal2 = findMealByDate.get();
         System.out.println("meal2 = " + meal2);
     }
-
 }
