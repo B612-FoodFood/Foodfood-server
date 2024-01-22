@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
@@ -25,6 +24,7 @@ public class BodyComposition {
     @Setter(value = PROTECTED)  // member의 obestiy 계산을 위하여 bodyFat만 별도로 setter를 허용함.
     private Double bodyFat; // 체지방률: 단위(%)
 
+    @Column(columnDefinition = "DATE")
     private LocalDate date;  // 기록 시간
 
     @ManyToOne(fetch = LAZY)
