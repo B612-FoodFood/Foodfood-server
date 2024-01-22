@@ -11,8 +11,9 @@ import java.util.Optional;
 
 public interface BodyCompositionRepository extends JpaRepository<BodyComposition,Long> {
 
-    @Query("select b from BodyComposition b " +
-            "join fetch b.member m " +
-            "where b.date =: date")
+    @Query(value = "select b from BodyComposition b " +
+            "left join fetch  b.member m " +
+            "where b.date= :date")
     Optional<BodyComposition> findByDate(@Param("date") LocalDate date);
 }
+
