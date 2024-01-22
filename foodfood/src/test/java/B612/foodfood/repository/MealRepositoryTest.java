@@ -25,8 +25,10 @@ class MealRepositoryTest {
         //given
         Meal meal = new Meal();
         mealRepository.save(meal);
+        System.out.println("meal.getDate() = " + meal.getDate());
 
-        LocalDate date1 = LocalDate.of(2024, 01, 17);
+        LocalDate date1 = LocalDate.now();
+        System.out.println("date1 = " + date1);
         //when
         Optional<Meal> byDate = mealRepository.findByDate(date1);
 

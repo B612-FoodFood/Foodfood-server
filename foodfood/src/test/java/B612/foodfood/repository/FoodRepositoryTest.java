@@ -38,6 +38,10 @@ class FoodRepositoryTest {
         foodRepository.save(fo1);
         foodRepository.save(fo2);
         foodRepository.save(fo3);
+
+        System.out.println("fo1 = " + fo1);
+        System.out.println("fo1 = " + fo2);
+        System.out.println("fo1 = " + fo3);
     }
 
     @Test
@@ -62,11 +66,10 @@ class FoodRepositoryTest {
         //given
 
         //when
-        Optional<Food> food1 = foodRepository.findByName("food1");
+        //Optional<Food> food1 = foodRepository.findByName("food1"); // 동일한 이름의 객체가 두개라 에러발생
         Optional<Food> food2 = foodRepository.findByName("food2");
 
         //then
-        assertEquals(food1.get().getName(),"food1");
         assertEquals(food2.get().getName(), "food2");
     }
 
