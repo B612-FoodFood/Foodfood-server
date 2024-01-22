@@ -26,6 +26,7 @@ public class Member {
     private Long id;
 
     private String name;
+    @Column(columnDefinition = "date")  // 미 지정시 DB에 TimeStamp 타입으로 저장됨. 왜 그런진 모르겠음
     private LocalDate birthDate;
     private double height;
 
@@ -72,7 +73,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<MemberDisease> memberDiseases = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = ALL)
+    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<MemberDrug> memberDrugs = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL)
@@ -131,38 +132,32 @@ public class Member {
         bodyCompositions.add(bodyComposition);
     }
 
-    /* 제거)
-    // 이 메서드는 Member, MemberAllergy, Allergy간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
-    public void addAllergy(Allergy allergy) {
-        MemberAllergy memberAllergy =
-                MemberAllergy.createMemberAllergy(allergy);
-        memberAllergy.setMember(this);
-        memberAllergies.add(memberAllergy);
-    }
-    */
-
     // 이 메서드는 Member, AvoidFood, Food간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
     // 유저에게 음식추천해주는 로직 구현시 여기 안에 들어있는 음식은 추천해주지 않도록 구현
-    public void addAvoidFood(Food food) {
+    public AvoidFood addAvoidFood(Food food) {
         AvoidFood avoidFood = AvoidFood.createAvoidFood(food);
         avoidFood.setMember(this);
         avoidFoods.add(avoidFood);
+        return avoidFood;
     }
 
     // 이 메서드는 Member, MemberAllergy, Allergy간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
-    public void addDisease(Disease disease) {
+    public MemberDisease addDisease(Disease disease) {
         MemberDisease memberDisease =
                 MemberDisease.createMemberDisease(disease);
         memberDisease.setMember(this);
         memberDiseases.add(memberDisease);
+        return memberDisease;
     }
 
     // 이 메서드는 Member, MemberDrug, Drug간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
-    public void addDrug(Drug drug) {
+    public MemberDrug addDrug(Drug drug) {
         MemberDrug memberDrug =
                 MemberDrug.createMemberDrug(drug);
         memberDrug.setMember(this);
         memberDrugs.add(memberDrug);
+
+        return memberDrug;
     }
 
     /**

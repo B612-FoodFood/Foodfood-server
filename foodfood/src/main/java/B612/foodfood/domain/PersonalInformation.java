@@ -2,10 +2,7 @@ package B612.foodfood.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import static lombok.AccessLevel.*;
 
@@ -20,6 +17,7 @@ public class PersonalInformation {
     private Long id;
 
     @Embedded
+    @Setter
     private LogIn logIn;
 
     private String phoneNumber;
