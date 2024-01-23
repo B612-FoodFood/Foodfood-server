@@ -2,6 +2,7 @@ package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.MemberJoinRequest;
+import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.NoDataExistException;
 import B612.foodfood.repository.AvoidFoodRepository;
@@ -47,10 +48,8 @@ public class MemberApiController {
         LocalDate birthDate = LocalDate.parse(request.getBirthDate());
         // LogIn
         LogIn logIn = new LogIn(request.getId(), encoder.encode(request.getPassword()));  // 비밀번호를 spring security를 이용해서 hashing
-        // Address
-        Address address = new Address(request.getCity(), request.getStreet(), request.getZipCode());
         // PersonalInformation
-        PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber(), request.getEmail(), address);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber(), request.getEmail());
         // current body information
         double height = request.getHeight();
         BodyComposition bodyComposition = new BodyComposition(request.getWeight(), request.getMuscle(), request.getFat());
@@ -62,6 +61,17 @@ public class MemberApiController {
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(request.getAchieveMuscle(), request.getAchieveBodyFat());
         // AccountType
         AccountType accountType = AccountType.valueOf(request.getAccountType());
+
+        // 데이터가 존재하는지 검사(데이터 없을 시 에러 발생하면서 회원가입 실패)
+        for (String avoidFoodName : request.getAvoidFoods()) {
+            Food avoidFood = foodService.findFoodByName(avoidFoodName);
+        }
+        for (String diseaseName : request.getDiseases()) {
+            Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
+        }
+        for (String drugName : request.getDrugs()) {
+            Drug findDrug = drugService.findDrugByName(drugName);
+        }
 
         // create Member
         Member member = new Member(name, sex, birthDate, personalInformation,
@@ -86,6 +96,13 @@ public class MemberApiController {
         }
 
 
-        return ResponseEntity.ok("회원가입 성공" + memberId);
+        return ResponseEntity.ok("회원가입 성공" + " " + memberId);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> logIn(@RequestBody MemberLogInRequest request) {
+        String token = memberService.login(request.getLogin_id(), request.getLogin_pw());
+
+        return ResponseEntity.ok(token);
     }
 }
