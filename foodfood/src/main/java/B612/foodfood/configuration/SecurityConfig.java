@@ -25,6 +25,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/api/v1/members/join").permitAll()  // api/v1/members/join에 대한 인가 예외
+                                .requestMatchers("/api/v1/members/login").permitAll()  // api/v1/members/join에 대한 인가 예외
                                 .anyRequest().authenticated());
 
         return httpSecurity.build();
