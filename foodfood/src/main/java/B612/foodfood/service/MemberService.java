@@ -27,6 +27,7 @@ public class MemberService {
     private final MemberDiseaseRepository memberDiseaseRepository;
     private final AvoidFoodRepository avoidFoodRepository;
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder encoder;
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
@@ -49,7 +50,7 @@ public class MemberService {
     public Member findMemberById(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
         if (member.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
                             "발생위치: MemberService.findMemberById(Long memberId)\n" +
                             "발생원인: 가입되지 않은 유저입니다.");
@@ -69,7 +70,7 @@ public class MemberService {
     public Member findMemberByLogInId(String login_id) {
         Optional<Member> findMember = memberRepository.findByLogInId(login_id);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
                             "발생위치: MemberService.findMemberByLogInId(String login_id)\n" +
                             "발생원인: 가입되지 않은 유저입니다.");
@@ -80,21 +81,21 @@ public class MemberService {
     public Member findMemberByPhoneNumber(String phoneNumber) {
         Optional<Member> findMember = memberRepository.findByPhoneNumber(phoneNumber);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.findMemberByPhoneNumber(String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.findMemberByPhoneNumber(String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
         return findMember.get();
     }
 
-    public Member findMemberByEmail(String email) throws NoDataExistException {
+    public Member findMemberByEmail(String email) {
         Optional<Member> findMember = memberRepository.findByEmail(email);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.findMemberByEmail(String email)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.findMemberByEmail(String email)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
         return findMember.get();
     }
@@ -106,38 +107,38 @@ public class MemberService {
     public void updateMemberPassword(Long memberId, String password) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateMemberPassword(Long memberId, String password)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateMemberPassword(Long memberId, String password)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
         member.updatePassword(password);
     }
 
-    @Transactional(readOnly = false)
+    /*@Transactional(readOnly = false)
     public void updateMemberAddress(Long memberId, String city, String street, String zipcode) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateUserAddress(Long memberId, String city, String street, String zipcode)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateUserAddress(Long memberId, String city, String street, String zipcode)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
         member.updateAddress(city, street, zipcode);
-    }
+    }*/
 
     @Transactional(readOnly = false)
     public void updateMemberPhoneNumber(Long memberId, String phoneNumber) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -148,10 +149,10 @@ public class MemberService {
     public void updateMemberEmail(Long memberId, String email) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -162,10 +163,10 @@ public class MemberService {
     public void updateAddAvoidFood(Long memberId, Food avoidFood) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -177,10 +178,10 @@ public class MemberService {
     public void updateAddMemberDisease(Long memberId, Disease disease) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -192,13 +193,33 @@ public class MemberService {
     public void updateAddMemberDrug(Long memberId, Drug drug) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
-            throw new AppException(NO_DATA_EXISTED,"오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
+            throw new AppException(MEMBER_ID_NOT_FOUND,
+                    "오류 발생\n" +
+                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                            "발생원인: 가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
         MemberDrug memberDrug = member.addDrug(drug);
         memberDrugRepository.save(memberDrug);
+    }
+
+    public String login(String login_id, String login_pw) {
+        // 해당 id의 member 존재 안함.
+        Member findMember = memberRepository.findByLogInId(login_id)
+                .orElseThrow(() -> new AppException(MEMBER_ID_NOT_FOUND,
+                        "오류 발생\n" +
+                                "발생위치: MemberService.login(Long login_id, String login_pw)\n" +
+                                "발생원인: 가입되지 않은 유저입니다."));
+
+        if (!encoder.matches(login_pw,findMember.getPersonalInformation().getLogIn().getLogin_pw())) {
+            System.out.println("findMember.getPersonalInformation().getLogIn().getLogin_pw() = " + findMember.getPersonalInformation().getLogIn().getLogin_pw());
+            throw new AppException(INVALID_PASSWORD,
+                    "오류 발생\n" +
+                            "발생위치: MemberService.login(Long login_id, String login_pw)\n" +
+                            "발생원인: 잘못된 비밀번호입니다.");
+        }
+
+        return "token";
     }
 }
