@@ -8,11 +8,15 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
-    MEMBER_ID_DUPLICATED(HttpStatus.CONFLICT," "),
-    NO_MEMBER_ALLOCATED(HttpStatus.CONFLICT," "),
-    DATA_ALREADY_EXISTED(HttpStatus.CONFLICT," "),
-    NO_DATA_EXISTED(HttpStatus.CONFLICT, "");
+    DATA_ALREADY_EXISTED(HttpStatus.CONFLICT,""),
+    NO_DATA_EXISTED(HttpStatus.NOT_FOUND, ""),
 
-    private HttpStatus httpStatus;
-    private String message;
+    MEMBER_ID_DUPLICATED(HttpStatus.CONFLICT,""),
+    MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND,""),
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,""),
+
+    NO_MEMBER_ALLOCATED(HttpStatus.FAILED_DEPENDENCY,"");
+
+    private final HttpStatus httpStatus;
+    private final String message;
 }
