@@ -8,6 +8,10 @@ import lombok.ToString;
 
 import static lombok.AccessLevel.*;
 
+
+/**
+ * deprecated
+ */
 @Embeddable
 @Getter
 @ToString
