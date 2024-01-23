@@ -6,8 +6,10 @@ import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.ErrorCode;
 import B612.foodfood.exception.NoDataExistException;
 import B612.foodfood.repository.*;
+import B612.foodfood.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,10 @@ public class MemberService {
     private final AvoidFoodRepository avoidFoodRepository;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
+
+    @Value("${jwt.token.secret}")
+    private String secretKey;
+    private Long expireTimeMs = 1000 * 60 * 60L;  // 토큰 만료 시간: 1시간
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
@@ -212,7 +218,7 @@ public class MemberService {
                                 "발생위치: MemberService.login(Long login_id, String login_pw)\n" +
                                 "발생원인: 가입되지 않은 유저입니다."));
 
-        if (!encoder.matches(login_pw,findMember.getPersonalInformation().getLogIn().getLogin_pw())) {
+        if (!encoder.matches(login_pw, findMember.getPersonalInformation().getLogIn().getLogin_pw())) {
             System.out.println("findMember.getPersonalInformation().getLogIn().getLogin_pw() = " + findMember.getPersonalInformation().getLogIn().getLogin_pw());
             throw new AppException(INVALID_PASSWORD,
                     "오류 발생\n" +
@@ -220,6 +226,8 @@ public class MemberService {
                             "발생원인: 잘못된 비밀번호입니다.");
         }
 
-        return "token";
+        // 앞에서 exception 발생 안 한 경우 token 발행
+        String token = JwtTokenUtil.createToken(login_id, secretKey, expireTimeMs);
+        return token;
     }
 }

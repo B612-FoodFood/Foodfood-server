@@ -21,6 +21,10 @@ logging.level:
   deserialization:
     fail-on-unknown-properties: false # @JsonIgnoreProperties 프로젝트 전체 적용
 
+jwt:
+  token:
+    secret: "secretKey"  # 실제로 사용하는 비밀키는 environment에 저장.(노출 방지)
+
 # api 조회시 필요한 정보들(외부에 노출되서는 안되거나 변하지 않는값들)
 openApi:
   baseUrl: http://apis.data.go.kr/1471000/FoodNtrIrdntInfoService1/getFoodNtrItdntList1?
