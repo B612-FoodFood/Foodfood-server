@@ -36,8 +36,8 @@ class MemberServiceTest {
     public void each() throws DataSaveException {
        double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
-        LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
+        LogIn logIn = new LogIn("aa", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -51,7 +51,7 @@ class MemberServiceTest {
         double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id1", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -71,7 +71,7 @@ class MemberServiceTest {
     @DisplayName("업데이트 로직 테스트")
     public void test2() throws Exception {
         //given
-        Member aa1 = memberService.findMemberByLogInId("id");
+        Member aa1 = memberService.findMemberByLogInId("aa");
 
         //when
         memberService.updateMemberPhoneNumber(aa1.getId(), "1111-1111");
@@ -95,8 +95,8 @@ class MemberServiceTest {
         //given
         double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
-        LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
+        LogIn logIn = new LogIn("bb", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);

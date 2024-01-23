@@ -5,6 +5,7 @@ import B612.foodfood.domain.Drug;
 import B612.foodfood.domain.Food;
 import B612.foodfood.domain.Nutrition;
 import B612.foodfood.dto.MemberJoinRequest;
+import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.service.DiseaseService;
 import B612.foodfood.service.DrugService;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.bytebuddy.matcher.ElementMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,14 +103,14 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email, city, street,
-                                        zipCode, height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
+                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                                        height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
                                         accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
-    @org.junit.Test
+    @Test
     @DisplayName("회원 가입 실패 - id 중복")
     public void test2() throws Exception {
         //given
@@ -122,7 +125,7 @@ public class MemberApiControllerTest2 {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(
                         new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
-                                city, street, zipCode, height, weight, muscle, fat, activity, goal,
+                                height, weight, muscle, fat, activity, goal,
                                 achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))));
 
         //then
@@ -130,7 +133,7 @@ public class MemberApiControllerTest2 {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
                                 new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
-                                        city, street, zipCode, height, weight, muscle, fat, activity, goal,
+                                        height, weight, muscle, fat, activity, goal,
                                         achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isConflict());

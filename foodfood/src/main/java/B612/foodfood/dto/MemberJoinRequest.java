@@ -22,10 +22,6 @@ public class MemberJoinRequest {  // ㅋㅋ 인자수 보소
     private String password;
     private String phoneNumber;
     private String email;
-    // Address
-    private String city;
-    private String street;
-    private String zipCode;
 
     private double height;
     // BodyComposition

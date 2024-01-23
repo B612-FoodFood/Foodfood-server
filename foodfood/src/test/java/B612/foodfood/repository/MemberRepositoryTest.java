@@ -36,7 +36,7 @@ class MemberRepositoryTest {
         double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -66,9 +66,9 @@ class MemberRepositoryTest {
     public void test3() throws Exception {
         //given
         double height = 172;
-        Address address = new Address("Seoul", "Hongdae", "12345");
+//        Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com", address);
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);

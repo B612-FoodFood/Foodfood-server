@@ -194,10 +194,10 @@ public class Member {
         this.personalInformation.updatePassword(password);
     }
 
-    public void updateAddress(String city, String street, String zipcode) {
+    /*public void updateAddress(String city, String street, String zipcode) {
         Address address = new Address(city, street, zipcode);
         this.personalInformation.updateAddress(address);
-    }
+    }*/
 
     public void updatePhoneNumber(String phoneNumber) {
         this.personalInformation.updatePhoneNumber(phoneNumber);

@@ -23,22 +23,21 @@ public class PersonalInformation {
     private String phoneNumber;
     private String email;
 
-    @Embedded
-    private Address address;
+    /*@Embedded
+    private Address address;*/
 
-    public PersonalInformation(LogIn logIn, String phoneNumber, String email, Address address) {
+    public PersonalInformation(LogIn logIn, String phoneNumber, String email) {
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.address = address;
         this.logIn = logIn;
     }
 
     /**
      * 업데이트 로직
      */
-    protected void updateAddress(Address address) {
+    /*protected void updateAddress(Address address) {
         this.address = address;
-    }
+    }*/
 
     protected void updatePassword(String password) {
         this.logIn = new LogIn(logIn.getLogin_id(), password);
