@@ -76,8 +76,8 @@ dependencies {
 ///* 15. thymeleaf-extras-springsecurity5 */
 //    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
 
-///* 16. spring-security-test */
-//    testImplementation group: 'org.springframework.security', name: 'spring-security-test'
+/* 16. spring-security-test */
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 
 /* 17. hibernate5module*/
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
