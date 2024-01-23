@@ -46,15 +46,4 @@ public class MealRepository {
                         "join fetch m.member mm", Meal.class)
                 .getResultList();
     }
-
-    /*
-    public List<Meal> findByMember(Member member) {
-        return em.createQuery("select m from Meal m " +
-                        "join fetch m.member mm " +
-                        "where mm.id = :memberId", Meal.class)
-                .setParameter("memberId", member.getId())
-                .getResultList();
-    }
-    */
-
 }
