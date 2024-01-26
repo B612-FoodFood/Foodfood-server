@@ -43,10 +43,11 @@ public class MemberService {
                 memberRepository.findByLogInUsername(member.getPersonalInformation().getLogIn().getUsername());
 
         if (memberFindByLogInId.isPresent()) {
-            throw new AppException(MEMBER_ID_DUPLICATED,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.join(Member member)\n" +
-                            "발생원인: 이미 가입된 아이디입니다.");
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.join(Member member)\n" +
+                    "발생원인: 이미 가입된 아이디입니다.");
+
+            throw new AppException(MEMBER_ID_DUPLICATED, "이미 가입된 아이디입니다.");
         }
 
         memberRepository.save(member);
@@ -56,10 +57,12 @@ public class MemberService {
     public Member findMemberById(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
         if (member.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.findMemberById(Long memberId)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
+
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.findMemberById(Long memberId)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         return member.get();
@@ -76,10 +79,11 @@ public class MemberService {
     public Member findMemberByLogInUsername(String username) {
         Optional<Member> findMember = memberRepository.findByLogInUsername(username);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.findMemberByLogInId(String username)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.findMemberByLogInId(String username)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
         return findMember.get();
     }
@@ -87,10 +91,11 @@ public class MemberService {
     public Member findMemberByPhoneNumber(String phoneNumber) {
         Optional<Member> findMember = memberRepository.findByPhoneNumber(phoneNumber);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.findMemberByPhoneNumber(String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.findMemberByPhoneNumber(String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
         return findMember.get();
     }
@@ -98,10 +103,11 @@ public class MemberService {
     public Member findMemberByEmail(String email) {
         Optional<Member> findMember = memberRepository.findByEmail(email);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.findMemberByEmail(String email)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.findMemberByEmail(String email)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
         return findMember.get();
     }
@@ -113,38 +119,26 @@ public class MemberService {
     public void updateMemberPassword(Long memberId, String password) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateMemberPassword(Long memberId, String password)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateMemberPassword(Long memberId, String password)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
         member.updatePassword(password);
     }
 
-    /*@Transactional(readOnly = false)
-    public void updateMemberAddress(Long memberId, String city, String street, String zipcode) {
-        Optional<Member> findMember = memberRepository.findById(memberId);
-        if (findMember.isEmpty()) {
-            throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserAddress(Long memberId, String city, String street, String zipcode)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
-        }
-
-        Member member = findMember.get();
-        member.updateAddress(city, street, zipcode);
-    }*/
-
     @Transactional(readOnly = false)
     public void updateMemberPhoneNumber(Long memberId, String phoneNumber) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -155,10 +149,11 @@ public class MemberService {
     public void updateMemberEmail(Long memberId, String email) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -169,10 +164,11 @@ public class MemberService {
     public void updateAddAvoidFood(Long memberId, Food avoidFood) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -184,10 +180,11 @@ public class MemberService {
     public void updateAddMemberDisease(Long memberId, Disease disease) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -199,10 +196,11 @@ public class MemberService {
     public void updateAddMemberDrug(Long memberId, Drug drug) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
-                            "발생원인: 가입되지 않은 유저입니다.");
+                    "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
@@ -212,17 +210,23 @@ public class MemberService {
 
     public String login(String username, String password) {
         // 해당 id의 member 존재 안함.
-        Member findMember = memberRepository.findByLogInUsername(username)
-                .orElseThrow(() -> new AppException(MEMBER_ID_NOT_FOUND,
-                        "오류 발생\n" +
-                                "발생위치: MemberService.login(String username, String password)\n" +
-                                "발생원인: 가입되지 않은 유저입니다."));
+        Optional<Member> findMember = memberRepository.findByLogInUsername(username);
 
-        if (!encoder.matches(password, findMember.getPersonalInformation().getLogIn().getPassword())) {
+        if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.login(String username, String password)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
+            new AppException(MEMBER_ID_NOT_FOUND,
+                    "가입되지 않은 유저입니다.");
+        }
+
+        Member member = findMember.get();
+        if (!encoder.matches(password, member.getPersonalInformation().getLogIn().getPassword())) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.login(String username, String password)\n" +
+                    "발생원인: 잘못된 비밀번호입니다.");
             throw new AppException(INVALID_PASSWORD,
-                    "오류 발생\n" +
-                            "발생위치: MemberService.login(String username, String password)\n" +
-                            "발생원인: 잘못된 비밀번호입니다.");
+                    "잘못된 비밀번호입니다.");
         }
 
         // 앞에서 exception 발생 안 한 경우 token 발행
