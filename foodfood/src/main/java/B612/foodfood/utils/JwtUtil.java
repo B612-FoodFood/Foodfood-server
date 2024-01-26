@@ -1,19 +1,33 @@
 package B612.foodfood.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
+@Slf4j
 public class JwtUtil {
     /**
-     * 토큰 만료 여부 체크 메서드
+     * 토큰의 유효 및 만료 확인 메서드
      */
-    public static boolean isExpired(String token, String secretKey) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)  // seceret key로 디코딩한 token
-                .getBody().getExpiration() //token의 만료일자가
-                .before(new Date());  // 현재 이전인가?
+    public static boolean validateToken(String token,String secretKey, HttpServletRequest request ) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("Invalid JWT signature");
+            return false;
+        } catch (UnsupportedJwtException e) {
+            log.error("Unsupported JWT token");
+            return false;
+        } catch (IllegalArgumentException e) {
+            log.error("JWT token is invalid");
+            return false;
+        } catch (ExpiredJwtException e) {
+            log.error("token is expired");
+            return false;
+        }
     }
 
     /**
