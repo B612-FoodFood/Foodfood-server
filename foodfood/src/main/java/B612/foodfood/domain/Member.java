@@ -17,7 +17,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString(exclude = {"goals", "bodyCompositions", "memberAllergies", "memberDiseases", "meals"})
+@ToString(exclude = {"bodyCompositions", "avoidFoods", "memberDiseases", "memberDrugs", "meals"})
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
