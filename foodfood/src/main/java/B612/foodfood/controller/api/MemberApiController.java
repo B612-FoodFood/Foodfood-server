@@ -84,7 +84,7 @@ public class MemberApiController {
             }
         } catch (AppException e) {
 
-            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(),e.getMessage());
+            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(), e.getMessage());
         }
 
 
@@ -98,7 +98,7 @@ public class MemberApiController {
             // 회원 등록
             memberId = memberService.join(member);
         } catch (AppException e) {
-            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(),e.getMessage());
+            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(), e.getMessage());
         }
 
 
@@ -125,8 +125,13 @@ public class MemberApiController {
 
     @PostMapping("/login")
     public MemberLogInResponse logIn(@RequestBody MemberLogInRequest request) {
-        String token = memberService.login(request.getUsername(), request.getPassword());
+        String token = null;
+        try {
+            token = memberService.login(request.getUsername(), request.getPassword());
+        } catch (AppException e) {
+            return new MemberLogInResponse(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
 
-        return new MemberLogInResponse(token);
+        return new MemberLogInResponse(HttpStatus.OK, null, token);
     }
 }
