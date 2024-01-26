@@ -33,10 +33,12 @@ public class MemberService {
 
     @Value("${jwt.token.secret}")
     private String secretKey;
-    private final Long expireTimeMs = 1000 * 60 * 60L;  // 토큰 만료 시간: 1시간
+    @Value("${jwt.token.expireTimeMs}")
+    private long expireTimeMs;  // 토큰 만료 시간: 1시간
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
+        System.out.println("expireTimeMs = " + expireTimeMs);
 
         // 이미 가입된 멤버(동일한 아이디가 존재하는 경우) 회원 가입 불가
         Optional<Member> memberFindByLogInId =
@@ -216,7 +218,7 @@ public class MemberService {
             log.error("오류 발생\n" +
                     "발생위치: MemberService.login(String username, String password)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
-            new AppException(MEMBER_ID_NOT_FOUND,
+            throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
         }
 
