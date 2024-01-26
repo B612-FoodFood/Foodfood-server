@@ -9,23 +9,34 @@ import java.util.Date;
 @Slf4j
 public class JwtUtil {
     /**
+     * token 추출 메서드
+     */
+    public static String extractToken(String authorization) {
+        String token = authorization.split(" ")[1];
+        return token;
+    }
+    /**
      * 토큰의 유효 및 만료 확인 메서드
      */
-    public static boolean validateToken(String token,String secretKey, HttpServletRequest request ) {
+    public static boolean validateToken(String token,String secretKey) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("Invalid JWT signature");
+        } catch (SignatureException| SecurityException | MalformedJwtException e) {
+            log.error(e.getClass().getName());
+            log.error("Invalid JWT signature: "+ e.getMessage());
             return false;
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token");
+            log.error(e.getClass().getName());
+            log.error("Unsupported JWT token: "+e.getMessage());
             return false;
         } catch (IllegalArgumentException e) {
-            log.error("JWT token is invalid");
+            log.error(e.getClass().getName());
+            log.error("JWT token is invalid: "+ e.getMessage());
             return false;
         } catch (ExpiredJwtException e) {
-            log.error("token is expired");
+            log.error(e.getClass().getName());
+            log.error("token is expired: "+e.getMessage());
             return false;
         }
     }
