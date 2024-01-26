@@ -23,10 +23,10 @@ logging.level:
 
 jwt:
   token:
-    secret: "secretKey"  # 실제로 사용하는 비밀키는 environment에 저장.(노출 방지)
+    secret: ${JWT_TOKEN_SECRET}  # 실제로 사용하는 비밀키는 환경변수로 로컬에 저장.(노출 방지)
 
 # api 조회시 필요한 정보들(외부에 노출되서는 안되거나 변하지 않는값들)
 openApi:
-  baseUrl: http://apis.data.go.kr/1471000/FoodNtrIrdntInfoService1/getFoodNtrItdntList1?
-  ServiceKey: RRAZ7WfqxV7iXm8KE6cMuImCqAiHG%2Fn1fVI6E%2FbnzlmWxRNU1l%2FEsHQ8794sz47WFNlM1HMaQCv8%2FtWAH2gBqQ%3D%3D
+  baseUrl: ${OPEN_API_BASEURL}
+  ServiceKey: ${OPEN_API_SERVICE_KEY}
   type: json
