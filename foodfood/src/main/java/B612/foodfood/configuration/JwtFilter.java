@@ -39,10 +39,10 @@ public class JwtFilter extends OncePerRequestFilter {  // 매번 토큰 인증�
         }
 
         // Token 꺼내기
-        String token = authorization.split(" ")[1]; // authorization == "Bearer Token"
+        String token = JwtUtil.extractToken(authorization); // authorization == "Bearer Token"
 
         // Token Expired 되었는지 Check
-        if (!JwtUtil.validateToken(token, secretKey, request)) {
+        if (!JwtUtil.validateToken(token, secretKey)) {
             filterChain.doFilter(request, response);
             return;  // 종료
         }
