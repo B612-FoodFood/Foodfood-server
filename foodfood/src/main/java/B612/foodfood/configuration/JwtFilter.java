@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {  // 매번 토큰 인증�
 
         // Token을 보내지 않은 경우 Block됨, Bearer로 보내지 않았다면 Block
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            log.error("Authorization 이 잘못되었습니다");
+            log.error("Authorization is invalid");
             filterChain.doFilter(request, response);
             return;  // 종료
         }
@@ -42,8 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {  // 매번 토큰 인증�
         String token = authorization.split(" ")[1]; // authorization == "Bearer Token"
 
         // Token Expired 되었는지 Check
-        if (JwtUtil.isExpired(token, secretKey)) {
-            log.error("Token이 만료 되었습니다");
+        if (!JwtUtil.validateToken(token, secretKey, request)) {
             filterChain.doFilter(request, response);
             return;  // 종료
         }
