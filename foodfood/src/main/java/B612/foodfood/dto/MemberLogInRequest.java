@@ -8,6 +8,6 @@ import static lombok.AccessLevel.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class MemberLogInRequest {
-    String login_id;
-    String login_pw;
+    String username;
+    String password;
 }

@@ -49,7 +49,7 @@ class MemberRepositoryTest {
     public void findTest() throws Exception {
         //given
         //when
-        Optional<Member> findMember = memberRepository.findByLogInId("id");
+        Optional<Member> findMember = memberRepository.findByLogInUsername("id");
 
         //then
         if (findMember.isEmpty()) {

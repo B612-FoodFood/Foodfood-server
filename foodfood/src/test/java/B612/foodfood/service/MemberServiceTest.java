@@ -71,14 +71,14 @@ class MemberServiceTest {
     @DisplayName("업데이트 로직 테스트")
     public void test2() throws Exception {
         //given
-        Member aa1 = memberService.findMemberByLogInId("aa");
+        Member aa1 = memberService.findMemberByLogInUsername("aa");
 
         //when
         memberService.updateMemberPhoneNumber(aa1.getId(), "1111-1111");
         System.out.println(aa1.getPersonalInformation().getPhoneNumber());
 
         //then
-        Member aa2 = memberService.findMemberByLogInId("aa");
+        Member aa2 = memberService.findMemberByLogInUsername("aa");
         assertEquals(aa2.getPersonalInformation().getPhoneNumber(), "1111-1111");
     }
 

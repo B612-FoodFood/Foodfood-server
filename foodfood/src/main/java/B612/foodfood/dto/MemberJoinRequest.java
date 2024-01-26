@@ -18,7 +18,7 @@ public class MemberJoinRequest {  // ㅋㅋ 인자수 보소
     // LocalDate
     private String birthDate;
     // PersonalInformation
-    private String id;
+    private String username;
     private String password;
     private String phoneNumber;
     private String email;

@@ -12,11 +12,11 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 public class LogIn {
-    private String login_id;
-    private String login_pw;
+    private String username;
+    private String password;
 
-    public LogIn(String login_id, String login_pw) {
-        this.login_id = login_id;
-        this.login_pw = login_pw;
+    public LogIn(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }

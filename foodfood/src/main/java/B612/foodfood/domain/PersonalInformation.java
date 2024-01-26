@@ -40,7 +40,7 @@ public class PersonalInformation {
     }*/
 
     protected void updatePassword(String password) {
-        this.logIn = new LogIn(logIn.getLogin_id(), password);
+        this.logIn = new LogIn(logIn.getUsername(), password);
     }
 
     protected void updatePhoneNumber(String phoneNumber) {

@@ -6,7 +6,7 @@ import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.ErrorCode;
 import B612.foodfood.exception.NoDataExistException;
 import B612.foodfood.repository.*;
-import B612.foodfood.utils.JwtTokenUtil;
+import B612.foodfood.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +33,14 @@ public class MemberService {
 
     @Value("${jwt.token.secret}")
     private String secretKey;
-    private Long expireTimeMs = 1000 * 60 * 60L;  // 토큰 만료 시간: 1시간
+    private final Long expireTimeMs = 1000 * 60 * 60L;  // 토큰 만료 시간: 1시간
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
 
         // 이미 가입된 멤버(동일한 아이디가 존재하는 경우) 회원 가입 불가
         Optional<Member> memberFindByLogInId =
-                memberRepository.findByLogInId(member.getPersonalInformation().getLogIn().getLogin_id());
+                memberRepository.findByLogInUsername(member.getPersonalInformation().getLogIn().getUsername());
 
         if (memberFindByLogInId.isPresent()) {
             throw new AppException(MEMBER_ID_DUPLICATED,
@@ -73,12 +73,12 @@ public class MemberService {
         return memberRepository.findByName(name);
     }
 
-    public Member findMemberByLogInId(String login_id) {
-        Optional<Member> findMember = memberRepository.findByLogInId(login_id);
+    public Member findMemberByLogInUsername(String username) {
+        Optional<Member> findMember = memberRepository.findByLogInUsername(username);
         if (findMember.isEmpty()) {
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "오류 발생\n" +
-                            "발생위치: MemberService.findMemberByLogInId(String login_id)\n" +
+                            "발생위치: MemberService.findMemberByLogInId(String username)\n" +
                             "발생원인: 가입되지 않은 유저입니다.");
         }
         return findMember.get();
@@ -210,24 +210,23 @@ public class MemberService {
         memberDrugRepository.save(memberDrug);
     }
 
-    public String login(String login_id, String login_pw) {
+    public String login(String username, String password) {
         // 해당 id의 member 존재 안함.
-        Member findMember = memberRepository.findByLogInId(login_id)
+        Member findMember = memberRepository.findByLogInUsername(username)
                 .orElseThrow(() -> new AppException(MEMBER_ID_NOT_FOUND,
                         "오류 발생\n" +
-                                "발생위치: MemberService.login(Long login_id, String login_pw)\n" +
+                                "발생위치: MemberService.login(String username, String password)\n" +
                                 "발생원인: 가입되지 않은 유저입니다."));
 
-        if (!encoder.matches(login_pw, findMember.getPersonalInformation().getLogIn().getLogin_pw())) {
-            System.out.println("findMember.getPersonalInformation().getLogIn().getLogin_pw() = " + findMember.getPersonalInformation().getLogIn().getLogin_pw());
+        if (!encoder.matches(password, findMember.getPersonalInformation().getLogIn().getPassword())) {
             throw new AppException(INVALID_PASSWORD,
                     "오류 발생\n" +
-                            "발생위치: MemberService.login(Long login_id, String login_pw)\n" +
+                            "발생위치: MemberService.login(String username, String password)\n" +
                             "발생원인: 잘못된 비밀번호입니다.");
         }
 
         // 앞에서 exception 발생 안 한 경우 token 발행
-        String token = JwtTokenUtil.createToken(login_id, secretKey, expireTimeMs);
+        String token = JwtUtil.createToken(username, secretKey, expireTimeMs);
         return token;
     }
 }
