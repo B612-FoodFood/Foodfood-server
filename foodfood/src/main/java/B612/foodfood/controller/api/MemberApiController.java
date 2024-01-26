@@ -2,7 +2,9 @@ package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.MemberJoinRequest;
+import B612.foodfood.dto.MemberJoinResponse;
 import B612.foodfood.dto.MemberLogInRequest;
+import B612.foodfood.dto.MemberLogInResponse;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.ErrorCode;
@@ -49,7 +51,7 @@ public class MemberApiController {
      * request: 유저 회원 가입 데이터 받기
      */
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody MemberJoinRequest request) throws JsonProcessingException {
+    public MemberJoinResponse join(@RequestBody MemberJoinRequest request) throws JsonProcessingException {
 
         String name = request.getName();
         Sex sex = Sex.valueOf(request.getSex());
@@ -70,24 +72,34 @@ public class MemberApiController {
         AccountType accountType = AccountType.valueOf(request.getAccountType());
 
         // 데이터가 존재하는지 검사(데이터 없을 시 에러 발생하면서 회원가입 실패)
-        for (
-                String avoidFoodName : request.getAvoidFoods()) {
-            Food avoidFood = foodService.findFoodByName(avoidFoodName);
+        try {
+            for (String avoidFoodName : request.getAvoidFoods()) {
+                Food avoidFood = foodService.findFoodByName(avoidFoodName);
+            }
+            for (String diseaseName : request.getDiseases()) {
+                Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
+            }
+            for (String drugName : request.getDrugs()) {
+                Drug findDrug = drugService.findDrugByName(drugName);
+            }
+        } catch (AppException e) {
+
+            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(),e.getMessage());
         }
-        for (
-                String diseaseName : request.getDiseases()) {
-            Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
-        }
-        for (
-                String drugName : request.getDrugs()) {
-            Drug findDrug = drugService.findDrugByName(drugName);
-        }
+
 
         // create Member
         Member member = new Member(name, sex, birthDate, personalInformation,
                 height, activity, goal, bodyGoal, accountType);
+        Long memberId;
 
-        Long memberId = memberService.join(member);
+        // 회원 등록시 예외 처리 (중복 회원 가입 방지)
+        try {
+            // 회원 등록
+            memberId = memberService.join(member);
+        } catch (AppException e) {
+            return new MemberJoinResponse(e.getErrorCode().getHttpStatus(),e.getMessage());
+        }
 
 
         // add information
@@ -108,14 +120,13 @@ public class MemberApiController {
             memberService.updateAddMemberDrug(memberId, findDrug);
         }
 
-
-        return ResponseEntity.ok("회원가입 성공" + " " + memberId);
+        return new MemberJoinResponse(HttpStatus.OK, memberId.toString());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> logIn(@RequestBody MemberLogInRequest request) {
+    public MemberLogInResponse logIn(@RequestBody MemberLogInRequest request) {
         String token = memberService.login(request.getUsername(), request.getPassword());
 
-        return ResponseEntity.ok(token);
+        return new MemberLogInResponse(token);
     }
 }
