@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.*;
 
 @Entity
@@ -22,7 +23,7 @@ public class Food {
     private String name;
 
     @Setter
-    @Enumerated
+    @Enumerated(STRING)
     private FoodType foodType;
 
     @Embedded
@@ -31,8 +32,8 @@ public class Food {
     @OneToMany(mappedBy = "food", cascade = ALL)
     private List<MealFood> mealFoods = new ArrayList();
 
-    @OneToMany(mappedBy = "food")
-    private List<AvoidIngredient> avoidIngredients = new ArrayList<>();
+    @OneToMany(mappedBy = "food", cascade = ALL)
+    private List<FoodIngredient> foodIngredients = new ArrayList<>();
 
     public Food(String name, Nutrition nutrition) {
         this.name = name;
@@ -47,8 +48,11 @@ public class Food {
         mealFoods.add(mealFood);
     }
 
-    protected void addAvoidFood(AvoidIngredient avoidIngredient) {
-        avoidIngredient.setFood(this);
-        avoidIngredients.add(avoidIngredient);
+    public FoodIngredient addIngredient(Ingredient ingredient) {
+        FoodIngredient foodIngredient = FoodIngredient.createFoodIngredient(ingredient);
+        foodIngredient.setFood(this);
+        foodIngredients.add(foodIngredient);
+
+        return foodIngredient;
     }
 }
