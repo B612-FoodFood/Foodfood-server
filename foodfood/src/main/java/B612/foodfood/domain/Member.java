@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static B612.foodfood.domain.Obesity.*;
@@ -68,7 +67,7 @@ public class Member {
     private List<BodyComposition> bodyCompositions = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
-    private List<AvoidFood> avoidFoods = new ArrayList<>();
+    private List<AvoidIngredient> avoidIngredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private List<MemberDisease> memberDiseases = new ArrayList<>();
@@ -134,11 +133,11 @@ public class Member {
 
     // 이 메서드는 Member, AvoidFood, Food간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
     // 유저에게 음식추천해주는 로직 구현시 여기 안에 들어있는 음식은 추천해주지 않도록 구현
-    public AvoidFood addAvoidFood(Food food) {
-        AvoidFood avoidFood = AvoidFood.createAvoidFood(food);
-        avoidFood.setMember(this);
-        avoidFoods.add(avoidFood);
-        return avoidFood;
+    public AvoidIngredient addAvoidIngredient(Ingredient ingredient) {
+        AvoidIngredient avoidIngredient = AvoidIngredient.createAvoidIngredient(ingredient);
+        avoidIngredient.setMember(this);
+        avoidIngredients.add(avoidIngredient);
+        return avoidIngredient;
     }
 
     // 이 메서드는 Member, MemberAllergy, Allergy간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.

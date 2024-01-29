@@ -32,7 +32,7 @@ public class Food {
     private List<MealFood> mealFoods = new ArrayList();
 
     @OneToMany(mappedBy = "food")
-    private List<AvoidFood> avoidFoods = new ArrayList<>();
+    private List<AvoidIngredient> avoidIngredients = new ArrayList<>();
 
     public Food(String name, Nutrition nutrition) {
         this.name = name;
@@ -47,8 +47,8 @@ public class Food {
         mealFoods.add(mealFood);
     }
 
-    protected void addAvoidFood(AvoidFood avoidFood) {
-        avoidFood.setFood(this);
-        avoidFoods.add(avoidFood);
+    protected void addAvoidFood(AvoidIngredient avoidIngredient) {
+        avoidIngredient.setFood(this);
+        avoidIngredients.add(avoidIngredient);
     }
 }

@@ -2,9 +2,6 @@ package B612.foodfood.service;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.exception.AppException;
-import B612.foodfood.exception.DataSaveException;
-import B612.foodfood.exception.ErrorCode;
-import B612.foodfood.exception.NoDataExistException;
 import B612.foodfood.repository.*;
 import B612.foodfood.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -174,8 +171,8 @@ public class MemberService {
         }
 
         Member member = findMember.get();
-        AvoidFood addedAvoidFood = member.addAvoidFood(avoidFood);
-        avoidFoodRepository.save(addedAvoidFood);
+        AvoidIngredient addedAvoidIngredient = member.addAvoidFood(avoidFood);
+        avoidFoodRepository.save(addedAvoidIngredient);
     }
 
     @Transactional(readOnly = false)

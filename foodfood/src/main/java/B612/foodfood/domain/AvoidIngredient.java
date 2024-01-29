@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @ToString
 @NoArgsConstructor(access = PROTECTED)
-public class AvoidFood {
+public class AvoidIngredient {
     @Id
     @GeneratedValue
     @Column(name = "avoid_food_id")
@@ -25,13 +25,13 @@ public class AvoidFood {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "food_id")
+    @JoinColumn(name = "ingredient_id")
     @Setter(PROTECTED)
-    private Food food;
+    private Ingredient ingredient;
 
-    public static AvoidFood createAvoidFood(Food food) {
-        AvoidFood avoidFood = new AvoidFood();
-        food.addAvoidFood(avoidFood);
-        return avoidFood;
+    public static AvoidIngredient createAvoidIngredient(Ingredient ingredient) {
+        AvoidIngredient avoidIngredient = new AvoidIngredient();
+        ingredient.addAvoidIngredient(avoidIngredient);
+        return avoidIngredient;
     }
 }
