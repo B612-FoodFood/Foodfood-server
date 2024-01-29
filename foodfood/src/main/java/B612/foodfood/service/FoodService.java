@@ -26,7 +26,7 @@ public class FoodService {
 
     @Transactional(readOnly = true)
     public Long save(Food food) {
-        if (!foodRepository.findByName(food.getName()).isEmpty()) {
+        if (foodRepository.findByName(food.getName()).isPresent()) {
             log.error("오류 발생\n" +
                     "발생위치: FoodService.save(Food food)\n" +
                     "발생원인: 이미 존재하는 음식입니다.");

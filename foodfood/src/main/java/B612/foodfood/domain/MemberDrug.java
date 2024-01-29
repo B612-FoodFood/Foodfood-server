@@ -26,7 +26,7 @@ public class MemberDrug {
     @Setter(PROTECTED)
     private Drug drug;
 
-    static MemberDrug createMemberDrug(Drug drug) {
+    protected static MemberDrug createMemberDrug(Drug drug) {
         MemberDrug memberDrug = new MemberDrug();
         drug.addMemberDrug(memberDrug);
         return memberDrug;

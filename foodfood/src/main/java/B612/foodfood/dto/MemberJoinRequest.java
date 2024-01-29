@@ -38,9 +38,8 @@ public class MemberJoinRequest {  // ㅋㅋ 인자수 보소
     // AccountType
     private String accountType;
 
-
-    // AvoidFoods
-    private List<String> avoidFoods = new ArrayList<>();
+    // AvoidIngredients
+    private List<String> avoidIngredients = new ArrayList<>();
 
     // Disease
     private List<String> diseases;

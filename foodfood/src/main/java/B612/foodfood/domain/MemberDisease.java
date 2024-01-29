@@ -26,7 +26,7 @@ public class MemberDisease {
     @Setter(value = PROTECTED)
     private Disease disease;
 
-    static MemberDisease createMemberDisease(Disease disease) {
+    protected static MemberDisease createMemberDisease(Disease disease) {
         MemberDisease memberDisease = new MemberDisease();
         disease.addMemberDisease(memberDisease);
         return memberDisease;
