@@ -9,29 +9,21 @@ import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.ErrorCode;
-import B612.foodfood.repository.AvoidFoodRepository;
 import B612.foodfood.service.DiseaseService;
 import B612.foodfood.service.DrugService;
 import B612.foodfood.service.FoodService;
 import B612.foodfood.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +58,6 @@ class MemberApiControllerTest {
     DiseaseService diseaseService;
     @MockBean
     DrugService drugService;
-    @MockBean
-    AvoidFoodRepository avoidFoodRepository;
     @MockBean
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -132,8 +122,7 @@ class MemberApiControllerTest {
 
 
     /**
-     * @WithAnonymousUser
-     * Spring Security에서는 익명 사용자(Anonymous User)가 인증되지 않은 사용자를 나타냅니다.
+     * @WithAnonymousUser Spring Security에서는 익명 사용자(Anonymous User)가 인증되지 않은 사용자를 나타냅니다.
      * 이 어노테이션을 사용하면 로그인을 수행하지 않은 상태에서의 동작을 테스트할 수 있습니다.
      */
     @Test
