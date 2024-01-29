@@ -21,6 +21,10 @@ public class Food {
 
     private String name;
 
+    @Setter
+    @Enumerated
+    private FoodType foodType;
+
     @Embedded
     private Nutrition nutrition;
 
@@ -29,8 +33,8 @@ public class Food {
 
     @OneToMany(mappedBy = "food")
     private List<AvoidFood> avoidFoods = new ArrayList<>();
-    public Food(String name, Nutrition nutrition) {
 
+    public Food(String name, Nutrition nutrition) {
         this.name = name;
         this.nutrition = nutrition;
     }

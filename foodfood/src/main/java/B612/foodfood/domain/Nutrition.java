@@ -17,7 +17,7 @@ import static lombok.AccessLevel.*;
 public class Nutrition {
 
     /** 음식의 영양 데이터 **/
-    private double servingWeight;  // 1회제공량 (g)
+    private double servingWeight;  // 1회제공량 (g, 액체의 경우 ml)
     private double calories;  // 열량 (kcal)
     private double carbonHydrate;  // 탄수화물 (g)
     private double protein;  // 단백질 (g)
