@@ -1,5 +1,7 @@
 package B612.foodfood.domain;
 
+import B612.foodfood.exception.AppException;
+import B612.foodfood.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,12 +13,13 @@ import static B612.foodfood.domain.Obesity.*;
 import static B612.foodfood.domain.Sex.FEMALE;
 import static B612.foodfood.domain.Sex.MALE;
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString(exclude = {"bodyCompositions", "avoidFoods", "memberDiseases", "memberDrugs", "meals"})
+@ToString(exclude = {"bodyCompositions", "avoidIngredients", "memberDiseases", "memberDrugs", "meals"})
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
@@ -29,15 +32,15 @@ public class Member {
     private LocalDate birthDate;
     private double height;
 
-    @Enumerated
+    @Enumerated(STRING)
     private Sex sex;
-    @Enumerated
+    @Enumerated(STRING)
     private Activity activity;
-    @Enumerated
+    @Enumerated(STRING)
     private AccountType accountType;
-    @Enumerated
+    @Enumerated(STRING)
     private BodyGoal goal;
-    @Enumerated
+    @Enumerated(STRING)
     private Obesity obesity;
 
     @Embedded
@@ -86,7 +89,8 @@ public class Member {
         // 한 유저의 동일한 날짜에 대한 Meal은 하나만 존재 가능
         for (Meal memberMeal : meals) {
             if (memberMeal.getDate().equals(meal.getDate())) {
-                throw new IllegalStateException("오류 발생\n" +
+                throw new AppException(ErrorCode.DATA_ALREADY_EXISTED,
+                        "오류 발생\n" +
                         "발생위치: Member.addMeal(Meal meal)\n" +
                         "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
             }
@@ -134,13 +138,14 @@ public class Member {
     // 이 메서드는 Member, AvoidFood, Food간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
     // 유저에게 음식추천해주는 로직 구현시 여기 안에 들어있는 음식은 추천해주지 않도록 구현
     public AvoidIngredient addAvoidIngredient(Ingredient ingredient) {
-        AvoidIngredient avoidIngredient = AvoidIngredient.createAvoidIngredient(ingredient);
+        AvoidIngredient avoidIngredient =
+                AvoidIngredient.createAvoidIngredient(ingredient);
         avoidIngredient.setMember(this);
         avoidIngredients.add(avoidIngredient);
         return avoidIngredient;
     }
 
-    // 이 메서드는 Member, MemberAllergy, Allergy간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
+    // 이 메서드는 Member, MemberDisease, Disease간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
     public MemberDisease addDisease(Disease disease) {
         MemberDisease memberDisease =
                 MemberDisease.createMemberDisease(disease);
@@ -188,15 +193,13 @@ public class Member {
     /**
      * 업데이트 로직
      */
+    public void updateAchieveBodyGoal(AchieveBodyGoal achieveBodyGoal) {
+        this.achieveBodyGoal = achieveBodyGoal;
+    }
 
     public void updatePassword(String password) {
         this.personalInformation.updatePassword(password);
     }
-
-    /*public void updateAddress(String city, String street, String zipcode) {
-        Address address = new Address(city, street, zipcode);
-        this.personalInformation.updateAddress(address);
-    }*/
 
     public void updatePhoneNumber(String phoneNumber) {
         this.personalInformation.updatePhoneNumber(phoneNumber);
