@@ -1,16 +1,14 @@
 package B612.foodfood.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class FoodIngredient {
     @Id
@@ -18,6 +16,23 @@ public class FoodIngredient {
     @Column(name = "food_ingredient_id")
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "food_id")
+    @Setter(PROTECTED)
+    private Food food;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "ingredient_id")
+    @Setter(PROTECTED)
     private Ingredient ingredient;
+
+    /**
+     * 연관관계 편의 메서드
+     */
+    protected static FoodIngredient createFoodIngredient(Ingredient ingredient) {
+        FoodIngredient foodIngredient = new FoodIngredient();
+        ingredient.addFoodIngredient(foodIngredient);
+
+        return foodIngredient;
+    }
 }
