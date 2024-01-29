@@ -52,16 +52,16 @@ public class FoodDto {
     private String foodType;
 
     public Food toEntity() {
-        Double sw = Objects.equals(servingWeight, "-") ? Double.valueOf(servingWeight) : 0;
-        Double ca = Objects.equals(calories, "-") ? Double.valueOf(calories) : 0;
-        Double cb = Objects.equals(carbonHydrate, "-") ? Double.valueOf(carbonHydrate) : 0;
-        Double pr = Objects.equals(protein, "-") ? Double.valueOf(protein) : 0;
-        Double fa = Objects.equals(fat, "-") ? Double.valueOf(fat) : 0;
-        Double su = Objects.equals(sugar, "-") ? Double.valueOf(sugar) : 0;
-        Double na = Objects.equals(natrium, "-") ? Double.valueOf(natrium) : 0;
-        Double ch = Objects.equals(cholesterol, "-") ? Double.valueOf(cholesterol) : 0;
-        Double sf = Objects.equals(saturatedFattyAcid, "-") ? Double.valueOf(saturatedFattyAcid) : 0;
-        Double tr = Objects.equals(transFattyAcid, "-") ? Double.valueOf(transFattyAcid) : 0;
+        Double sw = Objects.equals(servingWeight, "-") ? Double.parseDouble(servingWeight) : 0;
+        Double ca = Objects.equals(calories, "-") ? Double.parseDouble(calories) : 0;
+        Double cb = Objects.equals(carbonHydrate, "-") ? Double.parseDouble(carbonHydrate) : 0;
+        Double pr = Objects.equals(protein, "-") ? Double.parseDouble(protein) : 0;
+        Double fa = Objects.equals(fat, "-") ? Double.parseDouble(fat) : 0;
+        Double su = Objects.equals(sugar, "-") ? Double.parseDouble(sugar) : 0;
+        Double na = Objects.equals(natrium, "-") ? Double.parseDouble(natrium) : 0;
+        Double ch = Objects.equals(cholesterol, "-") ? Double.parseDouble(cholesterol) : 0;
+        Double sf = Objects.equals(saturatedFattyAcid, "-") ? Double.parseDouble(saturatedFattyAcid) : 0;
+        Double tr = Objects.equals(transFattyAcid, "-") ? Double.parseDouble(transFattyAcid) : 0;
 
         Nutrition nutrition = new Nutrition(sw, ca, cb, pr, fa, su, na, ch, sf, tr);
         Food food = new Food(this.name, nutrition);
