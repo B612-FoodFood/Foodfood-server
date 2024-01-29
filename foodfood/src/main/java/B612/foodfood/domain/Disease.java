@@ -25,7 +25,7 @@ public class Disease {
     private String name;
     // 추가할 부분 추가...
 
-    @OneToMany(mappedBy = "disease", cascade = ALL)
+    @OneToMany(mappedBy = "disease")
     private List<MemberDisease> memberDiseases = new ArrayList<>();
 
     public Disease(String name) {

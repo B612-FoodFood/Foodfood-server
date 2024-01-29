@@ -6,11 +6,7 @@ import B612.foodfood.dto.MemberJoinResponse;
 import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.dto.MemberLogInResponse;
 import B612.foodfood.exception.AppException;
-import B612.foodfood.repository.AvoidFoodRepository;
-import B612.foodfood.service.DiseaseService;
-import B612.foodfood.service.DrugService;
-import B612.foodfood.service.FoodService;
-import B612.foodfood.service.MemberService;
+import B612.foodfood.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +30,7 @@ public class MemberApiController {
     private final FoodService foodService;
     private final DiseaseService diseaseService;
     private final DrugService drugService;
-    private final AvoidFoodRepository avoidFoodRepository;
-
+    private final IngredientService ingredientService;
     private final BCryptPasswordEncoder encoder;
     private final ObjectMapper objectMapper;
 
@@ -65,8 +60,8 @@ public class MemberApiController {
 
         // 데이터가 존재하는지 검사(데이터 없을 시 에러 발생하면서 회원가입 실패)
         try {
-            for (String avoidFoodName : request.getAvoidFoods()) {
-                Food avoidFood = foodService.findFoodByName(avoidFoodName);
+            for (String avoidIngredientName : request.getAvoidIngredients()) {
+                Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
             }
             for (String diseaseName : request.getDiseases()) {
                 Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
@@ -83,7 +78,7 @@ public class MemberApiController {
         // create Member
         Member member = new Member(name, sex, birthDate, personalInformation,
                 height, activity, goal, bodyGoal, accountType);
-        Long memberId;
+        Long memberId = null;
 
         // 회원 등록시 예외 처리 (중복 회원 가입 방지)
         try {
@@ -96,20 +91,17 @@ public class MemberApiController {
 
         // add information
         member.addBodyComposition(bodyComposition);
-        for (
-                String avoidFoodName : request.getAvoidFoods()) {
-            Food avoidFood = foodService.findFoodByName(avoidFoodName);
-            memberService.updateAddAvoidFood(memberId, avoidFood);
+        for (String avoidIngredientName : request.getAvoidIngredients()) {
+            Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
+            memberService.updateAddAvoidIngredient(memberId, avoidIngredient);
         }
-        for (
-                String diseaseName : request.getDiseases()) {
+        for (String diseaseName : request.getDiseases()) {
             Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
-            memberService.updateAddMemberDisease(memberId, findDisease);
+            memberService.updateAddDisease(memberId, findDisease);
         }
-        for (
-                String drugName : request.getDrugs()) {
+        for (String drugName : request.getDrugs()) {
             Drug findDrug = drugService.findDrugByName(drugName);
-            memberService.updateAddMemberDrug(memberId, findDrug);
+            memberService.updateAddDrug(memberId, findDrug);
         }
 
         return new MemberJoinResponse(HttpStatus.OK, memberId.toString());

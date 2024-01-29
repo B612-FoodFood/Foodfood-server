@@ -11,12 +11,11 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@ToString
 @NoArgsConstructor(access = PROTECTED)
 public class AvoidIngredient {
     @Id
     @GeneratedValue
-    @Column(name = "avoid_food_id")
+    @Column(name = "avoid_ingredient_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)

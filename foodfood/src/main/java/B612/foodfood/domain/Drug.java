@@ -30,7 +30,7 @@ public class Drug {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "drug", cascade = ALL)
+    @OneToMany(mappedBy = "drug")
     private List<MemberDrug> memberDrugs = new ArrayList<>();
 
     /**

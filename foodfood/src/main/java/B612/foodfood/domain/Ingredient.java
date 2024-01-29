@@ -13,8 +13,7 @@ import static jakarta.persistence.CascadeType.*;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@ToString(exclude = {"avoidIngredients", "foodIngredients"})
 @Getter
 public class Ingredient {
     @Id
@@ -23,9 +22,26 @@ public class Ingredient {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "ingredient", cascade = ALL)
+    @OneToMany(mappedBy = "ingredient")
     private List<AvoidIngredient> avoidIngredients = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ingredient", cascade = ALL)
+    @OneToMany(mappedBy = "ingredient")
     private List<FoodIngredient> foodIngredients = new ArrayList<>();
+
+    public Ingredient(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 연관관계 편의 메서드
+     */
+    protected void addAvoidIngredient(AvoidIngredient avoidIngredient) {
+        avoidIngredient.setIngredient(this);
+        avoidIngredients.add(avoidIngredient);
+    }
+
+    protected void addFoodIngredient(FoodIngredient foodIngredient) {
+        foodIngredient.setIngredient(this);
+        foodIngredients.add(foodIngredient);
+    }
 }
