@@ -22,9 +22,6 @@ import static B612.foodfood.exception.ErrorCode.*;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberDrugRepository memberDrugRepository;
-    private final MemberDiseaseRepository memberDiseaseRepository;
-    private final AvoidFoodRepository avoidFoodRepository;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
 
@@ -35,8 +32,6 @@ public class MemberService {
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
-        System.out.println("expireTimeMs = " + expireTimeMs);
-
         // 이미 가입된 멤버(동일한 아이디가 존재하는 경우) 회원 가입 불가
         Optional<Member> memberFindByLogInId =
                 memberRepository.findByLogInUsername(member.getPersonalInformation().getLogIn().getUsername());
@@ -115,6 +110,21 @@ public class MemberService {
      * 업데이트 로직
      */
     @Transactional(readOnly = false)
+    public void updateAchieveBodyGoal(Long memberId, AchieveBodyGoal achieveBodyGoal) {
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateAchieveBodyGoal(Long memberId, AchieveBodyGoal achieveBodyGoal)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
+            throw new AppException(MEMBER_ID_NOT_FOUND,
+                    "가입되지 않은 유저입니다.");
+        }
+
+        Member member = findMember.get();
+        member.updateAchieveBodyGoal(achieveBodyGoal);
+    }
+
+    @Transactional(readOnly = false)
     public void updateMemberPassword(Long memberId, String password) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
@@ -149,7 +159,7 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생위치: MemberService.updateMemberEmail(Long memberId, String email)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
@@ -160,51 +170,48 @@ public class MemberService {
     }
 
     @Transactional(readOnly = false)
-    public void updateAddAvoidFood(Long memberId, Food avoidFood) {
+    public void updateAddAvoidIngredient(Long memberId, Ingredient ingredient) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생위치: MemberService.updateAddAvoidIngredient(Long memberId, Ingredient ingredient)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
-        AvoidIngredient addedAvoidIngredient = member.addAvoidFood(avoidFood);
-        avoidFoodRepository.save(addedAvoidIngredient);
+        member.addAvoidIngredient(ingredient);
     }
 
     @Transactional(readOnly = false)
-    public void updateAddMemberDisease(Long memberId, Disease disease) {
+    public void updateAddDisease(Long memberId, Disease disease) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생위치: MemberService.updateAddMemberDisease(Long memberId, Disease disease)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
-        MemberDisease memberDisease = member.addDisease(disease);
-        memberDiseaseRepository.save(memberDisease);
+        member.addDisease(disease);
     }
 
     @Transactional(readOnly = false)
-    public void updateAddMemberDrug(Long memberId, Drug drug) {
+    public void updateAddDrug(Long memberId, Drug drug) {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateUserPhoneNumber(Long memberId, String phoneNumber)\n" +
+                    "발생위치: MemberService.updateAddMemberDrug(Long memberId, Drug drug)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
         }
 
         Member member = findMember.get();
-        MemberDrug memberDrug = member.addDrug(drug);
-        memberDrugRepository.save(memberDrug);
+        member.addDrug(drug);
     }
 
     public String login(String username, String password) {
