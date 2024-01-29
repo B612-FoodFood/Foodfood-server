@@ -1,6 +1,7 @@
 package B612.foodfood.repository;
 
 import B612.foodfood.domain.Food;
+import B612.foodfood.domain.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,5 +51,4 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     @Query("select f from Food f " +
             "where f.nutrition.fat <= :fat")
     List<Food> findThatHasLessFat(double fat);
-
 }
