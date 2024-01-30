@@ -54,11 +54,11 @@ class MemberTest {
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
 
         //when
-        member.addAvoidIngredient(new Ingredient("ingredient1"));
-        member.addAvoidIngredient(new Ingredient("ingredient2"));
+        member.addAvoidIngredient(new Ingredient("ingredient1",Category.견과류및종실류));
+        member.addAvoidIngredient(new Ingredient("ingredient2",Category.견과류및종실류));
         //then
         IllegalStateException illegalStateException =
-                assertThrows(IllegalStateException.class, () -> member.addAvoidIngredient(new Ingredient("ingredient1")));
+                assertThrows(IllegalStateException.class, () -> member.addAvoidIngredient(new Ingredient("ingredient1",Category.견과류및종실류)));
         System.out.println(illegalStateException.getMessage());
     }
 }

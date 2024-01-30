@@ -1,9 +1,6 @@
 package B612.foodfood.controller.api;
 
-import B612.foodfood.domain.Disease;
-import B612.foodfood.domain.Drug;
-import B612.foodfood.domain.Food;
-import B612.foodfood.domain.Nutrition;
+import B612.foodfood.domain.*;
 import B612.foodfood.dto.MemberJoinRequest;
 import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.exception.DataSaveException;
@@ -60,8 +57,8 @@ public class MemberApiControllerTest2 {
     @Before
     public void each() throws DataSaveException {
         // WebMvcTest라서 동작 안함.
-        foodService.save(new Food("food-apple", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)));
-        foodService.save(new Food("food-banana", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)));
+        foodService.save(new Food("food-apple", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), Category.견과류및종실류));
+        foodService.save(new Food("food-banana", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),Category.견과류및종실류));
         diseaseService.save(new Disease("disease-a"));
         diseaseService.save(new Disease("disease-b"));
         drugService.save(new Drug("drug-a"));

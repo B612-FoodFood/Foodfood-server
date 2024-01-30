@@ -1,5 +1,6 @@
 package B612.foodfood.repository;
 
+import B612.foodfood.domain.Category;
 import B612.foodfood.domain.Food;
 import B612.foodfood.domain.Nutrition;
 import org.assertj.core.api.Assertions;
@@ -31,9 +32,9 @@ class FoodRepositoryTest {
         Nutrition nutrition1 = new Nutrition(1, 10, 1, 10, 1, 1, 1, 1, 1, 1);
         Nutrition nutrition2 = new Nutrition(1, 10, 10, 1, 10, 1, 1, 1, 1, 1);
         Nutrition nutrition3 = new Nutrition(1, 1, 10, 10, 1, 1, 1, 1, 1, 1);
-        Food fo1 = new Food("food1", nutrition1);
-        Food fo2 = new Food("food2", nutrition2);
-        Food fo3 = new Food("food1", nutrition3);
+        Food fo1 = new Food("food1", nutrition1, Category.견과류및종실류);
+        Food fo2 = new Food("food2", nutrition2, Category.견과류및종실류);
+        Food fo3 = new Food("food1", nutrition3, Category.견과류및종실류);
 
         foodRepository.save(fo1);
         foodRepository.save(fo2);
@@ -49,7 +50,7 @@ class FoodRepositoryTest {
     public void test() throws Exception{
         //given
         Nutrition nutrition = new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-        Food fo = new Food("food1", nutrition);
+        Food fo = new Food("food1", nutrition, Category.견과류및종실류);
         foodRepository.save(fo);
 
         //when

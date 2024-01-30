@@ -1,9 +1,6 @@
 package B612.foodfood.controller.api;
 
-import B612.foodfood.domain.Disease;
-import B612.foodfood.domain.Drug;
-import B612.foodfood.domain.Food;
-import B612.foodfood.domain.Nutrition;
+import B612.foodfood.domain.*;
 import B612.foodfood.dto.MemberJoinRequest;
 import B612.foodfood.dto.MemberLogInRequest;
 import B612.foodfood.exception.AppException;
@@ -28,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static B612.foodfood.domain.Category.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -67,8 +65,8 @@ class MemberApiControllerTest {
     @BeforeEach
     public void each() throws DataSaveException {
         // WebMvcTest라서 동작 안함.
-        foodService.save(new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)));
-        foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)));
+        foodService.save(new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 견과류및종실류));
+        foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 어패류및수산물));
         diseaseService.save(new Disease("질병1"));
         diseaseService.save(new Disease("질병2"));
         drugService.save(new Drug("drug1"));

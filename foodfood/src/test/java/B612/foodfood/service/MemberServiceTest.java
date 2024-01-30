@@ -105,8 +105,8 @@ class MemberServiceTest {
 
         Member findMember = memberService.findMemberById(memberId);
 
-        Food food1 = new Food("food1", new Nutrition(1, 1, 1, 11, 1, 11, 1, 1, 1, 1));
-        Food food2 = new Food("food2", new Nutrition(1, 1, 1, 11, 1, 11, 1, 1, 1, 1));
+        Food food1 = new Food("food1", new Nutrition(1, 1, 1, 11, 1, 11, 1, 1, 1, 1), Category.견과류및종실류);
+        Food food2 = new Food("food2", new Nutrition(1, 1, 1, 11, 1, 11, 1, 1, 1, 1), Category.견과류및종실류);
         foodRepository.save(food1);
         foodRepository.save(food2);
 
