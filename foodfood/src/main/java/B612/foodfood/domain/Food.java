@@ -22,23 +22,23 @@ public class Food {
 
     private String name;
 
-    @Setter
-    @Enumerated(STRING)
-    private FoodType foodType;
-
     @Embedded
     private Nutrition nutrition;
+
+    @Enumerated(STRING)
+    private Category category;
+
+    public Food(String name, Nutrition nutrition, Category category) {
+        this.name = name;
+        this.nutrition = nutrition;
+        this.category = category;
+    }
 
     @OneToMany(mappedBy = "food", cascade = ALL)
     private List<MealFood> mealFoods = new ArrayList();
 
     @OneToMany(mappedBy = "food", cascade = ALL)
     private List<FoodIngredient> foodIngredients = new ArrayList<>();
-
-    public Food(String name, Nutrition nutrition) {
-        this.name = name;
-        this.nutrition = nutrition;
-    }
 
     /**
      * 연관관계 편의 메서드

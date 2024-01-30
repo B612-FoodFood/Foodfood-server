@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.EnumType.*;
 
 @Entity
 @NoArgsConstructor
@@ -22,15 +23,19 @@ public class Ingredient {
     private Long id;
     private String name;
 
+    @Enumerated(STRING)
+    private Category category;
+
+    public Ingredient(String name, Category category) {
+        this.name = name;
+        this.category = category;
+    }
+
     @OneToMany(mappedBy = "ingredient")
     private List<AvoidIngredient> avoidIngredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient")
     private List<FoodIngredient> foodIngredients = new ArrayList<>();
-
-    public Ingredient(String name) {
-        this.name = name;
-    }
 
     /**
      * 연관관계 편의 메서드
