@@ -16,9 +16,10 @@ import java.time.LocalDate;
 import static B612.foodfood.domain.AccountType.USER;
 import static B612.foodfood.domain.Activity.LOT;
 import static B612.foodfood.domain.BodyGoal.MUSCLE;
+import static B612.foodfood.domain.Category.*;
 import static B612.foodfood.domain.Sex.MALE;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class InitDB {
 
@@ -33,7 +34,7 @@ public class InitDB {
         initService.memberInit();
     }
 
-    @Component
+//    @Component
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
@@ -55,7 +56,7 @@ public class InitDB {
             Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
             Long memberId = memberService.join(member);
 
-            Food food = new Food("food3", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+            Food food = new Food("food3", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 견과류및종실류);
             foodService.save(food);
 
             Meal meal = new Meal();
@@ -70,10 +71,10 @@ public class InitDB {
         }
 
         void foodInit() throws DataSaveException {
-            Food food1 = new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+            Food food1 = new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 감자및전분류);
 
-            Ingredient ingredient1 = new Ingredient("ingredient1");
-            Ingredient ingredient2 = new Ingredient("ingredient2");
+            Ingredient ingredient1 = new Ingredient("ingredient1", 곡류);
+            Ingredient ingredient2 = new Ingredient("ingredient2",곡류);
             ingredientService.save(ingredient1);
             ingredientService.save(ingredient2);
 
@@ -81,7 +82,7 @@ public class InitDB {
             food1.addIngredient(ingredient2);
 
             foodService.save(food1);
-            foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)));
+            foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),곡류));
         }
 
         void diseaseInit() throws DataSaveException {
@@ -101,9 +102,9 @@ public class InitDB {
             LocalDate birthDate = LocalDate.of(1592, 1, 1);
             Member member = new Member("joonsik", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
 
-            Ingredient ingredient3 = new Ingredient("ingredient3");
-            Ingredient ingredient4 = new Ingredient("ingredient4");
-            Ingredient ingredient5 = new Ingredient("ingredient5");
+            Ingredient ingredient3 = new Ingredient("ingredient3",곡류);
+            Ingredient ingredient4 = new Ingredient("ingredient4",곡류);
+            Ingredient ingredient5 = new Ingredient("ingredient5",곡류);
             ingredientService.save(ingredient3);
             ingredientService.save(ingredient4);
             ingredientService.save(ingredient5);
