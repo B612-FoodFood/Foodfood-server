@@ -45,7 +45,7 @@ public class MemberApiController {
         LocalDate birthDate = LocalDate.parse(request.getBirthDate());
         LogIn logIn = new LogIn(request.getUsername(), encoder.encode(request.getPassword()));  // 비밀번호를 spring security를 이용해서 hashing
         // PersonalInformation
-        PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber(), request.getEmail());
+        PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber());
         // current body information
         double height = request.getHeight();
         BodyComposition bodyComposition = new BodyComposition(request.getWeight(), request.getMuscle(), request.getFat());
@@ -90,7 +90,7 @@ public class MemberApiController {
 
 
         // add information
-        member.addBodyComposition(bodyComposition);
+        memberService.updateAddBodyComposition(memberId, bodyComposition);
         for (String avoidIngredientName : request.getAvoidIngredients()) {
             Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
             memberService.updateAddAvoidIngredient(memberId, avoidIngredient);

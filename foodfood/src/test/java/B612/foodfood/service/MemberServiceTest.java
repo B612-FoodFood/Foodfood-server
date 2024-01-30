@@ -37,7 +37,7 @@ class MemberServiceTest {
        double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("aa", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -51,7 +51,7 @@ class MemberServiceTest {
         double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("id1", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -96,7 +96,7 @@ class MemberServiceTest {
         double height = 172;
         Address address = new Address("Seoul", "Hongdae", "12345");
         LogIn logIn = new LogIn("bb", "password");
-        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
         AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
         LocalDate birthDate = LocalDate.of(2000, 1, 1);
         Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);

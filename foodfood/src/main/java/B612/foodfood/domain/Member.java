@@ -204,8 +204,4 @@ public class Member {
     public void updatePhoneNumber(String phoneNumber) {
         this.personalInformation.updatePhoneNumber(phoneNumber);
     }
-
-    public void updateEmail(String email) {
-        this.personalInformation.updateEmail(email);
-    }
 }

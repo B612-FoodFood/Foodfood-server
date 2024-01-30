@@ -94,18 +94,6 @@ public class MemberService {
         return findMember.get();
     }
 
-    public Member findMemberByEmail(String email) {
-        Optional<Member> findMember = memberRepository.findByEmail(email);
-        if (findMember.isEmpty()) {
-            log.error("오류 발생\n" +
-                    "발생위치: MemberService.findMemberByEmail(String email)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
-            throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "가입되지 않은 유저입니다.");
-        }
-        return findMember.get();
-    }
-
     /**
      * 업데이트 로직
      */
@@ -154,20 +142,6 @@ public class MemberService {
         member.updatePhoneNumber(phoneNumber);
     }
 
-    @Transactional(readOnly = false)
-    public void updateMemberEmail(Long memberId, String email) {
-        Optional<Member> findMember = memberRepository.findById(memberId);
-        if (findMember.isEmpty()) {
-            log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateMemberEmail(Long memberId, String email)\n" +
-                    "발생원인: 가입되지 않은 유저입니다.");
-            throw new AppException(MEMBER_ID_NOT_FOUND,
-                    "가입되지 않은 유저입니다.");
-        }
-
-        Member member = findMember.get();
-        member.updateEmail(email);
-    }
 
     @Transactional(readOnly = false)
     public void updateAddAvoidIngredient(Long memberId, Ingredient ingredient) {
@@ -212,6 +186,21 @@ public class MemberService {
 
         Member member = findMember.get();
         member.addDrug(drug);
+    }
+
+    @Transactional(readOnly = false)
+    public void updateAddBodyComposition(Long memberId, BodyComposition bodyComposition) {
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        if (findMember.isEmpty()) {
+            log.error("오류 발생\n" +
+                    "발생위치: MemberService.updateAddMemberDrug(Long memberId, Drug drug)\n" +
+                    "발생원인: 가입되지 않은 유저입니다.");
+            throw new AppException(MEMBER_ID_NOT_FOUND,
+                    "가입되지 않은 유저입니다.");
+        }
+
+        Member member = findMember.get();
+        member.addBodyComposition(bodyComposition);
     }
 
     public String login(String username, String password) {

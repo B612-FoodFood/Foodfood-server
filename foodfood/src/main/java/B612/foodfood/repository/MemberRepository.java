@@ -31,10 +31,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "join fetch m.personalInformation p " +
             "where m.personalInformation.phoneNumber = :phoneNumber")
     Optional<Member> findByPhoneNumber(String phoneNumber);
-
-    @Query("select m from Member m " +
-            "join fetch m.personalInformation p " +
-            "where m.personalInformation.email = :email")
-    Optional<Member> findByEmail(String email);
-
 }

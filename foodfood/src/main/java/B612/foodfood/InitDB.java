@@ -50,7 +50,7 @@ public class InitDB {
         void mealInit() throws NoDataExistException, DataSaveException {
             double height = 172;
             LogIn logIn = new LogIn("id", "password");
-            PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "email@gmail.com");
+            PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
             AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
             LocalDate birthDate = LocalDate.of(2000, 5, 4);
             Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
@@ -97,7 +97,7 @@ public class InitDB {
         public void memberInit() {
             double height = 172;
             LogIn logIn = new LogIn("username", "password");
-            PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678", "joonsik@gmail.com");
+            PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
             AchieveBodyGoal bodyGoal = new AchieveBodyGoal(100, 100);
             LocalDate birthDate = LocalDate.of(1592, 1, 1);
             Member member = new Member("joonsik", MALE, birthDate, personalInformation, height, LOT, MUSCLE, bodyGoal, USER);
