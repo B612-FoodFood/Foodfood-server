@@ -17,13 +17,14 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     //H2 데이터베이스 추가
-    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'com.h2database:h2'
+    /* 7. MariaDB */
+//    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // mysql 데이터베이스 사용
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     /* 1. web */
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -32,6 +33,7 @@ dependencies {
 
 //  /* 2. 배포시 내장톰캣을 사용하지 않을거라는 dependency */
 //    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
     /* 3. lombok */
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -45,8 +47,6 @@ dependencies {
     /* 6. mybatis */
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.3'
 
-    /* 7. MariaDB */
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     /* 8. JDBC */
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -102,7 +102,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2"
     implementation "org.springdoc:springdoc-openapi-ui:1.6.11"
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
 
     /*JUnit4 추가*/
@@ -111,6 +111,10 @@ dependencies {
     }
 
 }
+repositories {
+    mavenCentral()
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()
