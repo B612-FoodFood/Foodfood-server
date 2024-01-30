@@ -1,5 +1,7 @@
 package B612.foodfood.service;
 
+import B612.foodfood.domain.Category;
+import B612.foodfood.domain.Disease;
 import B612.foodfood.domain.Ingredient;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.repository.IngredientRepository;
@@ -62,6 +64,14 @@ public class IngredientService {
 
     public List<Ingredient> findAllIngredients() {
         return ingredientRepository.findAll();
+    }
+
+    public List<Ingredient> findIngredientByKeyword(String keyword) {
+        return ingredientRepository.findByKeyword(keyword);
+    }
+
+    public List<Ingredient> findIngredientByCategory(Category category) {
+        return ingredientRepository.findByCategory(category);
     }
 }
 
