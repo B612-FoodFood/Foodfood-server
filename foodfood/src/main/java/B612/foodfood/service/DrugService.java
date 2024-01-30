@@ -63,6 +63,10 @@ public class DrugService {
         return findDrug.get();
     }
 
+    public List<Drug> findDrugByKeyword(String keyword) {
+        return drugRepository.findByKeyword(keyword);
+    }
+
     public List<Drug> findAllDrugs() {
         return drugRepository.findAll();
     }

@@ -1,5 +1,6 @@
 package B612.foodfood.service;
 
+import B612.foodfood.domain.Category;
 import B612.foodfood.domain.Food;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.DataSaveException;
@@ -96,5 +97,13 @@ public class FoodService {
 
     public List<Food> findFoodThatHasLessFat(double fat) {
         return foodRepository.findThatHasLessFat(fat);
+    }
+
+    public List<Food> findFoodByKeyword(String keyword) {
+        return foodRepository.findByKeyword(keyword);
+    }
+
+    public List<Food> findFoodByCategory(Category category) {
+        return foodRepository.findByCategory(category);
     }
 }

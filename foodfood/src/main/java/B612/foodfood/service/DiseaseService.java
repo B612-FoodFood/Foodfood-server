@@ -61,6 +61,10 @@ public class DiseaseService {
         return findDisease.get();
     }
 
+    public List<Disease> findDiseaseByKeyword(String keyword) {
+        return diseaseRepository.findByKeyword(keyword);
+    }
+
     public List<Disease> findAllDiseases() {
         return diseaseRepository.findAll();
     }

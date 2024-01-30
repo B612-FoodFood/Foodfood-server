@@ -1,5 +1,7 @@
 package B612.foodfood.repository;
 
+import B612.foodfood.domain.Category;
+import B612.foodfood.domain.Disease;
 import B612.foodfood.domain.Food;
 import B612.foodfood.domain.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +14,14 @@ import java.util.Optional;
 public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Optional<Food> findByName(String name);
+
+    @Query("select f from Food f " +
+            "where f.name like concat('%',:keyword,'%')")
+    List<Food> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("select f from Food f " +
+            "where f.category =: category")
+    List<Food> findByCategory(@Param("category") Category category);
 
     /**
      * 영양소별 검색 (칼로리+탄단지)
