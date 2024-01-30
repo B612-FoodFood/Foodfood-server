@@ -1,21 +1,23 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/foodfood
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/foodfood_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 7721
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
       hibernate:
-#        show_sql: true
+        show_sql: true
         format_sql: true
         default_batch_fetch_size: 1000 #최적화 옵션
 
-logging.level:
-  org.hibernate.SQL: debug
+logging:
+  level:
+    org.hibernate.SQL: debug
 #  org.hibernate.type: trace
 
   deserialization:
