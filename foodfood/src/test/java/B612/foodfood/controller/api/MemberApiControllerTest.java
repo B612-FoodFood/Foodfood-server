@@ -110,7 +110,7 @@ class MemberApiControllerTest {
                         .with(csrf())  // Spring Security Test 설정
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
                                         height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
                                         accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
@@ -135,7 +135,7 @@ class MemberApiControllerTest {
                         .with(csrf())  //Spring Security 설정
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
                                         height, weight, muscle, fat, activity, goal,
                                         achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())

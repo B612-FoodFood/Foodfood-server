@@ -100,7 +100,7 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
                                         height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
                                         accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
@@ -121,7 +121,7 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(
-                        new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                        new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
                                 height, weight, muscle, fat, activity, goal,
                                 achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))));
 
@@ -129,7 +129,7 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber, email,
+                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
                                         height, weight, muscle, fat, activity, goal,
                                         achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())

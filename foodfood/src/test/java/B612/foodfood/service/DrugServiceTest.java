@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -20,12 +22,7 @@ class DrugServiceTest {
 
     @Autowired
     DrugService drugService;
-
-    @BeforeEach
-    public void each(){
-        Drug drug = new Drug("drug-abc");
-        drugService.save(drug);
-    }
+    
 
     @Test
     @DisplayName("drug 중복 저장 테스트")
@@ -43,5 +40,17 @@ class DrugServiceTest {
 
         System.out.println("errorCode = " + errorCode);
         System.out.println("message = " + message);
+    }
+    
+    @Test
+    public void test2() throws Exception{
+        //given
+        List<Drug> allDrugs = drugService.findAllDrugs();
+        //when
+        for (Drug allDrug : allDrugs) {
+            System.out.println("allDrug = " + allDrug);
+        }
+        //then
+      
     }
 }
