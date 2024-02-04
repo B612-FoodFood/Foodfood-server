@@ -169,9 +169,9 @@ public class Member {
      */
     private void setObesityBySex(BodyComposition bodyComposition) throws IllegalStateException {
         if (sex == MALE) {
-            setObesity(bodyComposition, 10, 20);
+            setObesity(bodyComposition, 10, 21);
         } else if (sex == FEMALE) {
-            setObesity(bodyComposition, 15, 25);
+            setObesity(bodyComposition, 17, 30);
         } else {
             throw new IllegalStateException("""
                     오류발생
