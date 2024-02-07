@@ -12,15 +12,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static B612.foodfood.domain.AccountType.USER;
 import static B612.foodfood.domain.Activity.LOT;
+import static B612.foodfood.domain.BodyGoal.HEALTH_CARE;
 import static B612.foodfood.domain.BodyGoal.MUSCLE;
 import static B612.foodfood.domain.Category.*;
 import static B612.foodfood.domain.Sex.FEMALE;
 import static B612.foodfood.domain.Sex.MALE;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class InitDB {
 
@@ -28,9 +30,10 @@ public class InitDB {
 
     @PostConstruct  // 빈으로 등록될 시 자동으로 실행됨
     public void init() {
+        initService.memberInit();
     }
 
-//    @Component
+    @Component
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
@@ -44,7 +47,9 @@ public class InitDB {
         private final AverageBodyProfileService bfService;
         // 필요시 더 추가할 것
 
+        void memberInit() {
 
+        }
 
     }
 }

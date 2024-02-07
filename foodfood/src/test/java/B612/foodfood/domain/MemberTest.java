@@ -12,6 +12,7 @@ import java.util.Date;
 
 import static B612.foodfood.domain.AccountType.USER;
 import static B612.foodfood.domain.Activity.LOT;
+import static B612.foodfood.domain.BodyGoal.DIET;
 import static B612.foodfood.domain.BodyGoal.MUSCLE;
 import static B612.foodfood.domain.Sex.MALE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,5 +61,27 @@ class MemberTest {
         IllegalStateException illegalStateException =
                 assertThrows(IllegalStateException.class, () -> member.addAvoidIngredient(new Ingredient("ingredient1",Category.견과류및종실류)));
         System.out.println(illegalStateException.getMessage());
+    }
+
+    @Test
+    public void test3() throws Exception{
+        //given
+        double height = 172;
+        LogIn logIn = new LogIn("test", "password");
+        PersonalInformation personalInformation = new PersonalInformation(logIn, "010-1234-5678");
+        AchieveBodyGoal bodyGoal = new AchieveBodyGoal(35, 11);
+        LocalDate birthDate = LocalDate.of(2000, 1, 1);
+        Member member = new Member("member", MALE, birthDate, personalInformation, height, LOT, DIET, bodyGoal, USER);
+
+        //when
+        BodyComposition bodyComposition = new BodyComposition(65, 33D, 12D);
+        member.addBodyComposition(bodyComposition);
+
+        //then
+        double basalMetabolicRate = member.getBasalMetabolicRate();
+        System.out.println("basalMetabolicRate = " + basalMetabolicRate);
+
+        double recommendedCalories = member.getRecommendedCalories();
+        System.out.println("recommendedCalories = " + recommendedCalories);
     }
 }
