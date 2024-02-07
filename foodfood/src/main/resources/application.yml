@@ -18,7 +18,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
-#  org.hibernate.type: trace
+  #  org.hibernate.type: trace
 
   deserialization:
     fail-on-unknown-properties: false # @JsonIgnoreProperties 프로젝트 전체 적용
