@@ -4,11 +4,14 @@ import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static B612.foodfood.domain.Activity.*;
+import static B612.foodfood.domain.BodyGoal.*;
 import static B612.foodfood.domain.Obesity.*;
 import static B612.foodfood.domain.Sex.FEMALE;
 import static B612.foodfood.domain.Sex.MALE;
@@ -19,6 +22,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
+@Slf4j
 @ToString(exclude = {"bodyCompositions", "avoidIngredients", "memberDiseases", "memberDrugs", "meals"})
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
@@ -30,7 +34,11 @@ public class Member {
     private String name;
     @Column(columnDefinition = "date")  // 미 지정시 DB에 TimeStamp 타입으로 저장됨. 왜 그런진 모르겠음
     private LocalDate birthDate;
+    private int age;
     private double height;
+
+    private double basalMetabolicRate; // 기초대사량, Activity에 따라 변화
+    private double recommendedCalories; // 각 BodyGoal 마다 권장되는 칼로리
 
     @Enumerated(STRING)
     private Sex sex;
@@ -58,6 +66,7 @@ public class Member {
         this.name = name;
         this.sex = sex;
         this.birthDate = birthDate;
+        this.age = LocalDate.now().getYear() - birthDate.getYear();
         this.personalInformation = personalInformation;
         this.height = height;
         this.activity = activity;
@@ -91,8 +100,8 @@ public class Member {
             if (memberMeal.getDate().equals(meal.getDate())) {
                 throw new AppException(ErrorCode.DATA_ALREADY_EXISTED,
                         "오류 발생\n" +
-                        "발생위치: Member.addMeal(Meal meal)\n" +
-                        "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
+                                "발생위치: Member.addMeal(Meal meal)\n" +
+                                "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
             }
         }
 
@@ -101,6 +110,7 @@ public class Member {
     }
 
     public void addBodyComposition(BodyComposition bodyComposition) {
+
         if (bodyComposition.getBodyFat() == null) {
             if (bodyCompositions.isEmpty()) {
                 // 회원가입시 체지방률 정보가 존재하지 않는 경우 체지방률을 0으로 설정
@@ -113,26 +123,29 @@ public class Member {
             }
         }
 
-        bodyComposition.setMember(this);
-        bodyCompositions.add(bodyComposition);
-        setObesityBySex(bodyComposition);
-    }
-
-    public void addBodyComposition(double weight, Double muscle, Double bodyFat) {
-        if (bodyFat == null) {
+        if (bodyComposition.getMuscle() == null) {
             if (bodyCompositions.isEmpty()) {
-                // 회원가입시 체지방률 정보가 존재하지 않는 경우 체지방률을 0으로 설정
-                bodyFat = 0D;
+                // 회원가입시 골격근량 정보가 존재하지 않는 경우 골격근량을 0으로 설정
+                bodyComposition.setMuscle(0D);
             } else {
-                // 이외에 신체정보 기입 시 체지방률 정보가 없는 경우 직전의 체지방률 정보로 입력됨.(체지방률이 유지된다고 가정)
-                bodyFat = bodyCompositions.get(bodyCompositions.size() - 1).getBodyFat();
+                // 이외에 신체정보 기입 시 골격근량 정보가 없는 경우 직전의 골격근량 정보로 입력됨.(골격근이 유지된다고 가정)
+                Double recentMuscle =
+                        bodyCompositions.get(bodyCompositions.size() - 1).getMuscle();
+                bodyComposition.setMuscle(recentMuscle);
             }
         }
 
-        BodyComposition bodyComposition =
-                new BodyComposition(weight, muscle, bodyFat);
         bodyComposition.setMember(this);
         bodyCompositions.add(bodyComposition);
+
+        // 비만도 설정
+        setObesityBySex(bodyComposition);
+
+        // 기초대사량 설정
+        basalMetabolicRate = calculateBMR(bodyComposition);
+
+        // 일일 권장 칼로리 설정
+        recommendedCalories = calculateRecommendedCalories();
     }
 
     // 이 메서드는 Member, AvoidFood, Food간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
@@ -167,6 +180,44 @@ public class Member {
     /**
      * 비즈니스 로직
      */
+    private double calculateRecommendedCalories() {
+        double maintenanceCalories = 0;
+
+        // 활동량에 따른 유지 칼로리 계산
+        if (activity == VERY_LITTLE) {
+            maintenanceCalories = 1.2 * basalMetabolicRate;
+        } else if (activity == LITTLE) {
+            maintenanceCalories = 1.375 * basalMetabolicRate;
+        } else if (activity == NORMAL) {
+            maintenanceCalories = 1.55 * basalMetabolicRate;
+        } else if (activity == LOT) {
+            maintenanceCalories = 1.725 * basalMetabolicRate;
+        }
+
+        // 목표에 따른 권장 칼로리 계산 후 반환
+        if (goal == DIET) {
+            return maintenanceCalories * 0.85;
+        } else if (goal == MUSCLE) {
+            return maintenanceCalories * 1.2;
+        } else {
+            return maintenanceCalories;
+        }
+    }
+
+    private double calculateBMR(BodyComposition bodyComposition) {
+        double weight = bodyComposition.getWeight();
+
+        if (this.sex == MALE) {
+            return 66.5 + (13.75 * weight) + (5 * height) - (6.78 * age);
+        } else if (this.sex == FEMALE) {
+            return 655.1 + (9.56 * weight) + (1.85 * height) - (4.86 * age);
+        } else {
+            throw new IllegalStateException("오류 발생\n" +
+                    "발생위치:Member.calculateBMR()" +
+                    "발생원인: 기초대사량 계산시 필요한 성별이 지정되지 않습니다.");
+        }
+    }
+
     private void setObesityBySex(BodyComposition bodyComposition) throws IllegalStateException {
         if (sex == MALE) {
             setObesity(bodyComposition, 10, 21);
