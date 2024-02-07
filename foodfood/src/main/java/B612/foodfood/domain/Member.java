@@ -51,6 +51,9 @@ public class Member {
     // 민감한 개인 정보
     private PersonalInformation personalInformation;  // member는 persist 전에 반드시 personalInformation이 Member안에 있어야 함. 안 그러면 member 객체 생성 불가
 
+    public Member(String name) {
+        this.name = name;
+    }
     public Member(String name, Sex sex, LocalDate birthDate,
                   PersonalInformation personalInformation, double height,
                   Activity activity, BodyGoal goal,
