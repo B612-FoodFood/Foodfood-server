@@ -30,7 +30,6 @@ public class MemberApiController {
     private final IngredientService ingredientService;
     private final BCryptPasswordEncoder encoder;
     private final ObjectMapper objectMapper;
-    
 
     /**
      * request: 유저 회원 가입 데이터 받기
