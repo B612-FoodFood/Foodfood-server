@@ -66,6 +66,7 @@ dependencies {
 
     /* 12. spring-boot-starter-security */
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'  //OAuth2
 
     /* 13. validation(Bean Validation) */
     implementation 'org.springframework.boot:spring-boot-starter-validation'
