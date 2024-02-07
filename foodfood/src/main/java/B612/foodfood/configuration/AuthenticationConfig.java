@@ -1,6 +1,5 @@
 package B612.foodfood.configuration;
 
-import B612.foodfood.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ public class AuthenticationConfig {
 
     @Value("${jwt.token.secret}")
     private String secretKey;
+
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -28,13 +28,21 @@ public class AuthenticationConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/members/join").permitAll()  // 인증 불필요 설정
-                        .requestMatchers("/api/v1/members/login").permitAll() // 인증 불필요 설정
+                        .requestMatchers("/api/v1/members/join",
+                                "/api/v1/members/login",
+                                "/login/oauth2/**","/").permitAll()  // 인증 불필요 설정
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
+                )
+                .logout((logoutConfig) ->
+                        logoutConfig.logoutSuccessUrl("/")
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -45,7 +53,7 @@ public class AuthenticationConfig {
                         exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper)));  // 커스텀 인가 예외 추가
 
 
-        return httpSecurity.build();
+        return http.build();
     }
 
 }
