@@ -22,6 +22,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        // 인증 예외 발생시 commence 메서드가 실행
         sendErrorResponse(response, "인증에 실패했습니다");
     }
 

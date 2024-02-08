@@ -31,26 +31,25 @@ public class AuthenticationConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/members/join",
-                                "/api/v1/members/login",
-                                "/login/oauth2/**","/").permitAll()  // 인증 불필요 설정
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-
-                        .anyRequest().authenticated()
-                )
+        
+        http.csrf(AbstractHttpConfigurer::disable); // CSRF 공격을 방지하기 위해 서버에서 발생한 요청인지 확인하는 기능을 비활성화.
+        http.authorizeHttpRequests(authorize ->
+                        authorize.requestMatchers(
+                                        "/api/v1/members/join",
+                                        "/api/v1/members/login",
+                                        "/login/oauth2/**", "/")
+                                .permitAll()  // 인증 불필요 설정
+                                .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
+                                .anyRequest().authenticated())  // 나머지 모든 요청은 인증 필요
                 .logout((logoutConfig) ->
-                        logoutConfig.logoutSuccessUrl("/")
-                )
+                        logoutConfig.logoutSuccessUrl("/")) // 로그아웃시 redirect될 페이지
                 .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)  // 필터 추가
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // jwt를 사용할 것이기 때문에 session을 상태없이 유지하도록 설정함
+                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)  // 사용자 로그인 전에 jwt 필터를 먼저 추가해서 인증을 처리
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper)))  // 커스텀 인증 예외 추가
+                        exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper)))  // 커스텀 인증 예외 추가 (인증되지 않은 예외에 응답 처리)
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper)));  // 커스텀 인가 예외 추가
+                        exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper)));  // 커스텀 인가 예외 추가 (권한 없는 요청에 응답 처리)
 
 
         return http.build();

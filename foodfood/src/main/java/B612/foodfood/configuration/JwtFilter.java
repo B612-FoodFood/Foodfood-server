@@ -27,9 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {  // 매번 토큰 인증�
     @Override  // 권한 부여 로직
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+
         // header에서 authorization 꺼내기
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorization: {}",authorization);
+        log.info("authorization: {}", authorization);
 
         // Token을 보내지 않은 경우 Block됨, Bearer로 보내지 않았다면 Block
         if (authorization == null || !authorization.startsWith("Bearer ")) {
