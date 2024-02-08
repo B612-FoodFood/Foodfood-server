@@ -26,7 +26,8 @@ logging:
 jwt:
   token:
     secret: ${JWT_TOKEN_SECRET}  # 실제로 사용하는 비밀키는 환경변수로 로컬에 저장.(노출 방지)
-    expireTimeMs: ${JWT_TOKEN_EXPIRE_TIME_MS}
+    expireAccessTokenTimeMs: ${JWT_TOKEN_EXPIRE_ACCESS_TOKEN_TIME_MS}
+    expireRefreshTokenTimeMs: ${JWT_TOKEN_EXPIRE_REFRESH_TOKEN_TIME_MS}
 
 oauth2:
   google:

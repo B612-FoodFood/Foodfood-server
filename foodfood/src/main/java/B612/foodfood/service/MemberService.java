@@ -1,9 +1,11 @@
 package B612.foodfood.service;
 
 import B612.foodfood.domain.*;
+import B612.foodfood.dto.TokenSet;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.repository.*;
 import B612.foodfood.utils.JwtUtil;
+import groovyjarjarantlr.Token;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,11 +26,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${jwt.token.secret}")
-    private String secretKey;
-    @Value("${jwt.token.expireTimeMs}")
-    private long expireTimeMs;  // 토큰 만료 시간: 1시간
 
     @Transactional(readOnly = false)
     public Long join(Member member) {
@@ -203,7 +203,8 @@ public class MemberService {
         member.addBodyComposition(bodyComposition);
     }
 
-    public String login(String username, String password) {
+    @Transactional(readOnly = false)
+    public TokenSet login(String username, String password) {
         // 해당 id의 member 존재 안함.
         Optional<Member> findMember = memberRepository.findByLogInUsername(username);
 
@@ -225,7 +226,11 @@ public class MemberService {
         }
 
         // 앞에서 exception 발생 안 한 경우 token 발행
-        String token = JwtUtil.createToken(username, secretKey, expireTimeMs);
-        return token;
+        String accessToken = jwtUtil.createAccessToken(username);
+        String refreshToken = jwtUtil.createRefreshToken();
+
+        refreshTokenRepository.save(new RefreshToken(username, refreshToken));  // refresh token db 저장 or update
+
+        return new TokenSet(accessToken, refreshToken);
     }
 }
