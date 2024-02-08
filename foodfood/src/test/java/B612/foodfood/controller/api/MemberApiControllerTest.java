@@ -3,6 +3,7 @@ package B612.foodfood.controller.api;
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.MemberJoinRequest;
 import B612.foodfood.dto.MemberLogInRequest;
+import B612.foodfood.dto.TokenSet;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.exception.ErrorCode;
@@ -147,7 +148,7 @@ class MemberApiControllerTest {
     @WithMockUser
     public void test3() throws Exception {
         when(memberService.login(any(), any()))
-                .thenReturn("token");
+                .thenReturn(new TokenSet("",""));
 
         mockMvc.perform(post("/api/v1/members/login")
                         .with(csrf())  // Spring Security Test 설정
