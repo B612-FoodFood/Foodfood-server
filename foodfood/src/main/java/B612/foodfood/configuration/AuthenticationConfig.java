@@ -19,9 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class AuthenticationConfig {
 
-    @Value("${jwt.token.secret}")
-    private String secretKey;
     private final ObjectMapper objectMapper;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -38,7 +37,7 @@ public class AuthenticationConfig {
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)  // 필터 추가
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)  // 필터 추가
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper)))  // 커스텀 인증 예외 추가
                 .exceptionHandling(exceptionHandling ->

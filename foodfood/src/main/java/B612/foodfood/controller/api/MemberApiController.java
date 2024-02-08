@@ -1,10 +1,7 @@
 package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
-import B612.foodfood.dto.MemberJoinRequest;
-import B612.foodfood.dto.MemberJoinResponse;
-import B612.foodfood.dto.MemberLogInRequest;
-import B612.foodfood.dto.MemberLogInResponse;
+import B612.foodfood.dto.*;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -109,13 +106,16 @@ public class MemberApiController {
 
     @PostMapping("/login")
     public MemberLogInResponse logIn(@RequestBody MemberLogInRequest request) {
-        String token = null;
+        String accessToken = null;
+        String refreshToken = null;
         try {
-            token = memberService.login(request.getUsername(), request.getPassword());
+            TokenSet tokenSet = memberService.login(request.getUsername(), request.getPassword());
+            accessToken = tokenSet.getAccessToken();
+            refreshToken = tokenSet.getRefreshToken();
         } catch (AppException e) {
-            return new MemberLogInResponse(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+            return new MemberLogInResponse(e.getErrorCode().getHttpStatus(), e.getMessage(), null,null);
         }
 
-        return new MemberLogInResponse(HttpStatus.OK, null, token);
+        return new MemberLogInResponse(HttpStatus.OK, null, accessToken, refreshToken);
     }
 }

@@ -1,14 +1,16 @@
 package B612.foodfood.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.*;
 
 @Data
 @AllArgsConstructor
-public class MemberLogInResponse{
-    private HttpStatus Status;
-    private String message;
+@NoArgsConstructor(access = PROTECTED)
+public class TokenSet {
     private String accessToken;
     private String refreshToken;
 }
