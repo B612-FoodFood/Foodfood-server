@@ -40,6 +40,11 @@ public class Member {
     private double basalMetabolicRate; // 기초대사량, Activity에 따라 변화
     private double recommendedCalories; // 각 BodyGoal 마다 권장되는 칼로리
 
+    // 탄단지 비중 5:3:2
+    private double recommendedCarbonHydrate; // 권장되는 탄수화물
+    private double recommendedProtein; // 권장되는 단백질
+    private double recommendedFat; // 권장되는 지방
+
     @Enumerated(STRING)
     private Sex sex;
     @Enumerated(STRING)
@@ -99,9 +104,10 @@ public class Member {
         for (Meal memberMeal : meals) {
             if (memberMeal.getDate().equals(meal.getDate())) {
                 throw new AppException(ErrorCode.DATA_ALREADY_EXISTED,
-                        "오류 발생\n" +
-                                "발생위치: Member.addMeal(Meal meal)\n" +
-                                "발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.");
+                        """
+                                오류 발생
+                                발생위치: Member.addMeal(Meal meal)
+                                발생원인: 해당 유저는 이미 해당 날짜에 대한 식사 내역이 존재합니다.""");
             }
         }
 
@@ -143,9 +149,15 @@ public class Member {
 
         // 기초대사량 설정
         basalMetabolicRate = calculateBMR(bodyComposition);
-
         // 일일 권장 칼로리 설정
         recommendedCalories = calculateRecommendedCalories();
+        // 일일 권장 탄수화물량 설정
+        recommendedCarbonHydrate = calculateRecommendedCarbonHydrate(recommendedCalories);
+        // 일일 권장 단백질량 설정
+        recommendedProtein = calculateRecommendedProtein(recommendedCalories);
+        // 일일 권장 지방량 설정
+        recommendedFat = calculateRecommendedFat(recommendedCalories);
+
     }
 
     // 이 메서드는 Member, AvoidFood, Food간의 연관관계 관리를 Member에서 처리할 수 있도록 해줌.
@@ -180,6 +192,33 @@ public class Member {
     /**
      * 비즈니스 로직
      */
+    /**
+     * @param recommendedCalories
+     * @return 섭취 탄수화물량 (g)
+     */
+    private double calculateRecommendedCarbonHydrate(double recommendedCalories) {
+        return (recommendedCalories * 0.5) / 4;
+    }
+
+    /**
+     * @param recommendedCalories
+     * @return 섭취 단백질량 (g)
+     */
+    private double calculateRecommendedProtein(double recommendedCalories) {
+        return (recommendedCalories * 0.3) / 4;
+    }
+
+    /**
+     * @param recommendedCalories
+     * @return 섭취 지방량 (g)
+     */
+    private double calculateRecommendedFat(double recommendedCalories) {
+        return (recommendedCalories * 0.2) / 9;
+    }
+
+    /**
+     * @return 섭취할 적정 칼로리 (kcal)
+     */
     private double calculateRecommendedCalories() {
         double maintenanceCalories = 0;
 
@@ -204,6 +243,10 @@ public class Member {
         }
     }
 
+    /**
+     * @param bodyComposition
+     * @return 기초 대사량 (kcal)
+     */
     private double calculateBMR(BodyComposition bodyComposition) {
         double weight = bodyComposition.getWeight();
 
