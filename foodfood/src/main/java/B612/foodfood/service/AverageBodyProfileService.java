@@ -42,25 +42,26 @@ public class AverageBodyProfileService {
         return findBodyProfile.get();
     }
 
-    public AverageBodyProfile findAvgBodyProfileByAge(int age) {
-        Optional<AverageBodyProfile> findBodyProfile;
+    public List<AverageBodyProfile> findAvgBodyProfileByHeight(int height) {
+        List<AverageBodyProfile> findBodyProfile;
 
-        if (age < 19) {  // 19세 미만은 19세로 측정
-            findBodyProfile = abRepository.findByAge(19);
-        } else if (age > 99) { // 99세 초과는 99세로 측정
-            findBodyProfile = abRepository.findByAge(99);
+        if (90 <= height && height < 150) {  // 90 ~ 149는 150으로 측정
+            findBodyProfile = abRepository.findByHeight(150);
+        } else if (220 >= height && height > 190) { // 191 ~ 220는 190으로 측정
+            findBodyProfile = abRepository.findByHeight(190);
         } else {
-            findBodyProfile = abRepository.findByAge(age);
+            findBodyProfile = abRepository.findByHeight(height);
         }
 
-        if (findBodyProfile.isEmpty()) {
+        if (findBodyProfile.isEmpty()) {  // 90cm 이하는 오류
             log.error("""
                     오류 발생
                     발생위치: AverageBodyProfileService.findAvgBodyProfileByAge(int age)
-                    발생원인: 해당 나이의 평균 신체 정보가 존재하지 않습니다.""");
-            throw new AppException(NO_DATA_EXISTED, "해당 나이의 평균 신체 정보가 존재하지 않습니다.");
+                    발생원인: 신장 220cm 초과, 90cm 미만의 정보는 존재하지 않습니다.""");
+            throw new AppException(NO_DATA_EXISTED, "신장 220cm 초과, 90cm 미만의 정보는 존재하지 않습니다.");
         }
-        return findBodyProfile.get();
+
+        return findBodyProfile;
     }
 
     public List<AverageBodyProfile> findAvgBodyProfileBySex(Sex sex) {
@@ -76,22 +77,22 @@ public class AverageBodyProfileService {
         return findBodyProfile;
     }
 
-    public AverageBodyProfile findAvgBodyProfileByAgeAndSex(int age,Sex sex) {
+    public AverageBodyProfile findAvgBodyProfileBySexAndHeight(Sex sex,int height) {
         Optional<AverageBodyProfile> findBodyProfile;
-        if (age < 19) {  // 19세 미만은 19세로 측정
-            findBodyProfile = abRepository.findByAgeAndSex(19, sex);
-        } else if (age > 99) { // 99세 초과는 99세로 측정
-            findBodyProfile = abRepository.findByAgeAndSex(99, sex);
+        if (90 <= height && height < 150) {
+            findBodyProfile = abRepository.findBySexAndHeight(sex,150);
+        } else if (220 >= height && height > 190) {
+            findBodyProfile = abRepository.findBySexAndHeight(sex,190);
         } else {
-            findBodyProfile = abRepository.findByAgeAndSex(age, sex);
+            findBodyProfile = abRepository.findBySexAndHeight(sex,height);
         }
 
         if (findBodyProfile.isEmpty()) {
             log.error("""
                     오류 발생
                     발생위치: AverageBodyProfileService.findAvgBodyProfileByAgeAndSex(int age, Sex sex)
-                    발생원인: 해당 평균 신체 정보가 존재하지 않습니다.""");
-            throw new AppException(NO_DATA_EXISTED, "해당 평균 신체 정보가 존재하지 않습니다.");
+                    발생원인: 신장 220cm 초과, 90cm 미만의 정보는 존재하지 않습니다.""");
+            throw new AppException(NO_DATA_EXISTED, "신장 220cm 초과, 90cm 미만의 정보는 존재하지 않습니다.");
         }
         return findBodyProfile.get();
     }

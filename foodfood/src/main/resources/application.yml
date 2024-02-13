@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
       hibernate:
@@ -65,9 +65,4 @@ oauth2:
         user-info-uri: https://kapi.kakao.com/v2/user/me
         user-name-attribute: id
 
-# api 조회시 필요한 정보들(외부에 노출되서는 안되거나 변하지 않는값들)
-openApi:
-  baseUrl: ${OPEN_API_BASEURL}
-  ServiceKey: ${OPEN_API_SERVICE_KEY}
-  type: json
 
