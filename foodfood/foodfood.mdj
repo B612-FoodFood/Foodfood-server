@@ -8066,6 +8066,40 @@
 									"subViews": [
 										{
 											"_type": "UMLSlotView",
+											"_id": "AAAAAAGNoR5dNAD/26c=",
+											"_parent": {
+												"$ref": "AAAAAAGNEH1IvBI6WVE="
+											},
+											"model": {
+												"$ref": "AAAAAAGNoR5dGADVL9Y="
+											},
+											"font": "Arial;13;0",
+											"left": 1613,
+											"top": 126,
+											"width": 238,
+											"height": 13,
+											"text": "+id Long",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLSlotView",
+											"_id": "AAAAAAGNdDf66qeiyFE=",
+											"_parent": {
+												"$ref": "AAAAAAGNEH1IvBI6WVE="
+											},
+											"model": {
+												"$ref": "AAAAAAGNdDf61ad4uDk="
+											},
+											"font": "Arial;13;0",
+											"left": 1613,
+											"top": 141,
+											"width": 238,
+											"height": 13,
+											"text": "+sex Sex",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLSlotView",
 											"_id": "AAAAAAGNEH358xiAwBA=",
 											"_parent": {
 												"$ref": "AAAAAAGNEH1IvBI6WVE="
@@ -8075,7 +8109,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1613,
-											"top": 126,
+											"top": 156,
 											"width": 238,
 											"height": 13,
 											"text": "+height double",
@@ -8092,7 +8126,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1613,
-											"top": 141,
+											"top": 171,
 											"width": 238,
 											"height": 13,
 											"text": "+weight double",
@@ -8109,7 +8143,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1613,
-											"top": 156,
+											"top": 186,
 											"width": 238,
 											"height": 13,
 											"text": "+muscle double",
@@ -8117,19 +8151,19 @@
 										},
 										{
 											"_type": "UMLSlotView",
-											"_id": "AAAAAAGNdDf66qeiyFE=",
+											"_id": "AAAAAAGNoR68Sgo01Sk=",
 											"_parent": {
 												"$ref": "AAAAAAGNEH1IvBI6WVE="
 											},
 											"model": {
-												"$ref": "AAAAAAGNdDf61ad4uDk="
+												"$ref": "AAAAAAGNoR68NAoKDvA="
 											},
 											"font": "Arial;13;0",
 											"left": 1613,
-											"top": 171,
+											"top": 201,
 											"width": 238,
 											"height": 13,
-											"text": "+sex Sex",
+											"text": "+fat double",
 											"horizontalAlignment": 0
 										}
 									],
@@ -8137,7 +8171,7 @@
 									"left": 1608,
 									"top": 121,
 									"width": 248,
-									"height": 68
+									"height": 98
 								}
 							],
 							"font": "Arial;13;0",
@@ -10268,7 +10302,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGM9F59NuHOf4k="
 							},
-							"name": "age int"
+							"name": "age int",
+							"type": ""
 						},
 						{
 							"_type": "UMLSlot",
@@ -10285,7 +10320,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGM9F59NuHOf4k="
 							},
-							"name": "basalMetabolicRate double"
+							"name": "basalMetabolicRate double",
+							"type": ""
 						},
 						{
 							"_type": "UMLSlot",
@@ -10293,7 +10329,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGM9F59NuHOf4k="
 							},
-							"name": "recommendedCalories double"
+							"name": "recommendedCalories double",
+							"type": ""
 						},
 						{
 							"_type": "UMLSlot",
@@ -12374,6 +12411,23 @@
 					"slots": [
 						{
 							"_type": "UMLSlot",
+							"_id": "AAAAAAGNoR5dGADVL9Y=",
+							"_parent": {
+								"$ref": "AAAAAAGNEH1IvBIyRig="
+							},
+							"name": "id Long"
+						},
+						{
+							"_type": "UMLSlot",
+							"_id": "AAAAAAGNdDf61ad4uDk=",
+							"_parent": {
+								"$ref": "AAAAAAGNEH1IvBIyRig="
+							},
+							"name": "sex Sex",
+							"type": ""
+						},
+						{
+							"_type": "UMLSlot",
 							"_id": "AAAAAAGNEH356BhKJ24=",
 							"_parent": {
 								"$ref": "AAAAAAGNEH1IvBIyRig="
@@ -12401,12 +12455,11 @@
 						},
 						{
 							"_type": "UMLSlot",
-							"_id": "AAAAAAGNdDf61ad4uDk=",
+							"_id": "AAAAAAGNoR68NAoKDvA=",
 							"_parent": {
 								"$ref": "AAAAAAGNEH1IvBIyRig="
 							},
-							"name": "sex Sex",
-							"type": ""
+							"name": "fat double"
 						}
 					]
 				},
