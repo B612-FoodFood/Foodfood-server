@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface AverageBodyProfileRepository extends JpaRepository<AverageBodyProfile, Long> {
 
-    Optional<AverageBodyProfile> findByAge(int age);
     List<AverageBodyProfile> findBySex(Sex sex);
-    Optional<AverageBodyProfile> findByAgeAndSex(int age, Sex sex);
+    List<AverageBodyProfile> findByHeight(int height);
+    Optional<AverageBodyProfile> findBySexAndHeight(Sex sex, int height);
+
+
 }
