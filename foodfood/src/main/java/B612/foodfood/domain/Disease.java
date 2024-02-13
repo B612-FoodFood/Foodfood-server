@@ -22,6 +22,7 @@ public class Disease {
     @Column(name = "disease_id")
     private Long id;
 
+    @Column(unique = true)
     private String name;
     // 추가할 부분 추가...
 

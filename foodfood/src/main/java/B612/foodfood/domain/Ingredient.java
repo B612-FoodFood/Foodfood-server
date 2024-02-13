@@ -21,6 +21,8 @@ public class Ingredient {
     @GeneratedValue
     @Column(name = "ingredient_id")
     private Long id;
+
+    @Column(unique = true)
     private String name;
 
     @Enumerated(STRING)
