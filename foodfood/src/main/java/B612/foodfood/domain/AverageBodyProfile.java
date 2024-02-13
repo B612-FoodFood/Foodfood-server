@@ -18,18 +18,16 @@ public class AverageBodyProfile {
     private Long id;
 
     // 구분자
-    private int age;
     @Enumerated(STRING)
     private Sex sex;
+    private double height;
 
     // 신체 정보
     private double weight;
-    private double height;
     private double muscle;
     private double fat;
 
-    public AverageBodyProfile(int age, Sex sex, double weight, double height, double muscle,double fat) {
-        this.age = age;
+    public AverageBodyProfile(Sex sex, double height, double weight,  double muscle, double fat) {
         this.sex = sex;
         this.weight = weight;
         this.height = height;
