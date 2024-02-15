@@ -116,22 +116,4 @@ public class MemberApiController {
 
         return new MemberLogInResponse(HttpStatus.OK, null, accessToken, refreshToken);
     }
-
-    @GetMapping("/join/diet")
-    public MemberJoinDietResponse joinDiet(@RequestBody MemberJoinDietRequest request) {
-        AverageBodyProfile bodyProfile = abpService.findAvgBodyProfileBySexAndHeight(request.getSex(), request.getHeight());
-        double weight = bodyProfile.getWeight();
-
-        return new MemberJoinDietResponse(weight);
-    }
-
-    // 다이어트 페이지 목표설정 누른 경우
-    @GetMapping("/join/diet/bmi")
-    public MemberJoinDietBmiResponse joinDiet(@RequestBody MemberJoinDietBmiRequest request) {
-        double weight = request.getWeight(); // 단위 kg
-        double height = request.getHeight() / 100; // 단위 m
-        double bmi = weight / Math.pow(height, height);
-
-        return new MemberJoinDietBmiResponse(0,0); // 구현 필요
-    }
 }
