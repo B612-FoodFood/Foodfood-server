@@ -2,14 +2,15 @@ package B612.foodfood.dto.joinApiController;
 
 import B612.foodfood.domain.Sex;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.http.HttpStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class MemberJoinDietResponse {
+public class MemberJoinMuscleResponse {
     private String name;
     private Sex sex;
     private Double height;
-    private Double weight;
+    private Double muscle;
 }

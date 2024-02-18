@@ -1,13 +1,12 @@
 package B612.foodfood.dto.joinApiController;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class MemberJoinDietWeightResponse{
-    private double bmi;
+public class MemberJoinDietFatResponse {
+    int recommendedCalories;
 }

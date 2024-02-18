@@ -34,9 +34,10 @@ public class AuthenticationConfig {
         http.csrf(AbstractHttpConfigurer::disable); // CSRF 공격을 방지하기 위해 서버에서 발생한 요청인지 확인하는 기능을 비활성화.
         http.authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(
-                                        "/api/v1/members/join",
+                                        "/api/v1/members/join/**",
                                         "/api/v1/members/login",
-                                        "/login/oauth2/**", "/")
+                                        "/login/oauth2/**",
+                                        "/")
                                 .permitAll()  // 인증 불필요 설정
                                 .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
                                 .anyRequest().authenticated())  // 나머지 모든 요청은 인증 필요

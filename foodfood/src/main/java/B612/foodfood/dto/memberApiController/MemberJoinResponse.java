@@ -7,6 +7,5 @@ import org.springframework.http.HttpStatus;
 @Data
 @AllArgsConstructor
 public class MemberJoinResponse {
-    private HttpStatus Status;
-    private String message;
+
 }

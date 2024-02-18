@@ -1,18 +1,19 @@
 package B612.foodfood.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor
-public class HttpResponse {
+public class Result<T> {
     private HttpStatus status;
     private String message;
+    private T value;
 
-    public HttpResponse(HttpStatus status, String message) {
+    public Result(HttpStatus status, String message, T value) {
         this.status = status;
         this.message = message;
+        this.value = value;
     }
 }

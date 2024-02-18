@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class MemberJoinDietWeightResponse{
-    private double bmi;
+public class MemberJoinDietFatRequest {
+    private double achieveBodyFat;
 }
