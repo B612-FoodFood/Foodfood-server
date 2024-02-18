@@ -1,8 +1,8 @@
 package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
-import B612.foodfood.dto.MemberJoinRequest;
-import B612.foodfood.dto.MemberLogInRequest;
+import B612.foodfood.dto.memberApiController.MemberJoinRequest;
+import B612.foodfood.dto.memberApiController.MemberLogInRequest;
 import B612.foodfood.dto.TokenSet;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.DataSaveException;

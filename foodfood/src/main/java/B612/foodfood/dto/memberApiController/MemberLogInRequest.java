@@ -1,4 +1,4 @@
-package B612.foodfood.dto;
+package B612.foodfood.dto.memberApiController;
 
 import lombok.*;
 

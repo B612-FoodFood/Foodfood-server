@@ -1,8 +1,7 @@
 package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
-import B612.foodfood.dto.MemberJoinRequest;
-import B612.foodfood.dto.MemberLogInRequest;
+import B612.foodfood.dto.memberApiController.MemberJoinRequest;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.service.DiseaseService;
 import B612.foodfood.service.DrugService;
@@ -24,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.bytebuddy.matcher.ElementMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
