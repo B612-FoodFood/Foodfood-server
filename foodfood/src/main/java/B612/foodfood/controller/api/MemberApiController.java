@@ -47,6 +47,7 @@ public class MemberApiController {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
         }
 
+
         MemberLogInResponse value = new MemberLogInResponse(accessToken, refreshToken);
         return new Result<>(HttpStatus.OK, null, value);
     }
