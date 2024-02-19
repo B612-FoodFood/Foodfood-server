@@ -3,8 +3,9 @@ package B612.foodfood.controller.api;
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.Result;
 import B612.foodfood.dto.joinApiController.*;
-import B612.foodfood.dto.memberApiController.MemberJoinRequest;
+import B612.foodfood.dto.joinApiController.MemberJoinRequest;
 import B612.foodfood.exception.AppException;
+import B612.foodfood.exception.ErrorCode;
 import B612.foodfood.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static B612.foodfood.domain.AccountType.*;
 import static B612.foodfood.domain.BodyGoal.*;
@@ -44,6 +48,8 @@ public class JoinApiController {
     private double achieveWeight;
     private double achieveMuscle;
     private double achieveBodyFat;
+    private List<String> diseases = new ArrayList<>();
+    private List<String> drugs = new ArrayList<>();
 
     /**
      * 1. 회원가입 페이지에서 다이어트 클릭
@@ -137,13 +143,14 @@ public class JoinApiController {
             MemberJoinMuscleResponse value = new MemberJoinMuscleResponse(name, sex, height, averageMuscle);
             return new Result<>(HttpStatus.OK, null, value);
         } catch (AppException e) {
-            MemberJoinMuscleResponse value = new MemberJoinMuscleResponse(null,null,null,null);
+            MemberJoinMuscleResponse value = new MemberJoinMuscleResponse(null, null, null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
         }
     }
 
     /**
      * 목표 골격근량 설정
+     *
      * @param request achieveMuscle
      * @return
      */
@@ -152,6 +159,107 @@ public class JoinApiController {
         achieveMuscle = request.getAchieveMuscle();
 
         return new Result(HttpStatus.OK, null, null);
+    }
+
+    /**
+     * 사용자 정보 받아서 건강관리 페이지 클릭
+     *
+     * @param request MemberJoinHealthRequest
+     * @return
+     */
+    @PostMapping("/health")
+    public Result joinToHealth(@RequestBody MemberJoinHealthRequest request) {
+        this.name = request.getName();
+        this.sex = request.getSex();
+        this.birthDate = request.getBirthDate();
+        this.height = request.getHeight();
+        this.weight = request.getWeight();
+        this.muscle = request.getMuscle();
+        this.bodyFat = request.getFat();
+        this.goal = HEALTH_CARE;
+        this.activity = request.getActivity();
+
+        return new Result(HttpStatus.OK, null, null);
+    }
+
+    /**
+     * 질병 키워드를 받아서 해당 키워드가 있는 질환 리스트를 반환함
+     *
+     * @param request keyword
+     * @return 질병 리스트
+     */
+    @PostMapping("/health/disease")
+    public Result<MemberJoinHealthDiseaseResponse> searchDisease(@RequestBody MemberJoinHealthDiseaseRequest request) {
+        try {
+            List<Disease> diseases = diseaseService.findDiseaseByKeyword(request.getKeyword());
+            List<String> collect = diseases.stream().map(Disease::getName)
+                    .collect(Collectors.toList());
+
+            MemberJoinHealthDiseaseResponse value
+                    = new MemberJoinHealthDiseaseResponse(collect);
+
+            return new Result<>(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("health/disease/select")
+    public Result selectDisease(@RequestBody MemberJoinHealthDiseaseSelectRequest request) {
+        try {
+            String diseaseName = request.getName();
+            boolean isDiseaseFound = diseases.stream()
+                    .anyMatch(diseaseName::equals);
+            if (isDiseaseFound) {
+                throw new AppException(ErrorCode.DATA_ALREADY_EXISTED, "이미 선택된 질병입니다.");
+            }
+
+            diseaseService.findDiseaseByName(diseaseName); // 존재하는 질병인지 검사
+            diseases.add(diseaseName);
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 키워드 받아서 키워드가 포함된 약물 검색
+     *
+     * @param request keyword
+     * @return
+     */
+    @PostMapping("/health/drug")
+    public Result<MemberJoinHealthDrugResponse> searchDrug(@RequestBody MemberJoinHealthDrugRequest request) {
+        try {
+            List<Drug> drugs = drugService.findDrugByKeyword(request.getKeyword());
+            List<String> collect = drugs.stream().map(Drug::getName)
+                    .collect(Collectors.toList());
+
+            MemberJoinHealthDrugResponse value
+                    = new MemberJoinHealthDrugResponse(collect);
+
+            return new Result<>(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/health/drug/select")
+    public Result selectDrug(@RequestBody MemberJoinHealthDrugSelectRequest request) {
+        try {
+            String drugName = request.getName();
+            boolean isDrugFound = drugs.stream()
+                    .anyMatch(drugName::equals);
+            if (isDrugFound) {
+                throw new AppException(ErrorCode.DATA_ALREADY_EXISTED, "이미 선택된 약물입니다.");
+            }
+
+            drugService.findDrugByName(drugName);  // 존재하는 약물인지 검사
+            drugs.add(drugName);
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
     }
 
     /**
@@ -174,12 +282,12 @@ public class JoinApiController {
             for (String avoidIngredientName : request.getAvoidIngredients()) {
                 Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
             }
-            for (String diseaseName : request.getDiseases()) {
+            /*for (String diseaseName : request.getDiseases()) {
                 Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
             }
             for (String drugName : request.getDrugs()) {
                 Drug findDrug = drugService.findDrugByName(drugName);
-            }
+            }*/
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), "잘못된 데이터 입력");
         }
@@ -203,11 +311,11 @@ public class JoinApiController {
             Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
             memberService.updateAddAvoidIngredient(memberId, avoidIngredient);
         }
-        for (String diseaseName : request.getDiseases()) {
+        for (String diseaseName : diseases) {
             Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
             memberService.updateAddDisease(memberId, findDisease);
         }
-        for (String drugName : request.getDrugs()) {
+        for (String drugName : drugs) {
             Drug findDrug = drugService.findDrugByName(drugName);
             memberService.updateAddDrug(memberId, findDrug);
         }
@@ -217,9 +325,7 @@ public class JoinApiController {
 
     @GetMapping("/info/all")
     public MemberJoinTestRequest allData() {
-
-        return new MemberJoinTestRequest()
-                .builder()
+        MemberJoinTestRequest build = MemberJoinTestRequest.builder()
                 .name(name)
                 .sex(sex)
                 .birthDate(birthDate)
@@ -232,8 +338,10 @@ public class JoinApiController {
                 .achieveWeight(achieveWeight)
                 .achieveBodyFat(achieveBodyFat)
                 .achieveMuscle(achieveMuscle)
+                .diseases(diseases)
+                .drugs(drugs)
                 .build();
+
+        return build;
     }
-
-
 }

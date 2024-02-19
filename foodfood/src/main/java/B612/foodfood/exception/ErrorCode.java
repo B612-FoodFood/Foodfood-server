@@ -15,7 +15,9 @@ public enum ErrorCode {
     MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND,""),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,""),
 
-    NO_MEMBER_ALLOCATED(HttpStatus.FAILED_DEPENDENCY,"");
+    NO_MEMBER_ALLOCATED(HttpStatus.FAILED_DEPENDENCY,""),
+
+    KEYWORD_TOO_SHORT(HttpStatus.BAD_REQUEST,"");
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -64,6 +64,13 @@ public class DrugService {
     }
 
     public List<Drug> findDrugByKeyword(String keyword) {
+        if (keyword.length() < 2) {
+            log.error("오류 발생\n" +
+                    "발생위치: DrugService.findDrugByKeyword(String keyword)\n" +
+                    "발생원인: 키워드는 두 글자 이상이어야 합니다.");
+            throw new AppException(KEYWORD_TOO_SHORT,
+                    "키워드는 두 글자 이상이어야 합니다.");
+        }
         return drugRepository.findByKeyword(keyword);
     }
 

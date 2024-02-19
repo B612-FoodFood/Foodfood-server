@@ -1,19 +1,16 @@
 package B612.foodfood.dto.joinApiController;
 
-import B612.foodfood.domain.Activity;
-import B612.foodfood.domain.BodyGoal;
-import B612.foodfood.domain.Sex;
+import B612.foodfood.domain.*;
 import jdk.jfr.Name;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @Data
 @Builder
+@Setter
 @NoArgsConstructor
 public class MemberJoinTestRequest {
     private String name;
@@ -28,4 +25,6 @@ public class MemberJoinTestRequest {
     private double achieveWeight;
     private double achieveBodyFat;
     private double achieveMuscle;
+    private List<String> diseases;
+    private List<String> drugs;
 }

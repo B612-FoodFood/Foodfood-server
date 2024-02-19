@@ -1,4 +1,4 @@
-package B612.foodfood.dto.memberApiController;
+package B612.foodfood.dto.joinApiController;
 
 import B612.foodfood.domain.AccountType;
 import lombok.AllArgsConstructor;
@@ -22,11 +22,5 @@ public class MemberJoinRequest {  // ㅋㅋ 인자수 보소
 
     // AvoidIngredients
     private List<String> avoidIngredients = new ArrayList<>();
-
-    // Disease
-    private List<String> diseases;
-
-    // Drug
-    private List<String> drugs;
 }
 

@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static B612.foodfood.exception.ErrorCode.DATA_ALREADY_EXISTED;
-import static B612.foodfood.exception.ErrorCode.NO_DATA_EXISTED;
+import static B612.foodfood.exception.ErrorCode.*;
 
 @Service
 @Slf4j
@@ -62,6 +61,13 @@ public class DiseaseService {
     }
 
     public List<Disease> findDiseaseByKeyword(String keyword) {
+        if (keyword.length() < 2) {
+            log.error("오류 발생\n" +
+                    "발생위치: DiseaseService.findDiseaseByKeyword(String keyword)\n" +
+                    "발생원인: 키워드는 두 글자 이상이어야 합니다.");
+            throw new AppException(KEYWORD_TOO_SHORT,
+                    "키워드는 두 글자 이상이어야 합니다.");
+        }
         return diseaseRepository.findByKeyword(keyword);
     }
 
