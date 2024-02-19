@@ -25,7 +25,7 @@ public class JwtTestController {
     private Activity activity;
     private BodyGoal goal;
 
-    @PostMapping("/name")
+    @GetMapping("/name")
     public JwtTestResponse test(Authentication authentication) {
         System.out.println("name: " + authentication.getName());
         System.out.println("detail: " + authentication.getDetails());

@@ -2,6 +2,7 @@ package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.joinApiController.MemberJoinRequest;
+import B612.foodfood.dto.joinApiController.MemberJoinRequest2;
 import B612.foodfood.dto.memberApiController.MemberLogInRequest;
 import B612.foodfood.dto.TokenSet;
 import B612.foodfood.exception.AppException;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,21 +77,17 @@ class MemberApiControllerTest {
 
     String id = "userName";
     String password = "1q2w3d4r";
-    String email = "asdf@asfd.com";
     String phoneNumber = "010-1111-1111";
-    String city = "seoul";
-    String street = "street";
-    String zipCode = "12345";
     String name = "name";
-    String sex = "FEMALE";
-    String birthDate = "2000-01-01";
+    Sex sex = Sex.FEMALE;
+    LocalDate birthDate = LocalDate.of(2000,01,01);
     double height = 172.3;
     double weight = 65.3;
     double muscle = 35;
     double fat = 11;
     double achieveMuscle = 40;
     double achieveBodyFat = 10;
-    String accountType = "ADMIN";
+    AccountType accountType = AccountType.ADMIN;
     String activity = "LOT";
     String goal = "MUSCLE";
     List<String> avoidFoods = new ArrayList<>();
@@ -111,8 +109,8 @@ class MemberApiControllerTest {
                         .with(csrf())  // Spring Security Test 설정
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
-                                        height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
+                                new MemberJoinRequest2(name, sex, birthDate, id, password, phoneNumber,
+                                        height, weight, muscle, fat, activity, goal, 0,achieveMuscle, achieveBodyFat,
                                         accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -136,8 +134,8 @@ class MemberApiControllerTest {
                         .with(csrf())  //Spring Security 설정
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
-                                        height, weight, muscle, fat, activity, goal,
+                                new MemberJoinRequest2(name, sex, birthDate, id, password, phoneNumber,
+                                        height, weight, muscle, fat, activity, goal,0,
                                         achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isConflict());

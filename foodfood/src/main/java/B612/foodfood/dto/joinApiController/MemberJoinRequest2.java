@@ -1,4 +1,4 @@
-package B612.foodfood.dto.memberApiController;
+package B612.foodfood.dto.joinApiController;
 
 import B612.foodfood.domain.AccountType;
 import B612.foodfood.domain.Sex;

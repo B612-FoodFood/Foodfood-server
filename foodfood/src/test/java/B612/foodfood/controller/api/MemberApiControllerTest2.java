@@ -2,6 +2,7 @@ package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.joinApiController.MemberJoinRequest;
+import B612.foodfood.dto.joinApiController.MemberJoinRequest2;
 import B612.foodfood.exception.DataSaveException;
 import B612.foodfood.service.DiseaseService;
 import B612.foodfood.service.DrugService;
@@ -20,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,15 +71,15 @@ public class MemberApiControllerTest2 {
     String street = "street";
     String zipCode = "12345";
     String name = "name";
-    String sex = "FEMALE";
-    String birthDate = "2000-01-01";
+    Sex sex = Sex.FEMALE;
+    LocalDate birthDate = LocalDate.of(2000,01,01);
     double height = 172.3;
     double weight = 65.3;
     double muscle = 35;
     double fat = 11;
     double achieveMuscle = 40;
     double achieveBodyFat = 10;
-    String accountType = "ADMIN";
+    AccountType accountType = AccountType.ADMIN;
     String activity = "LOT";
     String goal = "MUSCLE";
     List<String> avoidFoods = new ArrayList<>();
@@ -97,8 +99,8 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
-                                        height, weight, muscle, fat, activity, goal, achieveMuscle, achieveBodyFat,
+                                new MemberJoinRequest2(name, sex, birthDate, id, password, phoneNumber,
+                                        height, weight, muscle, fat, activity, goal, 0, achieveMuscle, achieveBodyFat,
                                         accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -118,16 +120,16 @@ public class MemberApiControllerTest2 {
         mockMvc.perform(post("/api/v1/members/join")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(
-                        new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
-                                height, weight, muscle, fat, activity, goal,
-                                achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))));
+                        new MemberJoinRequest2(name, sex, birthDate, id, password, phoneNumber,
+                                height, weight, muscle, fat, activity, goal, 0,
+                                achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs) )));
 
         //then
         mockMvc.perform(post("/api/v1/members/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(
-                                new MemberJoinRequest(name, sex, birthDate, id, password, phoneNumber,
-                                        height, weight, muscle, fat, activity, goal,
+                                new MemberJoinRequest2(name, sex, birthDate, id, password, phoneNumber,
+                                        height, weight, muscle, fat, activity, goal, 0,
                                         achieveMuscle, achieveBodyFat, accountType, avoidFoods, diseases, drugs))))
                 .andDo(print())
                 .andExpect(status().isConflict());

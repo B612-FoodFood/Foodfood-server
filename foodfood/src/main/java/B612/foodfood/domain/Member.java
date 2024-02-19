@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static B612.foodfood.domain.Activity.*;
 import static B612.foodfood.domain.BodyGoal.*;
@@ -192,6 +193,18 @@ public class Member {
     /**
      * 비즈니스 로직
      */
+    public Optional<BodyComposition> findBodyCompositionByDate(LocalDate date) {
+        return bodyCompositions.stream()
+                .filter(bodyComposition -> bodyComposition.getDate().equals(date))
+                .findFirst();
+    }
+
+    public Optional<Meal> findMealByDate(LocalDate date) {
+        return meals.stream()
+                .filter(meal -> meal.getDate().equals(date))
+                .findFirst();
+    }
+
     /**
      * @param recommendedCalories
      * @return 섭취 탄수화물량 (g)

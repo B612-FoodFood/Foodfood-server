@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
@@ -30,6 +31,10 @@ public class MealFood {
     @JoinColumn(name = "food_id")
     @Setter(value = PROTECTED)
     private Food food;
+
+    @Setter(value = PROTECTED)
+    @Enumerated(value = STRING)
+    private MealType mealType;
 
     // MealFood는 Meal의 연관관계 편의 메서드(eg.addBreakFast())로 추가되어야함.
     protected static MealFood createMealFood(Food food, double foodWeight) {

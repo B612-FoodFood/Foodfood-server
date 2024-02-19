@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static B612.foodfood.domain.MealType.*;
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
 
@@ -53,6 +55,7 @@ public class Meal {
      */
     public void addBreakFast(Food food, double weight) {
         MealFood breakFastFood = MealFood.createMealFood(food, weight);
+        breakFastFood.setMealType(BREAKFAST);
         breakFastFood.setMeal(this);
         this.breakFast.add(breakFastFood);
 
@@ -61,6 +64,7 @@ public class Meal {
 
     public void addLunch(Food food, double weight) {
         MealFood lunchFood = MealFood.createMealFood(food, weight);
+        lunchFood.setMealType(LUNCH);
         lunchFood.setMeal(this);
         this.lunch.add(lunchFood);
 
@@ -69,6 +73,7 @@ public class Meal {
 
     public void addDinner(Food food, double weight) {
         MealFood dinnerFood = MealFood.createMealFood(food, weight);
+        dinnerFood.setMealType(DINNER);
         dinnerFood.setMeal(this);
         this.dinner.add(dinnerFood);
 
@@ -77,6 +82,7 @@ public class Meal {
 
     public void addSnack(Food food, double weight) {
         MealFood snackFood = MealFood.createMealFood(food, weight);
+        snackFood.setMealType(SNACK);
         snackFood.setMeal(this);
         this.snack.add(snackFood);
 
