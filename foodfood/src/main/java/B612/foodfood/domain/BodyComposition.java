@@ -20,6 +20,7 @@ public class BodyComposition {
     @Column(name = "body_composition_id")
     private Long id;
 
+    @Setter(value = PROTECTED)
     private double weight; // 체중: 단위(kg)
     @Setter(value = PROTECTED)
     private Double muscle; // 골격근량: 단위(kg)

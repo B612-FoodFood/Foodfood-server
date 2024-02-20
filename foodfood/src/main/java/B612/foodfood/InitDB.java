@@ -2,6 +2,7 @@ package B612.foodfood;
 
 import B612.foodfood.domain.*;
 
+import B612.foodfood.repository.MemberRepository;
 import B612.foodfood.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -65,8 +66,7 @@ public class InitDB {
         }
         void bodyCompositionInit() {
             Member member = memberService.findMemberByLogInUsername("joonsik@naver.com");
-            BodyComposition bodyComposition = new BodyComposition(65, 36D, 11D);
-            bodyCompositionService.save(bodyComposition);
+            BodyComposition bodyComposition = new BodyComposition(12, 12D, 12D);
             member.addBodyComposition(bodyComposition);
             System.out.println("member = " + member);
         }
