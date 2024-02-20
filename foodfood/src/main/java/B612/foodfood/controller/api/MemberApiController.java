@@ -151,4 +151,63 @@ public class MemberApiController {
         }
     }
 
+    /**
+     *
+     * @param authentication
+     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
+     */
+    @GetMapping("/member/edit/muscle")
+    public Result<MemberEditMuscleResponse> currentMuscle(Authentication authentication) {
+        try{
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+
+            Double muscle = bodyCompositions.get(bodyCompositions.size() - 1).getMuscle(); // 가장 최근의 골격근량 (현재 상태도 이 정보로 유지됨)
+            double achieveMuscle = member.getAchieveBodyGoal().getAchieveMuscle();
+
+            MemberEditMuscleResponse value = new MemberEditMuscleResponse(muscle,achieveMuscle);
+            return new Result(HttpStatus.OK, null, value);
+
+        }catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     *
+     * @param authentication
+     * @param request
+     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
+     */
+    @PostMapping("/member/edit/muscle")
+    public Result editMuscle(Authentication authentication, @RequestBody MemberEditMuscleRequest request) {
+        try {
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            double muscle = request.getMuscle(); // 업데이트할 현재 골격근량
+            double achieveMuscle = request.getAchieveMuscle();  // 업데이트할 현재 목표 골격근량
+
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+            BodyComposition recentBodyComposition = bodyCompositions.get(bodyCompositions.size() - 1);
+
+            // 기존 신체정보(체중, 체지방률)은 유지
+            double weight = recentBodyComposition.getWeight();
+            Double bodyFat = recentBodyComposition.getBodyFat();
+            BodyComposition updatedBodyComposition = new BodyComposition(weight, muscle, bodyFat);
+
+            // 기존 목표 신체정보(목표체중, 목표체지방률)은 유지
+            AchieveBodyGoal achieveBodyGoal = member.getAchieveBodyGoal();
+            double achieveWeight = achieveBodyGoal.getAchieveWeight();
+            double achieveBodyFat = achieveBodyGoal.getAchieveBodyFat();
+            AchieveBodyGoal updatedAchieveBodyGoal = new AchieveBodyGoal(achieveWeight, achieveMuscle, achieveBodyFat);
+
+            // 정보 업데이트
+            memberService.updateAddBodyComposition(member.getId(),updatedBodyComposition);
+            memberService.updateAchieveBodyGoal(member.getId(),updatedAchieveBodyGoal);
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
 }
