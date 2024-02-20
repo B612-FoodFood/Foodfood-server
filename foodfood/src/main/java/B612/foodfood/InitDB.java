@@ -38,9 +38,10 @@ public class InitDB {
         private final DrugService drugService;
         private final IngredientService ingredientService;
         private final AverageBodyProfileService bfService;
+        private final BodyCompositionService bodyCompositionService;
         // 필요시 더 추가할 것
 
-        void memberInit() {
+        void mealInit() {
             Food food1 = foodService.findFoodByName("국밥");
             Food food2 = foodService.findFoodByName("가래떡");
             Food food3 = foodService.findFoodByName("감자볶음");
@@ -62,12 +63,12 @@ public class InitDB {
 
             mealService.save(meal);
         }
-        void mealInit() {
-            Meal meal = mealService.findMealById(152L);
-            List<MealFood> breakFast = meal.getBreakFast();
-            for (MealFood mealFood : breakFast) {
-                System.out.println("mealFood.getFood().getName() = " + mealFood.getFood().getName()+ mealFood.getMealType());
-            }
+        void bodyCompositionInit() {
+            Member member = memberService.findMemberByLogInUsername("joonsik@naver.com");
+            BodyComposition bodyComposition = new BodyComposition(65, 36D, 11D);
+            bodyCompositionService.save(bodyComposition);
+            member.addBodyComposition(bodyComposition);
+            System.out.println("member = " + member);
         }
 
     }

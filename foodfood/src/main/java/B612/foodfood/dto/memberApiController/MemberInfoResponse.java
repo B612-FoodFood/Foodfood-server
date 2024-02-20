@@ -20,9 +20,9 @@ public class MemberInfoResponse {
     private List<FoodDto> dinner = new ArrayList<>();
     private List<FoodDto> snack = new ArrayList<>();
 
-    private double recommendedCalories;
-    private Double consumedCalories;
-    private Double leftCalories;
+    private int recommendedCalories;
+    private Integer consumedCalories;
+    private Integer leftCalories;
 
     private double achieveWeight;
     private double achieveMuscle;
@@ -46,6 +46,7 @@ public class MemberInfoResponse {
         private double calories;
         private double carbonHydrate;
         private double protein;
+        private double fat;
     }
 
     @AllArgsConstructor
@@ -63,23 +64,23 @@ public class MemberInfoResponse {
         bodyChanges.add(bodyCompositionDto);
     }
 
-    public void addBreakFast(String name, double servingWeight, double calories, double carbonHydrate, double protein) {
-        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein);
+    public void addBreakFast(String name, double servingWeight, double calories, double carbonHydrate, double protein, double fat) {
+        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein,fat);
         breakFast.add(foodDto);
     }
 
-    public void addLunch(String name, double servingWeight, double calories, double carbonHydrate, double protein) {
-        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein);
+    public void addLunch(String name, double servingWeight, double calories, double carbonHydrate, double protein,double fat) {
+        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein,fat);
         lunch.add(foodDto);
     }
 
-    public void addDinner(String name, double servingWeight, double calories, double carbonHydrate, double protein) {
-        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein);
+    public void addDinner(String name, double servingWeight, double calories, double carbonHydrate, double protein,double fat) {
+        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein,fat);
         dinner.add(foodDto);
     }
 
-    public void addSnack(String name, double servingWeight, double calories, double carbonHydrate, double protein) {
-        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein);
+    public void addSnack(String name, double servingWeight, double calories, double carbonHydrate, double protein,double fat) {
+        FoodDto foodDto = new FoodDto(name, servingWeight, calories, carbonHydrate, protein,fat);
         snack.add(foodDto);
     }
 

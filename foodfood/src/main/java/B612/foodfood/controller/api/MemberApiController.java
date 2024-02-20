@@ -77,7 +77,7 @@ public class MemberApiController {
 
             // 정보 담기
             value.setName(name);
-            value.setRecommendedCalories(recommendedCalories);
+            value.setRecommendedCalories((int) recommendedCalories);
             value.setAchieveWeight(achieveBodyGoal.getAchieveWeight());
             value.setAchieveMuscle(achieveBodyGoal.getAchieveMuscle());
             value.setAchieveBodyFat(achieveBodyGoal.getAchieveBodyFat());
@@ -99,38 +99,38 @@ public class MemberApiController {
                 // 아침식사 추가
                 List<MealFood> breakFast = meal.getBreakFast();
                 for (MealFood mealFood : breakFast) {
-                    if(mealFood.getMealType()!= BREAKFAST) continue;
+                    if (mealFood.getMealType() != BREAKFAST) continue;
 
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
-                    value.addBreakFast(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein());
+                    value.addBreakFast(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
                 }
                 // 점심식사 추가
                 List<MealFood> lunch = meal.getLunch();
                 for (MealFood mealFood : lunch) {
-                    if(mealFood.getMealType()!= LUNCH) continue;
+                    if (mealFood.getMealType() != LUNCH) continue;
 
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
-                    value.addLunch(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein());
+                    value.addLunch(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
                 }
                 // 저녁식사 추가
                 List<MealFood> dinner = meal.getDinner();
                 for (MealFood mealFood : dinner) {
-                    if(mealFood.getMealType()!= DINNER) continue;
+                    if (mealFood.getMealType() != DINNER) continue;
 
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
-                    value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein());
+                    value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
                 }
                 // 간식추가
                 List<MealFood> snack = meal.getSnack();
                 for (MealFood mealFood : snack) {
-                    if(mealFood.getMealType()!= SNACK) continue;
+                    if (mealFood.getMealType() != SNACK) continue;
 
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
-                    value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein());
+                    value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
                 }
             }
 
@@ -142,8 +142,8 @@ public class MemberApiController {
 
                 value.addBodyComposition(date, weight, muscle, bodyFat);  // 사용자 신체 정보 변화
             }
-            value.setConsumedCalories(consumedCalories);
-            value.setLeftCalories(leftCalories);
+            value.setConsumedCalories((int) consumedCalories);
+            value.setLeftCalories((int) leftCalories);
             // 로그인한 멤버의 각종 정보 반환 로직 구현
             return new Result(HttpStatus.OK, null, value);
         } catch (AppException e) {
@@ -152,13 +152,12 @@ public class MemberApiController {
     }
 
     /**
-     *
      * @param authentication
      * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
      */
     @GetMapping("/member/edit/muscle")
     public Result<MemberEditMuscleResponse> currentMuscle(Authentication authentication) {
-        try{
+        try {
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -166,16 +165,15 @@ public class MemberApiController {
             Double muscle = bodyCompositions.get(bodyCompositions.size() - 1).getMuscle(); // 가장 최근의 골격근량 (현재 상태도 이 정보로 유지됨)
             double achieveMuscle = member.getAchieveBodyGoal().getAchieveMuscle();
 
-            MemberEditMuscleResponse value = new MemberEditMuscleResponse(muscle,achieveMuscle);
+            MemberEditMuscleResponse value = new MemberEditMuscleResponse(muscle, achieveMuscle);
             return new Result(HttpStatus.OK, null, value);
 
-        }catch (AppException e) {
+        } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         }
     }
 
     /**
-     *
      * @param authentication
      * @param request
      * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
@@ -203,8 +201,123 @@ public class MemberApiController {
             AchieveBodyGoal updatedAchieveBodyGoal = new AchieveBodyGoal(achieveWeight, achieveMuscle, achieveBodyFat);
 
             // 정보 업데이트
-            memberService.updateAddBodyComposition(member.getId(),updatedBodyComposition);
-            memberService.updateAchieveBodyGoal(member.getId(),updatedAchieveBodyGoal);
+            memberService.updateAddBodyComposition(member.getId(), updatedBodyComposition);
+            memberService.updateAchieveBodyGoal(member.getId(), updatedAchieveBodyGoal);
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     * @param authentication
+     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
+     */
+    @GetMapping("/member/edit/bodyFat")
+    public Result<MemberEditBodyFatResponse> currentBodyFat(Authentication authentication) {
+        try {
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+
+            Double bodyFat = bodyCompositions.get(bodyCompositions.size() - 1).getBodyFat(); // 가장 최근의 체지방량 (현재 상태도 이 정보로 유지됨)
+            double achieveBodyFat = member.getAchieveBodyGoal().getAchieveBodyFat();
+
+            MemberEditBodyFatResponse value = new MemberEditBodyFatResponse(bodyFat, achieveBodyFat);
+            return new Result(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     * @param authentication
+     * @param request
+     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
+     */
+    @PostMapping("/member/edit/bodyFat")
+    public Result editBodyFat(Authentication authentication, @RequestBody MemberEditBodyFatRequest request) {
+        try {
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            double bodyFat = request.getBodyFat(); // 업데이트할 현재 골격근량
+            double achieveBodyFat = request.getAchieveBodyFat();  // 업데이트할 현재 목표 골격근량
+
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+            BodyComposition recentBodyComposition = bodyCompositions.get(bodyCompositions.size() - 1);
+
+            // 기존 신체정보(체중, 골격근량)은 유지
+            double weight = recentBodyComposition.getWeight();
+            Double muscle = recentBodyComposition.getMuscle();
+            BodyComposition updatedBodyComposition = new BodyComposition(weight, muscle, bodyFat);
+
+            // 기존 목표 신체정보(목표체중, 목표골격근량)은 유지
+            AchieveBodyGoal achieveBodyGoal = member.getAchieveBodyGoal();
+            double achieveWeight = achieveBodyGoal.getAchieveWeight();
+            double achieveMuscle = achieveBodyGoal.getAchieveMuscle();
+            AchieveBodyGoal updatedAchieveBodyGoal = new AchieveBodyGoal(achieveWeight, achieveMuscle, achieveBodyFat);
+
+            // 정보 업데이트
+            memberService.updateAddBodyComposition(member.getId(), updatedBodyComposition);
+            memberService.updateAchieveBodyGoal(member.getId(), updatedAchieveBodyGoal);
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     * @param authentication
+     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
+     */
+    @GetMapping("/member/edit/weight")
+    public Result<MemberEditWeightResponse> currentWeight(Authentication authentication) {
+        try {
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+
+            Double weight = bodyCompositions.get(bodyCompositions.size() - 1).getWeight(); // 가장 최근의 체중 (현재 상태도 이 정보로 유지됨)
+            double achieveWeight = member.getAchieveBodyGoal().getAchieveWeight();
+
+            MemberEditWeightResponse value = new MemberEditWeightResponse(weight, achieveWeight);
+            return new Result(HttpStatus.OK, null, value);
+
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    /**
+     * @param authentication
+     * @param request
+     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
+     */
+    @PostMapping("/member/edit/weight")
+    public Result editBodyFat(Authentication authentication, @RequestBody MemberEditWeightRequest request) {
+        try {
+            String userName = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(userName);
+            double weight = request.getWeight(); // 업데이트할 현재 체중
+            double achieveWeight = request.getAchieveWeight();  // 업데이트할 현재 목표 체중
+
+            List<BodyComposition> bodyCompositions = member.getBodyCompositions();
+            BodyComposition recentBodyComposition = bodyCompositions.get(bodyCompositions.size() - 1);
+
+            // 기존 신체정보(골격근량, 체지방률)은 유지
+            Double muscle = recentBodyComposition.getMuscle();
+            Double bodyFat = recentBodyComposition.getBodyFat();
+            BodyComposition updatedBodyComposition = new BodyComposition(weight, muscle, bodyFat);
+
+            // 기존 목표 신체정보(목표골격근량, 목표체지방률)은 유지
+            AchieveBodyGoal achieveBodyGoal = member.getAchieveBodyGoal();
+            double achieveMuscle = achieveBodyGoal.getAchieveMuscle();
+            double achieveBodyFat = achieveBodyGoal.getAchieveBodyFat();
+            AchieveBodyGoal updatedAchieveBodyGoal = new AchieveBodyGoal(achieveWeight, achieveMuscle, achieveBodyFat);
+
+            // 정보 업데이트
+            memberService.updateAddBodyComposition(member.getId(), updatedBodyComposition);
+            memberService.updateAchieveBodyGoal(member.getId(), updatedAchieveBodyGoal);
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);

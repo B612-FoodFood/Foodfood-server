@@ -1,5 +1,7 @@
 package B612.foodfood.domain;
 
+import B612.foodfood.exception.AppException;
+import B612.foodfood.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +36,9 @@ public class BodyComposition {
     private Member member;
 
     public BodyComposition(double weight, Double muscle, Double bodyFat) {
+        if (weight <= 0 || muscle <= 0 || bodyFat <= 0 || bodyFat > 100) {
+            throw new AppException(ErrorCode.INVALID_VALUE_ASSIGNMENT, "잘못된 값이 입력되었습니다");
+        }
         this.weight = weight;
         this.muscle = muscle;
         this.bodyFat = bodyFat;

@@ -117,6 +117,24 @@ public class Member {
     }
 
     public void addBodyComposition(BodyComposition bodyComposition) {
+        LocalDate date = bodyComposition.getDate();
+        if (!bodyCompositions.isEmpty()) {
+            // 현재 날짜에 이미 BodyComposition이 있다면 기존의 BodyComposition을 삭제
+            for (int idx = 0; idx < bodyCompositions.size(); idx++) {
+                BodyComposition composition = bodyCompositions.get(idx);
+                if (composition.getDate().equals(date)) {
+                    log.info("delete body composition {}",composition.getId());
+                    bodyCompositions.remove(idx);
+                }
+            }
+            /*int lastIndex = bodyCompositions.size() - 1;
+            log.info("bodyCompositions.get(lastIndex).getDate() {}",bodyCompositions.get(lastIndex).getDate());
+            log.info("date {}",date);
+            if (bodyCompositions.get(lastIndex).getDate().equals(date)) {
+                log.info("delete body composition");
+                bodyCompositions.remove(lastIndex);
+            }*/
+        }
 
         if (bodyComposition.getBodyFat() == null) {
             if (bodyCompositions.isEmpty()) {

@@ -163,7 +163,7 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateAddMemberDisease(Long memberId, Disease disease)\n" +
+                    "발생위치: MemberService.updateAddDisease(Long memberId, Disease disease)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
@@ -178,7 +178,7 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateAddMemberDrug(Long memberId, Drug drug)\n" +
+                    "발생위치: MemberService.updateAddDrug(Long memberId, Drug drug)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
@@ -193,7 +193,7 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findById(memberId);
         if (findMember.isEmpty()) {
             log.error("오류 발생\n" +
-                    "발생위치: MemberService.updateAddMemberDrug(Long memberId, Drug drug)\n" +
+                    "발생위치: MemberService.updateAddBodyComposition(Long memberId, BodyComposition bodyComposition)\n" +
                     "발생원인: 가입되지 않은 유저입니다.");
             throw new AppException(MEMBER_ID_NOT_FOUND,
                     "가입되지 않은 유저입니다.");
