@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static B612.foodfood.domain.AccountType.ADMIN;
 import static B612.foodfood.domain.Activity.*;
@@ -25,6 +26,7 @@ public class InitDB {
 
     @PostConstruct  // 빈으로 등록될 시 자동으로 실행됨
     public void init() {
+        initService.mealInit();
     }
 
     @Component
@@ -52,8 +54,15 @@ public class InitDB {
 
 
             Member member = memberService.findMemberByLogInUsername("joonsik@naver.com");
-            Meal meal = new Meal();
-            member.addMeal(meal);
+            Optional<Meal> mealByDate = member.findMealByDate(LocalDate.of(2024, 2, 21));
+
+            Meal meal;
+            if (mealByDate.isPresent()) {
+                meal = mealByDate.get();
+            } else {
+                meal = new Meal();
+                member.addMeal(meal);
+            }
 
             meal.addBreakFast(food1, 500);
             meal.addLunch(food2, 250);
@@ -64,6 +73,7 @@ public class InitDB {
 
             mealService.save(meal);
         }
+
         void bodyCompositionInit() {
             Member member = memberService.findMemberByLogInUsername("joonsik@naver.com");
             BodyComposition bodyComposition = new BodyComposition(12, 12D, 12D);

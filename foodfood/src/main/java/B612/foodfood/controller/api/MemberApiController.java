@@ -323,4 +323,100 @@ public class MemberApiController {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         }
     }
+
+    @PostMapping("/member/meal")
+    public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
+        String userName = authentication.getName();
+        Member member = memberService.findMemberByLogInUsername(userName);
+
+        for (Meal meal : member.getMeals()) {
+            if (meal.getDate().equals(request.getDate())) {
+                MemberMealResponse value = new MemberMealResponse();
+
+                for (MealFood breakFast : meal.getBreakFast()) {
+                    if (breakFast.getMealType() != BREAKFAST)
+                        continue;
+
+                    System.out.println("breakFast.getMealType() = " + breakFast.getMealType());
+
+                    Food food = breakFast.getFood();
+                    Nutrition nutrition = food.getNutrition();
+
+                    // food name
+                    String name = food.getName();
+
+                    // food Nutrition
+                    double calories = nutrition.getCalories();
+                    double carbonHydrate = nutrition.getCarbonHydrate();
+                    double protein = nutrition.getProtein();
+                    double fat = nutrition.getFat();
+
+                    // add breakFast food
+                    value.addBreakFast(food.getName(), calories, carbonHydrate, protein, fat);
+                }
+                for (MealFood lunch : meal.getLunch()) {
+                    if (lunch.getMealType() != LUNCH)
+                        continue;
+
+                    Food food = lunch.getFood();
+                    Nutrition nutrition = food.getNutrition();
+
+                    // food name
+                    String name = food.getName();
+
+                    // food Nutrition
+                    double calories = nutrition.getCalories();
+                    double carbonHydrate = nutrition.getCarbonHydrate();
+                    double protein = nutrition.getProtein();
+                    double fat = nutrition.getFat();
+
+                    // add lunch food
+                    value.addLunch(food.getName(), calories, carbonHydrate, protein, fat);
+                }
+                for (MealFood dinner : meal.getDinner()) {
+                    if (dinner.getMealType() != DINNER)
+                        continue;
+
+                    Food food = dinner.getFood();
+                    Nutrition nutrition = food.getNutrition();
+
+                    // food name
+                    String name = food.getName();
+
+                    // food Nutrition
+                    double calories = nutrition.getCalories();
+                    double carbonHydrate = nutrition.getCarbonHydrate();
+                    double protein = nutrition.getProtein();
+                    double fat = nutrition.getFat();
+
+                    // add dinner food
+                    value.addDinner(food.getName(), calories, carbonHydrate, protein, fat);
+                }
+
+                for (MealFood snack : meal.getSnack()) {
+                    if (snack.getMealType() != SNACK)
+                        continue;
+                    
+                    Food food = snack.getFood();
+                    Nutrition nutrition = food.getNutrition();
+
+                    // food name
+                    String name = food.getName();
+
+                    // food Nutrition
+                    double calories = nutrition.getCalories();
+                    double carbonHydrate = nutrition.getCarbonHydrate();
+                    double protein = nutrition.getProtein();
+                    double fat = nutrition.getFat();
+
+                    // add snack food
+                    value.addSnack(food.getName(), calories, carbonHydrate, protein, fat);
+                }
+
+
+                return new Result<>(HttpStatus.OK, null, value);
+            }
+        }
+        return new Result<>(HttpStatus.BAD_GATEWAY, "해당 날짜의 식사 기록이 존재하지 않습니다.", null);
+    }
 }
