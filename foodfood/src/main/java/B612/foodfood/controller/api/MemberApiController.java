@@ -6,6 +6,7 @@ import B612.foodfood.dto.joinApiController.MemberJoinDietInfoResponse;
 import B612.foodfood.dto.joinApiController.MemberJoinRequest;
 import B612.foodfood.dto.memberApiController.*;
 import B612.foodfood.exception.AppException;
+import B612.foodfood.exception.ErrorCode;
 import B612.foodfood.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,14 +24,15 @@ import java.util.Optional;
 
 import static B612.foodfood.domain.MealType.*;
 
+@RequiredArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/api/v1")
-@Slf4j
-@RequiredArgsConstructor
 public class MemberApiController {
 
     private final MemberService memberService;
     private final FoodService foodService;
+    private final MealService mealService;
     private final DiseaseService diseaseService;
     private final DrugService drugService;
     private final IngredientService ingredientService;
@@ -87,7 +90,7 @@ public class MemberApiController {
             value.setCurrentBodyFat(currentBodyFat);
 
             // 오늘 먹은 식사
-            Optional<Meal> mealByDate = member.findMealByDate(LocalDate.now());
+            Optional<Meal> mealByDate = member.getMealByDate(LocalDate.now());
             if (mealByDate.isPresent()) {
                 Meal meal = mealByDate.get();
                 ConsumedNutrients nutritionPerDay = meal.getNutritionPerDay();
@@ -99,8 +102,6 @@ public class MemberApiController {
                 // 아침식사 추가
                 List<MealFood> breakFast = meal.getBreakFast();
                 for (MealFood mealFood : breakFast) {
-                    if (mealFood.getMealType() != BREAKFAST) continue;
-
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
                     value.addBreakFast(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
@@ -108,8 +109,6 @@ public class MemberApiController {
                 // 점심식사 추가
                 List<MealFood> lunch = meal.getLunch();
                 for (MealFood mealFood : lunch) {
-                    if (mealFood.getMealType() != LUNCH) continue;
-
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
                     value.addLunch(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
@@ -117,8 +116,6 @@ public class MemberApiController {
                 // 저녁식사 추가
                 List<MealFood> dinner = meal.getDinner();
                 for (MealFood mealFood : dinner) {
-                    if (mealFood.getMealType() != DINNER) continue;
-
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
                     value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
@@ -126,11 +123,9 @@ public class MemberApiController {
                 // 간식추가
                 List<MealFood> snack = meal.getSnack();
                 for (MealFood mealFood : snack) {
-                    if (mealFood.getMealType() != SNACK) continue;
-
                     Food food = mealFood.getFood();
                     Nutrition nutrition = food.getNutrition();
-                    value.addDinner(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
+                    value.addSnack(food.getName(), nutrition.getServingWeight(), nutrition.getCalories(), nutrition.getCarbonHydrate(), nutrition.getProtein(), nutrition.getFat());
                 }
             }
 
@@ -201,6 +196,7 @@ public class MemberApiController {
             AchieveBodyGoal updatedAchieveBodyGoal = new AchieveBodyGoal(achieveWeight, achieveMuscle, achieveBodyFat);
 
             // 정보 업데이트
+            member.addBodyComposition(updatedBodyComposition);
             memberService.updateAddBodyComposition(member.getId(), updatedBodyComposition);
             memberService.updateAchieveBodyGoal(member.getId(), updatedAchieveBodyGoal);
             return new Result(HttpStatus.OK, null, null);
@@ -326,97 +322,135 @@ public class MemberApiController {
 
     @PostMapping("/member/meal")
     public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
+        if (request.getDate().isAfter(LocalDate.now())) {
+            return new Result<>(HttpStatus.BAD_REQUEST, "잘못된 날짜 정보입니다.", null);
+        }
+
         String userName = authentication.getName();
         Member member = memberService.findMemberByLogInUsername(userName);
 
-        for (Meal meal : member.getMeals()) {
-            if (meal.getDate().equals(request.getDate())) {
-                MemberMealResponse value = new MemberMealResponse();
-
-                for (MealFood breakFast : meal.getBreakFast()) {
-                    if (breakFast.getMealType() != BREAKFAST)
-                        continue;
-
-                    System.out.println("breakFast.getMealType() = " + breakFast.getMealType());
-
-                    Food food = breakFast.getFood();
-                    Nutrition nutrition = food.getNutrition();
-
-                    // food name
-                    String name = food.getName();
-
-                    // food Nutrition
-                    double calories = nutrition.getCalories();
-                    double carbonHydrate = nutrition.getCarbonHydrate();
-                    double protein = nutrition.getProtein();
-                    double fat = nutrition.getFat();
-
-                    // add breakFast food
-                    value.addBreakFast(food.getName(), calories, carbonHydrate, protein, fat);
-                }
-                for (MealFood lunch : meal.getLunch()) {
-                    if (lunch.getMealType() != LUNCH)
-                        continue;
-
-                    Food food = lunch.getFood();
-                    Nutrition nutrition = food.getNutrition();
-
-                    // food name
-                    String name = food.getName();
-
-                    // food Nutrition
-                    double calories = nutrition.getCalories();
-                    double carbonHydrate = nutrition.getCarbonHydrate();
-                    double protein = nutrition.getProtein();
-                    double fat = nutrition.getFat();
-
-                    // add lunch food
-                    value.addLunch(food.getName(), calories, carbonHydrate, protein, fat);
-                }
-                for (MealFood dinner : meal.getDinner()) {
-                    if (dinner.getMealType() != DINNER)
-                        continue;
-
-                    Food food = dinner.getFood();
-                    Nutrition nutrition = food.getNutrition();
-
-                    // food name
-                    String name = food.getName();
-
-                    // food Nutrition
-                    double calories = nutrition.getCalories();
-                    double carbonHydrate = nutrition.getCarbonHydrate();
-                    double protein = nutrition.getProtein();
-                    double fat = nutrition.getFat();
-
-                    // add dinner food
-                    value.addDinner(food.getName(), calories, carbonHydrate, protein, fat);
-                }
-
-                for (MealFood snack : meal.getSnack()) {
-                    if (snack.getMealType() != SNACK)
-                        continue;
-                    
-                    Food food = snack.getFood();
-                    Nutrition nutrition = food.getNutrition();
-
-                    // food name
-                    String name = food.getName();
-
-                    // food Nutrition
-                    double calories = nutrition.getCalories();
-                    double carbonHydrate = nutrition.getCarbonHydrate();
-                    double protein = nutrition.getProtein();
-                    double fat = nutrition.getFat();
-
-                    // add snack food
-                    value.addSnack(food.getName(), calories, carbonHydrate, protein, fat);
-                }
-
-
-                return new Result<>(HttpStatus.OK, null, value);
-            }
+        Optional<Meal> mealByDate = member.getMealByDate(request.getDate());
+        Meal meal;
+        if (mealByDate.isPresent()) {  // 해당일자에 이미 Meal이 존재한다면 해당 Meal을 가져옴
+            meal = mealByDate.get();
+        } else {  // 해당 날짜에 생성된 Meal이 없다면 해당 일자에 Meal을 생성.
+            meal = new Meal(request.getDate());
+            member.addMeal(meal);
+            mealService.save(meal);
         }
-        return new Result<>(HttpStatus.BAD_GATEWAY, "해당 날짜의 식사 기록이 존재하지 않습니다.", null);
+
+        MemberMealResponse value = new MemberMealResponse();
+        for (MealFood breakFast : meal.getBreakFast()) {
+            FoodResult result = getFoodResult(breakFast);
+
+            // add breakFast food
+            value.addBreakFast(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
+        }
+        for (MealFood lunch : meal.getLunch()) {
+            FoodResult result = getFoodResult(lunch);
+
+            // add lunch food
+            value.addLunch(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
+        }
+        for (MealFood dinner : meal.getDinner()) {
+            FoodResult result = getFoodResult(dinner);
+
+            // add dinner food
+            value.addDinner(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
+        }
+        for (MealFood snack : meal.getSnack()) {
+            FoodResult result = getFoodResult(snack);
+
+            // add snack food
+            value.addSnack(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
+        }
+
+        return new Result<>(HttpStatus.OK, null, value);
+    }
+
+    private static FoodResult getFoodResult(MealFood breakFast) {
+        Food food = breakFast.getFood();
+        Nutrition nutrition = food.getNutrition();
+
+        // food name
+        String name = food.getName();
+
+        // food Nutrition
+        double calories = nutrition.getCalories();
+        double carbonHydrate = nutrition.getCarbonHydrate();
+        double protein = nutrition.getProtein();
+        double fat = nutrition.getFat();
+        FoodResult result = new FoodResult(name, calories, carbonHydrate, protein, fat);
+        return result;
+    }
+
+    private record FoodResult(String name, double calories, double carbonHydrate, double protein, double fat) {
+    }
+
+    @PostMapping("/member/meal/search")
+    public Result<MemberMealSearchResponse> searchFood(Authentication authentication, @RequestBody MemberMealSearchRequest request) {
+        try {
+            List<Food> foods
+                    = foodService.findFoodByKeyword(request.getKeyword());
+            MemberMealSearchResponse value = new MemberMealSearchResponse();
+
+            for (Food food : foods) {
+                String name = food.getName();
+                double calories = food.getNutrition().getCalories();
+                double carbonHydrate = food.getNutrition().getCarbonHydrate();
+                double protein = food.getNutrition().getProtein();
+                double fat = food.getNutrition().getFat();
+
+                value.addFoods(name, calories, carbonHydrate, protein, fat);
+            }
+
+            return new Result(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
+    }
+
+    @Transactional
+    @PostMapping("/member/meal/add/{type}")  // type = {breakfast,lunch,dinner,snack}
+    public Result addFood(Authentication authentication, @PathVariable(name = "type") String type, @RequestBody MemberMealSelectRequest request) {
+        try {
+            String username = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(username);
+
+            Meal meal;
+            Optional<Meal> mealByDate = member.getMealByDate(request.getDate());
+
+            if (mealByDate.isEmpty()) {  // 멤버가 해당날짜에 식사내역이 없는 경우 식사 추가
+                meal = new Meal();
+                member.addMeal(meal);
+            } else {  // 식사내역이 있는 경우 식사내역 가져옴.
+                meal = mealByDate.get();
+            }
+
+            Food food = foodService.findFoodByName(request.getName());
+            double foodWeight = request.getFoodWeight();
+
+            // 요청한 타입(아침,점심,저녁,간식)에 따라 식사 추가
+            if (type.equals("breakfast")) {
+                log.info("add breakfast: {},{}", food.getName(), foodWeight);
+                meal.addBreakFast(food, foodWeight);
+            } else if (type.equals("lunch")) {
+                meal.addLunch(food, foodWeight);
+            } else if (type.equals("dinner")) {
+                meal.addDinner(food, foodWeight);
+            } else if (type.equals("snack")) {
+                meal.addSnack(food, foodWeight);
+            } else {
+                throw new AppException(ErrorCode.INVALID_URI_ACCESS, "잘못된 uri 접근입니다");
+            }
+
+            mealService.save(meal);
+
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } catch (Exception e) {
+            return new Result(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
     }
 }

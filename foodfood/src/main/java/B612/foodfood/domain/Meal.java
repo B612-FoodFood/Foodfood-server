@@ -10,12 +10,13 @@ import java.util.List;
 import static B612.foodfood.domain.MealType.*;
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = {"member"})
 public class Meal {
     @Id
     @GeneratedValue
@@ -48,6 +49,55 @@ public class Meal {
     public Meal() {
         this.nutritionPerDay = new ConsumedNutrients();
         this.date = LocalDate.now();
+    }
+
+    public Meal(LocalDate date) {
+        this.nutritionPerDay = new ConsumedNutrients();
+        this.date = date;
+    }
+
+    /**
+     * getter
+     */
+    public List<MealFood> getBreakFast() {
+        List<MealFood> breakFast = new ArrayList<>();
+        for (MealFood mealFood : this.breakFast) {
+            if (mealFood.getMealType().equals(BREAKFAST)) {
+                breakFast.add(mealFood);
+            }
+        }
+
+        return breakFast;
+    }
+    public List<MealFood> getLunch() {
+        List<MealFood> lunch = new ArrayList<>();
+        for (MealFood mealFood : this.lunch) {
+            if (mealFood.getMealType().equals(LUNCH)) {
+                lunch.add(mealFood);
+            }
+        }
+
+        return lunch;
+    }
+    public List<MealFood> getDinner() {
+        List<MealFood> dinner = new ArrayList<>();
+        for (MealFood mealFood : this.dinner) {
+            if (mealFood.getMealType().equals(DINNER)) {
+                dinner.add(mealFood);
+            }
+        }
+
+        return dinner;
+    }
+    public List<MealFood> getSnack() {
+        List<MealFood> snack = new ArrayList<>();
+        for (MealFood mealFood : this.snack) {
+            if (mealFood.getMealType().equals(SNACK)) {
+                snack.add(mealFood);
+            }
+        }
+
+        return snack;
     }
 
     /**

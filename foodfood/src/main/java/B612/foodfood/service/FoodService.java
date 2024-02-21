@@ -25,7 +25,7 @@ public class FoodService {
 
     private final FoodRepository foodRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public Long save(Food food) {
         if (foodRepository.findByName(food.getName()).isPresent()) {
             log.error("오류 발생\n" +
@@ -100,6 +100,13 @@ public class FoodService {
     }
 
     public List<Food> findFoodByKeyword(String keyword) {
+        if (keyword.length() < 2) {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodByKeyword(String keyword)\n" +
+                    "발생원인: 키워드는 두 글자 이상이어야 합니다.");
+            throw new AppException(KEYWORD_TOO_SHORT,
+                    "키워드는 두 글자 이상이어야 합니다.");
+        }
         return foodRepository.findByKeyword(keyword);
     }
 

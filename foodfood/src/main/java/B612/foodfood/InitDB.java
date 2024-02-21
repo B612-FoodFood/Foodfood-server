@@ -26,7 +26,7 @@ public class InitDB {
 
     @PostConstruct  // 빈으로 등록될 시 자동으로 실행됨
     public void init() {
-        initService.mealInit();
+//        initService.mealInit();
     }
 
     @Component
@@ -54,7 +54,7 @@ public class InitDB {
 
 
             Member member = memberService.findMemberByLogInUsername("joonsik@naver.com");
-            Optional<Meal> mealByDate = member.findMealByDate(LocalDate.of(2024, 2, 21));
+            Optional<Meal> mealByDate = member.getMealByDate(LocalDate.of(2024, 2, 21));
 
             Meal meal;
             if (mealByDate.isPresent()) {

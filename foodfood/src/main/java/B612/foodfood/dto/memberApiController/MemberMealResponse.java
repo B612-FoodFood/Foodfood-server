@@ -40,12 +40,12 @@ public class MemberMealResponse {
 
     public void addDinner(String name, double calories, double carbonHydrate, double protein, double fat) {
         FoodDto dinnerFood = new FoodDto(name, calories, carbonHydrate, protein, fat);
-        breakFast.add(dinnerFood);
+        dinner.add(dinnerFood);
     }
 
     public void addSnack(String name, double calories, double carbonHydrate, double protein, double fat) {
         FoodDto snackFood = new FoodDto(name, calories, carbonHydrate, protein, fat);
-        breakFast.add(snackFood);
+        snack.add(snackFood);
     }
 }
 

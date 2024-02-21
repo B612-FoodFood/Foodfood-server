@@ -20,7 +20,8 @@ public enum ErrorCode {
     NO_MEMBER_ALLOCATED(FAILED_DEPENDENCY, ""),
 
     KEYWORD_TOO_SHORT(BAD_REQUEST, ""),
-    INVALID_VALUE_ASSIGNMENT(BAD_REQUEST, "");
+    INVALID_VALUE_ASSIGNMENT(BAD_REQUEST, ""),
+    INVALID_URI_ACCESS(NOT_FOUND,"");
 
 
     private final HttpStatus httpStatus;

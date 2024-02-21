@@ -118,16 +118,17 @@ public class Member {
 
     public void addBodyComposition(BodyComposition bodyComposition) {
         LocalDate date = bodyComposition.getDate();
-        if (!bodyCompositions.isEmpty()) {
-            // 현재 날짜에 이미 BodyComposition이 있다면 새로운 BodyComposition을 추가하는 대신
-            // 기존의 BodyComposition을 업데이트
+        // 현재 날짜에 이미 BodyComposition이 있다면 새로운 BodyComposition을 추가하는 대신
+        // 기존의 BodyComposition을 업데이트
 
-            for (BodyComposition currentComposition : bodyCompositions) {
-                if (currentComposition.getDate().equals(date)) {
-                    currentComposition.setWeight(bodyComposition.getWeight());
-                    currentComposition.setMuscle(bodyComposition.getMuscle());
-                    currentComposition.setBodyFat(bodyComposition.getBodyFat());
-                }
+        log.info(String.valueOf(bodyComposition));
+
+        for (BodyComposition currentComposition : bodyCompositions) {
+            if (currentComposition.getDate().equals(date)) {
+                log.info(String.valueOf(currentComposition));
+                currentComposition.setWeight(bodyComposition.getWeight());
+                currentComposition.setMuscle(bodyComposition.getMuscle());
+                currentComposition.setBodyFat(bodyComposition.getBodyFat());
                 return;
             }
         }
@@ -207,13 +208,13 @@ public class Member {
     /**
      * 비즈니스 로직
      */
-    public Optional<BodyComposition> findBodyCompositionByDate(LocalDate date) {
+    public Optional<BodyComposition> getBodyCompositionByDate(LocalDate date) {
         return bodyCompositions.stream()
                 .filter(bodyComposition -> bodyComposition.getDate().equals(date))
                 .findFirst();
     }
 
-    public Optional<Meal> findMealByDate(LocalDate date) {
+    public Optional<Meal> getMealByDate(LocalDate date) {
         return meals.stream()
                 .filter(meal -> meal.getDate().equals(date))
                 .findFirst();
