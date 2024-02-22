@@ -5,6 +5,7 @@ import B612.foodfood.exception.ErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
+import static B612.foodfood.exception.ErrorCode.INVALID_VALUE_ASSIGNMENT;
 import static lombok.AccessLevel.*;
 
 @Embeddable
@@ -23,8 +24,8 @@ public class AchieveBodyGoal {
         this.achieveMuscle = achieveMuscle;
         this.achieveBodyFat = achieveBodyFat;
 
-        if (achieveWeight <= 0 || achieveMuscle <= 0 || achieveBodyFat <= 0 || achieveBodyFat > 100) {
-            throw new AppException(ErrorCode.INVALID_VALUE_ASSIGNMENT, "잘못된 값이 입력되었습니다");
+        if (achieveWeight < 0 || achieveMuscle < 0 || achieveBodyFat < 0 || achieveBodyFat > 100) {
+            throw new AppException(INVALID_VALUE_ASSIGNMENT, "잘못된 값이 입력되었습니다");
         }
     }
 }
