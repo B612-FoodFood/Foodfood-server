@@ -107,14 +107,18 @@ public class JoinApiController {
      */
     @PostMapping("/diet/fat")
     public Result<MemberJoinDietFatResponse> setAchieveBodyFat(@RequestBody MemberJoinDietFatRequest request) {
-        this.achieveBodyFat = request.getAchieveBodyFat();
+        try {
+            this.achieveBodyFat = request.getAchieveBodyFat();
 
-        // 권장 칼로리 계산을 위한 임시 멤버 객체 생성. (저장안함)
-        Member tempUser = new Member(name, sex, birthDate, new PersonalInformation(new LogIn("temp_id", "temp_pw"), "temp_phone"), height, activity, goal, new AchieveBodyGoal(0, 0, 0), USER);
-        tempUser.addBodyComposition(new BodyComposition(achieveWeight, null, null));
-        int recommendedCalories = (int) tempUser.getRecommendedCalories();
+            // 권장 칼로리 계산을 위한 임시 멤버 객체 생성. (저장안함)
+            Member tempUser = new Member(name, sex, birthDate, new PersonalInformation(new LogIn("temp_id", "temp_pw"), "temp_phone"), height, activity, goal, new AchieveBodyGoal(0, 0, 0), USER);
+            tempUser.addBodyComposition(new BodyComposition(achieveWeight, null, null));
+            int recommendedCalories = (int) tempUser.getRecommendedCalories();
 
-        return new Result<>(HttpStatus.OK, null, new MemberJoinDietFatResponse(recommendedCalories));
+            return new Result<>(HttpStatus.OK, null, new MemberJoinDietFatResponse(recommendedCalories));
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }
     }
 
     /**
