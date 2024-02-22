@@ -68,8 +68,8 @@ class MemberApiControllerTest {
     @BeforeEach
     public void each() throws DataSaveException {
         // WebMvcTest라서 동작 안함.
-        foodService.save(new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 견과류및종실류));
-        foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), 어패류및수산물));
+        foodService.save(new Food("food1", new Nutrition(1, 1, 1, 1, 1, 1D, 1D, 1D, 1D, 1D), 견과류및종실류));
+        foodService.save(new Food("food2", new Nutrition(1, 1, 1, 1, 1, 1D, 1D, 1D, 1D, 1D), 어패류및수산물));
         diseaseService.save(new Disease("질병1"));
         diseaseService.save(new Disease("질병2"));
         drugService.save(new Drug("drug1"));

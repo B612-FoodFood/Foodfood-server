@@ -29,9 +29,9 @@ class FoodRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Nutrition nutrition1 = new Nutrition(1, 10, 1, 10, 1, 1, 1, 1, 1, 1);
-        Nutrition nutrition2 = new Nutrition(1, 10, 10, 1, 10, 1, 1, 1, 1, 1);
-        Nutrition nutrition3 = new Nutrition(1, 1, 10, 10, 1, 1, 1, 1, 1, 1);
+        Nutrition nutrition1 = new Nutrition(1, 10, 1, 10, 1, 1D, 1D, 1D, 1D, 1D);
+        Nutrition nutrition2 = new Nutrition(1, 10, 10, 1, 10, 1D, 1D, 1D, 1D, 1D);
+        Nutrition nutrition3 = new Nutrition(1, 1, 10, 10, 1, 1D, 1D, 1D, 1D, 1D);
         Food fo1 = new Food("food1", nutrition1, Category.견과류및종실류);
         Food fo2 = new Food("food2", nutrition2, Category.견과류및종실류);
         Food fo3 = new Food("food1", nutrition3, Category.견과류및종실류);
@@ -49,7 +49,7 @@ class FoodRepositoryTest {
     @DisplayName("ID로 조회")
     public void test() throws Exception{
         //given
-        Nutrition nutrition = new Nutrition(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        Nutrition nutrition = new Nutrition(1, 1, 1, 1, 1, 1D, 1D, 1D, 1D, 1D);
         Food fo = new Food("food1", nutrition, Category.견과류및종실류);
         foodRepository.save(fo);
 
