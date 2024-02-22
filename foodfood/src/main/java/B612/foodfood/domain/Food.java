@@ -17,11 +17,11 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class Food {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "food_id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Embedded
@@ -30,10 +30,34 @@ public class Food {
     @Enumerated(STRING)
     private Category category;
 
+    @Column(columnDefinition = "boolean")
+    private Boolean isUserCreateFood;
+
+    public Food(String name, Nutrition nutrition) {
+        this.name = name;
+        this.nutrition = nutrition;
+        this.category = null;
+        this.isUserCreateFood = false;
+    }
+
+    public Food(String name, Nutrition nutrition, boolean isUserCreateFood) {
+        this.name = name;
+        this.nutrition = nutrition;
+        this.category = null;
+        this.isUserCreateFood = isUserCreateFood;
+    }
+
     public Food(String name, Nutrition nutrition, Category category) {
         this.name = name;
         this.nutrition = nutrition;
         this.category = category;
+    }
+
+    public Food(String name, Nutrition nutrition, Category category, boolean isUserCreateFood) {
+        this.name = name;
+        this.nutrition = nutrition;
+        this.category = category;
+        this.isUserCreateFood = isUserCreateFood;
     }
 
     @OneToMany(mappedBy = "food", cascade = ALL)

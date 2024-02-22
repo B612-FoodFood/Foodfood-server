@@ -18,11 +18,11 @@ import static jakarta.persistence.EnumType.*;
 @Getter
 public class Ingredient {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Enumerated(STRING)

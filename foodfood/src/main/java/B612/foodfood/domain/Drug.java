@@ -19,11 +19,11 @@ import static lombok.AccessLevel.*;
 @ToString
 public class Drug {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "drug_id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     // 추가할 부분 추가...

@@ -13,7 +13,7 @@ import static lombok.AccessLevel.*;
 @ToString
 public class AverageBodyProfile {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "average_body_profile_id")
     private Long id;
 

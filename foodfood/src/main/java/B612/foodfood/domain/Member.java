@@ -28,10 +28,11 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
     @Column(columnDefinition = "date")  // 미 지정시 DB에 TimeStamp 타입으로 저장됨. 왜 그런진 모르겠음
     private LocalDate birthDate;

@@ -12,14 +12,16 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class PersonalInformation {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "personal_information_id")
     private Long id;
 
     @Embedded
     @Setter
+    @Column(nullable = false)
     private LogIn logIn;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     public PersonalInformation(LogIn logIn, String phoneNumber) {

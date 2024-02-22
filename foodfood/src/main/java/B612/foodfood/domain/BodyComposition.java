@@ -16,7 +16,7 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access = PROTECTED)
 public class BodyComposition {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "body_composition_id")
     private Long id;
 
@@ -28,7 +28,7 @@ public class BodyComposition {
     @Setter(value = PROTECTED)  // member의 obestiy 계산을 위하여 bodyFat만 별도로 setter를 허용함.
     private Double bodyFat; // 체지방률: 단위(%)
 
-    @Column(columnDefinition = "DATE")
+    @Column(columnDefinition = "DATE", nullable = false)
     private LocalDate date;  // 기록 시간
 
     @ManyToOne(fetch = LAZY)
@@ -37,7 +37,9 @@ public class BodyComposition {
     private Member member;
 
     public BodyComposition(double weight, Double muscle, Double bodyFat) {
-        if (weight <= 0 || muscle <= 0 || bodyFat <= 0 || bodyFat > 100) {
+        if (weight <= 0 ||
+                (muscle != null && muscle < 0) ||
+                (bodyFat != null && bodyFat < 0 || bodyFat != null && bodyFat > 100)) {
             throw new AppException(ErrorCode.INVALID_VALUE_ASSIGNMENT, "잘못된 값이 입력되었습니다");
         }
         this.weight = weight;

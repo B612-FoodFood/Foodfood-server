@@ -19,7 +19,7 @@ import static lombok.AccessLevel.*;
 @ToString(exclude = {"member"})
 public class Meal {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meal_id")
     private Long id;
 
@@ -69,6 +69,7 @@ public class Meal {
 
         return breakFast;
     }
+
     public List<MealFood> getLunch() {
         List<MealFood> lunch = new ArrayList<>();
         for (MealFood mealFood : this.lunch) {
@@ -79,6 +80,7 @@ public class Meal {
 
         return lunch;
     }
+
     public List<MealFood> getDinner() {
         List<MealFood> dinner = new ArrayList<>();
         for (MealFood mealFood : this.dinner) {
@@ -89,6 +91,7 @@ public class Meal {
 
         return dinner;
     }
+
     public List<MealFood> getSnack() {
         List<MealFood> snack = new ArrayList<>();
         for (MealFood mealFood : this.snack) {

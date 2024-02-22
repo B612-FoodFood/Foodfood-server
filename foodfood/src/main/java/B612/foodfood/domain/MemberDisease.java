@@ -12,7 +12,7 @@ import static lombok.AccessLevel.*;
 public class MemberDisease {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_disease_id")
     private Long id;
 
