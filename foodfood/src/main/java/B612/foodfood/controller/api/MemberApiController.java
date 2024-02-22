@@ -320,6 +320,7 @@ public class MemberApiController {
         }
     }
 
+    @Transactional(readOnly = false)
     @PostMapping("/member/meal")
     public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
         if (request.getDate().isAfter(LocalDate.now())) {
@@ -421,7 +422,7 @@ public class MemberApiController {
             Optional<Meal> mealByDate = member.getMealByDate(request.getDate());
 
             if (mealByDate.isEmpty()) {  // 멤버가 해당날짜에 식사내역이 없는 경우 식사 추가
-                meal = new Meal();
+                meal = new Meal(request.getDate());
                 member.addMeal(meal);
             } else {  // 식사내역이 있는 경우 식사내역 가져옴.
                 meal = mealByDate.get();
@@ -451,6 +452,34 @@ public class MemberApiController {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } catch (Exception e) {
             return new Result(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * <p>음식 직접 입력. 사용자가 직접 Food 엔티티를 생성.</p>
+     * <p>해당 Food는 DB에 저장되고, 다른 유저도 조회할 수 있음.</p>
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/member/food/create")
+    public Result createFood(@RequestBody MemberMealAddCreateRequest request) {
+        try {
+            String foodName = request.getName();
+            double servingWeight = request.getServingWeight();
+            double calories = request.getCalories();
+            double carbonHydrate = request.getCarbonHydrate();
+            double protein = request.getProtein();
+            double fat = request.getFat();
+
+            Nutrition nutrition = new Nutrition(servingWeight, calories, carbonHydrate, protein, fat);
+            Food userCreateFood = new Food(foodName, nutrition, true);
+
+            foodService.save(userCreateFood);  // 유저가 보낸 정보를 바탕으로 새로운 Food을 만들어 DB 저장.
+
+            return new Result(HttpStatus.OK, null, null);
+        } catch (AppException e) {
+            return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         }
     }
 }
