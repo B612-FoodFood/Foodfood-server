@@ -47,5 +47,5 @@ public enum Category {
     육류,
     조미료,
     채소류,
-    해조류
+    해조류,
 }
