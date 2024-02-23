@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 @Data
 @AllArgsConstructor
 public class MemberLogInResponse{
-    private String accessToken;
+    private String authorization;
     private String refreshToken;
 }

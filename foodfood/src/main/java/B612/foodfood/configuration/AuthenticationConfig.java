@@ -36,7 +36,7 @@ public class AuthenticationConfig {
                         authorize.requestMatchers(
                                         "/api/v1/join/**",
                                         "/api/v1/login",
-                                        "/")
+                                        "/test")
                                 .permitAll()  // 인증 불필요 설정
                                 .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 권한이 있는 사용자만 접근 가능
                                 .anyRequest().authenticated())  // 나머지 모든 요청은 인증 필요
