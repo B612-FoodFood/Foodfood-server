@@ -61,6 +61,7 @@ public class JoinApiController {
      */
     @PostMapping("/diet")
     public Result<MemberJoinDietResponse> joinToDiet(@RequestBody MemberJoinDietRequest request) {
+        log.info("/api/v1/join/diet");
         this.name = request.getName();
         this.sex = request.getSex();
         this.birthDate = request.getBirthDate();
@@ -89,6 +90,7 @@ public class JoinApiController {
      */
     @PostMapping("/diet/weight")
     public Result<MemberJoinDietWeightResponse> setWeight(@RequestBody MemberJoinDietWeightRequest request) {
+        log.info("/api/v1/join/diet/weight");
         this.achieveWeight = request.getAchieveWeight();
 
         // bmi 계산
@@ -108,6 +110,8 @@ public class JoinApiController {
     @PostMapping("/diet/fat")
     public Result<MemberJoinDietFatResponse> setAchieveBodyFat(@RequestBody MemberJoinDietFatRequest request) {
         try {
+            log.info("/api/v1/join/diet/fat");
+
             this.achieveBodyFat = request.getAchieveBodyFat();
 
             // 권장 칼로리 계산을 위한 임시 멤버 객체 생성. (저장안함)
@@ -128,11 +132,15 @@ public class JoinApiController {
      */
     @GetMapping("/diet/info")
     public Result<MemberJoinDietInfoResponse> getDietInfo() {
+        log.info("/api/v1/join/info");
+
         return new Result<>(HttpStatus.OK, null, new MemberJoinDietInfoResponse(name, bodyFat, achieveBodyFat, goal));
     }
 
     @PostMapping("/muscle")
     public Result<MemberJoinMuscleResponse> joinToMuscle(@RequestBody MemberJoinMuscleRequest request) {
+        log.info("/api/v1/join/muscle");
+
         this.name = request.getName();
         this.sex = request.getSex();
         this.birthDate = request.getBirthDate();
@@ -162,6 +170,8 @@ public class JoinApiController {
      */
     @PostMapping("/muscle/weight")
     public Result setMuscleWeight(@RequestBody MemberJoinMuscleWeightRequest request) {
+        log.info("/api/v1/join/muscle/weight");
+
         achieveMuscle = request.getAchieveMuscle();
 
         return new Result(HttpStatus.OK, null, null);
@@ -175,6 +185,8 @@ public class JoinApiController {
      */
     @PostMapping("/health")
     public Result joinToHealth(@RequestBody MemberJoinHealthRequest request) {
+        log.info("/api/v1/join/health");
+
         this.name = request.getName();
         this.sex = request.getSex();
         this.birthDate = request.getBirthDate();
@@ -197,6 +209,8 @@ public class JoinApiController {
     @PostMapping("/health/disease")
     public Result<MemberJoinHealthDiseaseResponse> searchDisease(@RequestBody MemberJoinHealthDiseaseRequest request) {
         try {
+            log.info("/api/v1/join/health/disease");
+
             List<Disease> diseases = diseaseService.findDiseaseByKeyword(request.getKeyword());
             List<String> collect = diseases.stream().map(Disease::getName)
                     .collect(Collectors.toList());
@@ -213,6 +227,8 @@ public class JoinApiController {
     @PostMapping("health/disease/select")
     public Result selectDisease(@RequestBody MemberJoinHealthDiseaseSelectRequest request) {
         try {
+            log.info("/api/v1/join/health/disease/select");
+
             String diseaseName = request.getName();
             boolean isDiseaseFound = diseases.stream()
                     .anyMatch(diseaseName::equals);
@@ -237,6 +253,8 @@ public class JoinApiController {
     @PostMapping("/health/drug")
     public Result<MemberJoinHealthDrugResponse> searchDrug(@RequestBody MemberJoinHealthDrugRequest request) {
         try {
+            log.info("/api/v1/join/health/drug");
+
             List<Drug> drugs = drugService.findDrugByKeyword(request.getKeyword());
             List<String> collect = drugs.stream().map(Drug::getName)
                     .collect(Collectors.toList());
@@ -253,6 +271,8 @@ public class JoinApiController {
     @PostMapping("/health/drug/select")
     public Result selectDrug(@RequestBody MemberJoinHealthDrugSelectRequest request) {
         try {
+            log.info("/api/v1/join/health/drug/select");
+
             String drugName = request.getName();
             boolean isDrugFound = drugs.stream()
                     .anyMatch(drugName::equals);
@@ -276,6 +296,7 @@ public class JoinApiController {
      */
     @PostMapping("/create")
     public Result<String> createMember(@RequestBody MemberJoinRequest request) {
+        log.info("/api/v1/join/create");
 
         LogIn logIn = new LogIn(request.getUsername(), encoder.encode(request.getPassword()));  // 비밀번호를 spring security를 이용해서 hashing
         PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber());
@@ -331,12 +352,15 @@ public class JoinApiController {
 
     /**
      * 유저 회원 가입 데이터 한번에 받기
+     *
      * @param request
      * @return
      * @throws JsonProcessingException
      */
     @PostMapping("/create2")
     public Result join(@RequestBody MemberJoinRequest2 request) throws JsonProcessingException {
+        log.info("/api/v1/join/create2");
+
         String name = request.getName();
         Sex sex = request.getSex();
         LocalDate birthDate = request.getBirthDate();
@@ -398,6 +422,8 @@ public class JoinApiController {
 
     @GetMapping("/info/all")
     public MemberJoinTestRequest allData() {
+        log.info("/api/v1/join/info/all");
+
         MemberJoinTestRequest build = MemberJoinTestRequest.builder()
                 .name(name)
                 .sex(sex)

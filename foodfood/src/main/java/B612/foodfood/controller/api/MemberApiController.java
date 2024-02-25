@@ -42,6 +42,7 @@ public class MemberApiController {
 
     @PostMapping("/login")
     public Result<MemberLogInResponse> logIn(@RequestBody MemberLogInRequest request) {
+        log.info("/api/v1/login");
         String accessToken = null;
         String refreshToken = null;
         try {
@@ -60,6 +61,8 @@ public class MemberApiController {
     @GetMapping("/member")
     public Result<MemberInfoResponse> memberPage(Authentication authentication) {
         try {
+            log.info("/api/v1/member");
+
             String userName = authentication.getName();
             MemberInfoResponse value = new MemberInfoResponse();
 
@@ -153,6 +156,8 @@ public class MemberApiController {
     @GetMapping("/member/edit/muscle")
     public Result<MemberEditMuscleResponse> currentMuscle(Authentication authentication) {
         try {
+            log.info("/api/v1/member/edit/muscle");
+
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -176,6 +181,8 @@ public class MemberApiController {
     @PostMapping("/member/edit/muscle")
     public Result editMuscle(Authentication authentication, @RequestBody MemberEditMuscleRequest request) {
         try {
+            log.info("/api/v1/member/edit/muscle");
+
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double muscle = request.getMuscle(); // 업데이트할 현재 골격근량
@@ -212,6 +219,8 @@ public class MemberApiController {
     @GetMapping("/member/edit/bodyFat")
     public Result<MemberEditBodyFatResponse> currentBodyFat(Authentication authentication) {
         try {
+            log.info("/api/v1/member/edit/bodyFat");
+
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -234,6 +243,8 @@ public class MemberApiController {
     @PostMapping("/member/edit/bodyFat")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditBodyFatRequest request) {
         try {
+            log.info("/api/v1/member/edit/bodyFat");
+
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double bodyFat = request.getBodyFat(); // 업데이트할 현재 골격근량
@@ -269,6 +280,7 @@ public class MemberApiController {
     @GetMapping("/member/edit/weight")
     public Result<MemberEditWeightResponse> currentWeight(Authentication authentication) {
         try {
+            log.info("GET:/api/v1/member/edit/weight");
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -292,6 +304,8 @@ public class MemberApiController {
     @PostMapping("/member/edit/weight")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditWeightRequest request) {
         try {
+            log.info("POST:/api/v1/member/edit/weight");
+
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double weight = request.getWeight(); // 업데이트할 현재 체중
@@ -323,6 +337,8 @@ public class MemberApiController {
     @Transactional(readOnly = false)
     @PostMapping("/member/meal")
     public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
+        log.info("/api/v1/member/meal");
+
         if (request.getDate().isAfter(LocalDate.now())) {
             return new Result<>(HttpStatus.BAD_REQUEST, "잘못된 날짜 정보입니다.", null);
         }
@@ -391,6 +407,8 @@ public class MemberApiController {
     @PostMapping("/member/meal/search")
     public Result<MemberMealSearchResponse> searchFood(Authentication authentication, @RequestBody MemberMealSearchRequest request) {
         try {
+            log.info("/api/v1/member/meal/search");
+
             List<Food> foods
                     = foodService.findFoodByKeyword(request.getKeyword());
             MemberMealSearchResponse value = new MemberMealSearchResponse();
@@ -415,6 +433,8 @@ public class MemberApiController {
     @PostMapping("/member/meal/add/{type}")  // type = {breakfast,lunch,dinner,snack}
     public Result addFood(Authentication authentication, @PathVariable(name = "type") String type, @RequestBody MemberMealSelectRequest request) {
         try {
+            log.info("/api/v1/member/meal/add/{}",type);
+
             String username = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(username);
 
@@ -465,6 +485,8 @@ public class MemberApiController {
     @PostMapping("/member/food/create")
     public Result createFood(@RequestBody MemberMealAddCreateRequest request) {
         try {
+            log.info("/api/v1/member/food/create");
+
             String foodName = request.getName();
             double servingWeight = request.getServingWeight();
             double calories = request.getCalories();
