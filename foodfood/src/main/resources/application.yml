@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
       hibernate:
@@ -15,8 +15,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000 #최적화 옵션
 
-#server:
-#  port: 5000
 
 logging:
   level:
