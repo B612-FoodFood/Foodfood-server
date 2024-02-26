@@ -14,8 +14,8 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 public class FoodfoodApplication {
 
     public static void main(String[] args) {
-        log.info("Food_Food_Version_0.9 (released 2024-02-26)");
         SpringApplication.run(FoodfoodApplication.class, args);
+        log.info("Food_Food_Version_0.9 (released 2024-02-26)");
     }
 
 }
