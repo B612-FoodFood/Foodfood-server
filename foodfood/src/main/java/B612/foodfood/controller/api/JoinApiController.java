@@ -61,7 +61,6 @@ public class JoinApiController {
      */
     @PostMapping("/diet")
     public Result<MemberJoinDietResponse> joinToDiet(@RequestBody MemberJoinDietRequest request) {
-        log.info("/api/v1/join/diet");
         this.name = request.getName();
         this.sex = request.getSex();
         this.birthDate = request.getBirthDate();
@@ -79,6 +78,9 @@ public class JoinApiController {
         } catch (AppException e) {
             MemberJoinDietResponse memberJoinDietResponse = new MemberJoinDietResponse(null, null, null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), memberJoinDietResponse);
+        } finally {
+            log.info("/api/v1/join/diet");
+
         }
     }
 
@@ -110,7 +112,6 @@ public class JoinApiController {
     @PostMapping("/diet/fat")
     public Result<MemberJoinDietFatResponse> setAchieveBodyFat(@RequestBody MemberJoinDietFatRequest request) {
         try {
-            log.info("/api/v1/join/diet/fat");
 
             this.achieveBodyFat = request.getAchieveBodyFat();
 
@@ -122,6 +123,8 @@ public class JoinApiController {
             return new Result<>(HttpStatus.OK, null, new MemberJoinDietFatResponse(recommendedCalories));
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/diet/fat");
         }
     }
 
@@ -139,7 +142,6 @@ public class JoinApiController {
 
     @PostMapping("/muscle")
     public Result<MemberJoinMuscleResponse> joinToMuscle(@RequestBody MemberJoinMuscleRequest request) {
-        log.info("/api/v1/join/muscle");
 
         this.name = request.getName();
         this.sex = request.getSex();
@@ -159,6 +161,9 @@ public class JoinApiController {
         } catch (AppException e) {
             MemberJoinMuscleResponse value = new MemberJoinMuscleResponse(null, null, null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
+        } finally {
+            log.info("/api/v1/join/muscle");
+
         }
     }
 
@@ -209,7 +214,6 @@ public class JoinApiController {
     @PostMapping("/health/disease")
     public Result<MemberJoinHealthDiseaseResponse> searchDisease(@RequestBody MemberJoinHealthDiseaseRequest request) {
         try {
-            log.info("/api/v1/join/health/disease");
 
             List<Disease> diseases = diseaseService.findDiseaseByKeyword(request.getKeyword());
             List<String> collect = diseases.stream().map(Disease::getName)
@@ -221,13 +225,15 @@ public class JoinApiController {
             return new Result<>(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/health/disease");
+
         }
     }
 
     @PostMapping("health/disease/select")
     public Result selectDisease(@RequestBody MemberJoinHealthDiseaseSelectRequest request) {
         try {
-            log.info("/api/v1/join/health/disease/select");
 
             String diseaseName = request.getName();
             boolean isDiseaseFound = diseases.stream()
@@ -241,6 +247,9 @@ public class JoinApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/health/disease/select");
+
         }
     }
 
@@ -253,7 +262,6 @@ public class JoinApiController {
     @PostMapping("/health/drug")
     public Result<MemberJoinHealthDrugResponse> searchDrug(@RequestBody MemberJoinHealthDrugRequest request) {
         try {
-            log.info("/api/v1/join/health/drug");
 
             List<Drug> drugs = drugService.findDrugByKeyword(request.getKeyword());
             List<String> collect = drugs.stream().map(Drug::getName)
@@ -265,13 +273,15 @@ public class JoinApiController {
             return new Result<>(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/health/drug");
+
         }
     }
 
     @PostMapping("/health/drug/select")
     public Result selectDrug(@RequestBody MemberJoinHealthDrugSelectRequest request) {
         try {
-            log.info("/api/v1/join/health/drug/select");
 
             String drugName = request.getName();
             boolean isDrugFound = drugs.stream()
@@ -285,6 +295,9 @@ public class JoinApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/health/drug/select");
+
         }
     }
 
@@ -296,7 +309,6 @@ public class JoinApiController {
      */
     @PostMapping("/create")
     public Result<String> createMember(@RequestBody MemberJoinRequest request) {
-        log.info("/api/v1/join/create");
 
         LogIn logIn = new LogIn(request.getUsername(), encoder.encode(request.getPassword()));  // 비밀번호를 spring security를 이용해서 hashing
         PersonalInformation personalInformation = new PersonalInformation(logIn, request.getPhoneNumber());
@@ -317,6 +329,9 @@ public class JoinApiController {
             }*/
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), "잘못된 데이터 입력");
+        } finally {
+            log.info("/api/v1/join/create --1");
+
         }
 
         // create Member
@@ -330,6 +345,9 @@ public class JoinApiController {
             memberId = memberService.join(member);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), "이미 존재하는 회원");
+        } finally {
+            log.info("/api/v1/join/create --2");
+
         }
 
         // add information
@@ -346,6 +364,7 @@ public class JoinApiController {
             Drug findDrug = drugService.findDrugByName(drugName);
             memberService.updateAddDrug(memberId, findDrug);
         }
+        log.info("/api/v1/join/create --OK");
 
         return new Result<>(HttpStatus.OK, "회원가입 성공", memberId.toString());
     }
@@ -359,8 +378,6 @@ public class JoinApiController {
      */
     @PostMapping("/create2")
     public Result join(@RequestBody MemberJoinRequest2 request) throws JsonProcessingException {
-        log.info("/api/v1/join/create2");
-
         String name = request.getName();
         Sex sex = request.getSex();
         LocalDate birthDate = request.getBirthDate();
@@ -391,6 +408,9 @@ public class JoinApiController {
             }
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/create2 --1");
+
         }
         // create Member
         Member member = new Member(name, sex, birthDate, personalInformation,
@@ -402,6 +422,9 @@ public class JoinApiController {
             memberId = memberService.join(member);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/join/create2 --2");
+
         }
         // add information
         memberService.updateAddBodyComposition(memberId, bodyComposition);
@@ -417,6 +440,8 @@ public class JoinApiController {
             Drug findDrug = drugService.findDrugByName(drugName);
             memberService.updateAddDrug(memberId, findDrug);
         }
+        log.info("/api/v1/join/create2 --OK");
+
         return new Result(HttpStatus.OK, memberId.toString(), null);
     }
 

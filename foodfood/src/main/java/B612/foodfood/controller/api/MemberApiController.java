@@ -42,7 +42,7 @@ public class MemberApiController {
 
     @PostMapping("/login")
     public Result<MemberLogInResponse> logIn(@RequestBody MemberLogInRequest request) {
-        log.info("/api/v1/login");
+
         String accessToken = null;
         String refreshToken = null;
         try {
@@ -52,6 +52,8 @@ public class MemberApiController {
         } catch (AppException e) {
             MemberLogInResponse value = new MemberLogInResponse(null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
+        } finally {
+            log.info("/api/v1/login");
         }
 
         MemberLogInResponse value = new MemberLogInResponse(accessToken, refreshToken);
@@ -146,6 +148,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/member");
         }
     }
 
@@ -156,8 +160,6 @@ public class MemberApiController {
     @GetMapping("/member/edit/muscle")
     public Result<MemberEditMuscleResponse> currentMuscle(Authentication authentication) {
         try {
-            log.info("/api/v1/member/edit/muscle");
-
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -170,6 +172,8 @@ public class MemberApiController {
 
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/edit/muscle");
         }
     }
 
@@ -181,8 +185,6 @@ public class MemberApiController {
     @PostMapping("/member/edit/muscle")
     public Result editMuscle(Authentication authentication, @RequestBody MemberEditMuscleRequest request) {
         try {
-            log.info("/api/v1/member/edit/muscle");
-
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double muscle = request.getMuscle(); // 업데이트할 현재 골격근량
@@ -209,6 +211,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/member/edit/muscle");
         }
     }
 
@@ -219,7 +223,6 @@ public class MemberApiController {
     @GetMapping("/member/edit/bodyFat")
     public Result<MemberEditBodyFatResponse> currentBodyFat(Authentication authentication) {
         try {
-            log.info("/api/v1/member/edit/bodyFat");
 
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
@@ -232,6 +235,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/member/edit/bodyFat");
         }
     }
 
@@ -243,8 +248,6 @@ public class MemberApiController {
     @PostMapping("/member/edit/bodyFat")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditBodyFatRequest request) {
         try {
-            log.info("/api/v1/member/edit/bodyFat");
-
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double bodyFat = request.getBodyFat(); // 업데이트할 현재 골격근량
@@ -270,6 +273,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/member/edit/bodyFat");
         }
     }
 
@@ -280,7 +285,6 @@ public class MemberApiController {
     @GetMapping("/member/edit/weight")
     public Result<MemberEditWeightResponse> currentWeight(Authentication authentication) {
         try {
-            log.info("GET:/api/v1/member/edit/weight");
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             List<BodyComposition> bodyCompositions = member.getBodyCompositions();
@@ -293,6 +297,8 @@ public class MemberApiController {
 
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("GET:/api/v1/member/edit/weight");
         }
     }
 
@@ -304,8 +310,6 @@ public class MemberApiController {
     @PostMapping("/member/edit/weight")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditWeightRequest request) {
         try {
-            log.info("POST:/api/v1/member/edit/weight");
-
             String userName = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(userName);
             double weight = request.getWeight(); // 업데이트할 현재 체중
@@ -331,14 +335,14 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("POST:/api/v1/member/edit/weight");
         }
     }
 
     @Transactional(readOnly = false)
     @PostMapping("/member/meal")
     public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
-        log.info("/api/v1/member/meal");
-
         if (request.getDate().isAfter(LocalDate.now())) {
             return new Result<>(HttpStatus.BAD_REQUEST, "잘못된 날짜 정보입니다.", null);
         }
@@ -381,6 +385,7 @@ public class MemberApiController {
             // add snack food
             value.addSnack(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
         }
+        log.info("/api/v1/member/meal");
 
         return new Result<>(HttpStatus.OK, null, value);
     }
@@ -407,8 +412,6 @@ public class MemberApiController {
     @PostMapping("/member/meal/search")
     public Result<MemberMealSearchResponse> searchFood(Authentication authentication, @RequestBody MemberMealSearchRequest request) {
         try {
-            log.info("/api/v1/member/meal/search");
-
             List<Food> foods
                     = foodService.findFoodByKeyword(request.getKeyword());
             MemberMealSearchResponse value = new MemberMealSearchResponse();
@@ -426,6 +429,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("/api/v1/member/meal/search");
         }
     }
 
@@ -433,8 +438,6 @@ public class MemberApiController {
     @PostMapping("/member/meal/add/{type}")  // type = {breakfast,lunch,dinner,snack}
     public Result addFood(Authentication authentication, @PathVariable(name = "type") String type, @RequestBody MemberMealSelectRequest request) {
         try {
-            log.info("/api/v1/member/meal/add/{}",type);
-
             String username = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(username);
 
@@ -472,6 +475,8 @@ public class MemberApiController {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } catch (Exception e) {
             return new Result(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }finally {
+            log.info("/api/v1/member/meal/add/{}",type);
         }
     }
 
@@ -502,6 +507,8 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        }finally {
+            log.info("/api/v1/member/food/create");
         }
     }
 }
