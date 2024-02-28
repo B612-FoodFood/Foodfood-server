@@ -1,4 +1,4 @@
-package B612.foodfood.controller.api;
+package B612.foodfood.controller.test;
 
 import B612.foodfood.domain.Activity;
 import B612.foodfood.domain.BodyGoal;
