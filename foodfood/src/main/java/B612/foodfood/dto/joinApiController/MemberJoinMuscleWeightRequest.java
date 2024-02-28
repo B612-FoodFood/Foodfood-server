@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberJoinMuscleWeightRequest {
+    private double achieveWeight;
     private double achieveMuscle;
 }
