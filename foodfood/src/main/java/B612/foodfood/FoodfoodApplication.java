@@ -15,7 +15,7 @@ public class FoodfoodApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FoodfoodApplication.class, args);
-        log.info("Food_Food_Version_0.9 (released 2024-02-26)");
+        log.info("Food_Food_Version_0.9.1 (released 2024-02-28)");
     }
 
 }
