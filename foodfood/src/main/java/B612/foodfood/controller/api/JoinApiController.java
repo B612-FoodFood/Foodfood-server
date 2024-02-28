@@ -96,11 +96,11 @@ public class JoinApiController {
         this.achieveWeight = request.getAchieveWeight();
 
         // bmi 계산
-        double bmi = achieveWeight / Math.pow(height / 100, height / 100);
+        double bmi = achieveWeight / Math.pow(height / 100, height / 100);  // 목표체중에 대한 bmi
 
-        MemberJoinDietWeightResponse memberJoinDietWeightResponse = new MemberJoinDietWeightResponse(bmi);
+        MemberJoinDietWeightResponse value = new MemberJoinDietWeightResponse(bmi);
 
-        return new Result<>(HttpStatus.OK, null, memberJoinDietWeightResponse);
+        return new Result<>(HttpStatus.OK, null, value);
     }
 
     /**
@@ -174,12 +174,17 @@ public class JoinApiController {
      * @return
      */
     @PostMapping("/muscle/weight")
-    public Result setMuscleWeight(@RequestBody MemberJoinMuscleWeightRequest request) {
+    public Result<MemberJoinMuscleWeightResponse> setMuscleWeight(@RequestBody MemberJoinMuscleWeightRequest request) {
         log.info("/api/v1/join/muscle/weight");
 
         achieveMuscle = request.getAchieveMuscle();
+        achieveWeight = request.getAchieveWeight();
 
-        return new Result(HttpStatus.OK, null, null);
+        // bmi 계산
+        double bmi = achieveWeight / Math.pow(height / 100, height / 100); // 목표체중에 대한 bmi
+        MemberJoinMuscleWeightResponse value = new MemberJoinMuscleWeightResponse(bmi);
+
+        return new Result(HttpStatus.OK, null, value);
     }
 
     /**
