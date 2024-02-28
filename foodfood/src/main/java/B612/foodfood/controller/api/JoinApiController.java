@@ -79,7 +79,7 @@ public class JoinApiController {
             MemberJoinDietResponse memberJoinDietResponse = new MemberJoinDietResponse(null, null, null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), memberJoinDietResponse);
         } finally {
-            log.info("/api/v1/join/diet");
+            log.info("POST: /api/v1/join/diet");
 
         }
     }
@@ -92,7 +92,7 @@ public class JoinApiController {
      */
     @PostMapping("/diet/weight")
     public Result<MemberJoinDietWeightResponse> setWeight(@RequestBody MemberJoinDietWeightRequest request) {
-        log.info("/api/v1/join/diet/weight");
+        log.info("POST: /api/v1/join/diet/weight");
         this.achieveWeight = request.getAchieveWeight();
 
         // bmi 계산
@@ -124,7 +124,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/diet/fat");
+            log.info("POST: /api/v1/join/diet/fat");
         }
     }
 
@@ -135,7 +135,7 @@ public class JoinApiController {
      */
     @GetMapping("/diet/info")
     public Result<MemberJoinDietInfoResponse> getDietInfo() {
-        log.info("/api/v1/join/info");
+        log.info("GET: /api/v1/join/info");
 
         return new Result<>(HttpStatus.OK, null, new MemberJoinDietInfoResponse(name, bodyFat, achieveBodyFat, goal));
     }
@@ -162,8 +162,7 @@ public class JoinApiController {
             MemberJoinMuscleResponse value = new MemberJoinMuscleResponse(null, null, null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
         } finally {
-            log.info("/api/v1/join/muscle");
-
+            log.info("POST: /api/v1/join/muscle");
         }
     }
 
@@ -175,7 +174,7 @@ public class JoinApiController {
      */
     @PostMapping("/muscle/weight")
     public Result<MemberJoinMuscleWeightResponse> setMuscleWeight(@RequestBody MemberJoinMuscleWeightRequest request) {
-        log.info("/api/v1/join/muscle/weight");
+        log.info("POST: /api/v1/join/muscle/weight");
 
         achieveMuscle = request.getAchieveMuscle();
         achieveWeight = request.getAchieveWeight();
@@ -195,7 +194,7 @@ public class JoinApiController {
      */
     @PostMapping("/health")
     public Result joinToHealth(@RequestBody MemberJoinHealthRequest request) {
-        log.info("/api/v1/join/health");
+        log.info("POST: /api/v1/join/health");
 
         this.name = request.getName();
         this.sex = request.getSex();
@@ -231,7 +230,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/health/disease");
+            log.info("POST: /api/v1/join/health/disease");
 
         }
     }
@@ -253,7 +252,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/health/disease/select");
+            log.info("POST: /api/v1/join/health/disease/select");
 
         }
     }
@@ -279,7 +278,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/health/drug");
+            log.info("POST: /api/v1/join/health/drug");
 
         }
     }
@@ -301,7 +300,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/health/drug/select");
+            log.info("POST: /api/v1/join/health/drug/select");
 
         }
     }
@@ -326,16 +325,10 @@ public class JoinApiController {
             for (String avoidIngredientName : request.getAvoidIngredients()) {
                 Ingredient avoidIngredient = ingredientService.findIngredientByName(avoidIngredientName);
             }
-            /*for (String diseaseName : request.getDiseases()) {
-                Disease findDisease = diseaseService.findDiseaseByName(diseaseName);
-            }
-            for (String drugName : request.getDrugs()) {
-                Drug findDrug = drugService.findDrugByName(drugName);
-            }*/
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), "잘못된 데이터 입력");
         } finally {
-            log.info("/api/v1/join/create --1");
+            log.info("POST: /api/v1/join/create --1");
 
         }
 
@@ -351,7 +344,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), "이미 존재하는 회원");
         } finally {
-            log.info("/api/v1/join/create --2");
+            log.info("POST: /api/v1/join/create --2");
 
         }
 
@@ -369,7 +362,7 @@ public class JoinApiController {
             Drug findDrug = drugService.findDrugByName(drugName);
             memberService.updateAddDrug(memberId, findDrug);
         }
-        log.info("/api/v1/join/create --OK");
+        log.info("POST: /api/v1/join/create --OK");
 
         return new Result<>(HttpStatus.OK, "회원가입 성공", memberId.toString());
     }
@@ -414,8 +407,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/create2 --1");
-
+            log.info("POST: /api/v1/join/create2 --1");
         }
         // create Member
         Member member = new Member(name, sex, birthDate, personalInformation,
@@ -428,8 +420,7 @@ public class JoinApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/join/create2 --2");
-
+            log.info("POST: /api/v1/join/create2 --2");
         }
         // add information
         memberService.updateAddBodyComposition(memberId, bodyComposition);
@@ -445,14 +436,14 @@ public class JoinApiController {
             Drug findDrug = drugService.findDrugByName(drugName);
             memberService.updateAddDrug(memberId, findDrug);
         }
-        log.info("/api/v1/join/create2 --OK");
+        log.info("POST: /api/v1/join/create2 --OK");
 
         return new Result(HttpStatus.OK, memberId.toString(), null);
     }
 
     @GetMapping("/info/all")
     public MemberJoinTestRequest allData() {
-        log.info("/api/v1/join/info/all");
+        log.info("GET: /api/v1/join/info/all");
 
         MemberJoinTestRequest build = MemberJoinTestRequest.builder()
                 .name(name)

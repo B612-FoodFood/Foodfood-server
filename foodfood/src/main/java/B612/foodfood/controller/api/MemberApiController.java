@@ -2,13 +2,10 @@ package B612.foodfood.controller.api;
 
 import B612.foodfood.domain.*;
 import B612.foodfood.dto.*;
-import B612.foodfood.dto.joinApiController.MemberJoinDietInfoResponse;
-import B612.foodfood.dto.joinApiController.MemberJoinRequest;
 import B612.foodfood.dto.memberApiController.*;
 import B612.foodfood.exception.AppException;
 import B612.foodfood.exception.ErrorCode;
 import B612.foodfood.service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static B612.foodfood.domain.MealType.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -53,13 +49,19 @@ public class MemberApiController {
             MemberLogInResponse value = new MemberLogInResponse(null, null);
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), value);
         } finally {
-            log.info("/api/v1/login");
+            log.info("POST: /api/v1/login");
         }
 
         MemberLogInResponse value = new MemberLogInResponse(accessToken, refreshToken);
         return new Result<>(HttpStatus.OK, null, value);
     }
 
+    /**
+     * 로그인 후 메인페이지에 필요한 각종 정보들을 반환
+     *
+     * @param authentication
+     * @return
+     */
     @GetMapping("/member")
     public Result<MemberInfoResponse> memberPage(Authentication authentication) {
         try {
@@ -149,7 +151,7 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/member");
+            log.info("GET: /api/v1/member");
         }
     }
 
@@ -173,7 +175,7 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/edit/muscle");
+            log.info("GET: /api/v1/edit/muscle");
         }
     }
 
@@ -212,13 +214,13 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/member/edit/muscle");
+            log.info("POST: /api/v1/member/edit/muscle");
         }
     }
 
     /**
      * @param authentication
-     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
+     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 체지방률, 현재 체지방률을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
      */
     @GetMapping("/member/edit/bodyFat")
     public Result<MemberEditBodyFatResponse> currentBodyFat(Authentication authentication) {
@@ -236,14 +238,14 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/member/edit/bodyFat");
+            log.info("GET: /api/v1/member/edit/bodyFat");
         }
     }
 
     /**
      * @param authentication
      * @param request
-     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
+     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 체지방률 업데이트됨.
      */
     @PostMapping("/member/edit/bodyFat")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditBodyFatRequest request) {
@@ -274,13 +276,13 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/member/edit/bodyFat");
+            log.info("POST: /api/v1/member/edit/bodyFat");
         }
     }
 
     /**
      * @param authentication
-     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 골격근량, 현재 골격근량을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
+     * @return 내 건강상태 수정하기 버튼 클릭시 표시될 현재의 목표 체중, 현재 체중을 반환. 건강상태 수정에서 초기화 버튼 눌러도 사용됨.
      */
     @GetMapping("/member/edit/weight")
     public Result<MemberEditWeightResponse> currentWeight(Authentication authentication) {
@@ -305,7 +307,7 @@ public class MemberApiController {
     /**
      * @param authentication
      * @param request
-     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 골격근량 업데이트됨.
+     * @return 건강 상태 수정에서 수정완료 버튼 클릭 시 체중 업데이트됨.
      */
     @PostMapping("/member/edit/weight")
     public Result editBodyFat(Authentication authentication, @RequestBody MemberEditWeightRequest request) {
@@ -336,10 +338,17 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("POST:/api/v1/member/edit/weight");
+            log.info("POST: /api/v1/member/edit/weight");
         }
     }
 
+    /**
+     * 특정일자에 먹은 식사 내역을 반환해줌
+     *
+     * @param authentication
+     * @param request
+     * @return
+     */
     @Transactional(readOnly = false)
     @PostMapping("/member/meal")
     public Result<MemberMealResponse> searchMealByDate(Authentication authentication, @RequestBody MemberMealRequest request) {
@@ -385,7 +394,7 @@ public class MemberApiController {
             // add snack food
             value.addSnack(result.name(), result.calories(), result.carbonHydrate(), result.protein(), result.fat());
         }
-        log.info("/api/v1/member/meal");
+        log.info("POST: /api/v1/member/meal");
 
         return new Result<>(HttpStatus.OK, null, value);
     }
@@ -409,8 +418,14 @@ public class MemberApiController {
     private record FoodResult(String name, double calories, double carbonHydrate, double protein, double fat) {
     }
 
+    /**
+     * 키워드로 검색한 음식 데이터를 반환
+     *
+     * @param request
+     * @return
+     */
     @PostMapping("/member/meal/search")
-    public Result<MemberMealSearchResponse> searchFood(Authentication authentication, @RequestBody MemberMealSearchRequest request) {
+    public Result<MemberMealSearchResponse> searchFood(@RequestBody MemberMealSearchRequest request) {
         try {
             List<Food> foods
                     = foodService.findFoodByKeyword(request.getKeyword());
@@ -430,10 +445,18 @@ public class MemberApiController {
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("/api/v1/member/meal/search");
+            log.info("POST: /api/v1/member/meal/search");
         }
     }
 
+    /**
+     * 유저가 특정일자에 먹은 식사 데이터를 아침, 점심, 저녁, 간식으로 구별하여 조회
+     *
+     * @param authentication
+     * @param type
+     * @param request
+     * @return
+     */
     @Transactional
     @PostMapping("/member/meal/add/{type}")  // type = {breakfast,lunch,dinner,snack}
     public Result addFood(Authentication authentication, @PathVariable(name = "type") String type, @RequestBody MemberMealSelectRequest request) {
@@ -475,8 +498,8 @@ public class MemberApiController {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } catch (Exception e) {
             return new Result(HttpStatus.BAD_REQUEST, e.getMessage(), null);
-        }finally {
-            log.info("/api/v1/member/meal/add/{}",type);
+        } finally {
+            log.info("POST: /api/v1/member/meal/add/{}", type);
         }
     }
 
@@ -507,8 +530,52 @@ public class MemberApiController {
             return new Result(HttpStatus.OK, null, null);
         } catch (AppException e) {
             return new Result(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
-        }finally {
-            log.info("/api/v1/member/food/create");
+        } finally {
+            log.info("POST: /api/v1/member/food/create");
+        }
+    }
+
+
+    @GetMapping("/recipe/muscle")
+    public Result<MemberRecipeMuscleResponse> recommendMuscleRecoveryFood(Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(username);
+
+            // 권장 탄단지 + 칼로리
+            double carbonHydrate = member.getRecommendedCarbonHydrate();
+            double protein = member.getRecommendedProtein();
+            double fat = member.getRecommendedFat();
+            double calories = member.getRecommendedCalories();
+
+            // 아침 (30%)
+            double morningRatio = 0.3;
+            double caloriesMorning = calories * morningRatio;
+            double carbonHydateMorning = carbonHydrate * morningRatio;
+            double proteinMorning = protein * morningRatio;
+            double fatMorning = fat * morningRatio;
+
+            // 점심 (40%)
+            double lunchRatio = 0.4;
+            double caloriesLunch = calories * lunchRatio;
+            double carbonHydateLunch = carbonHydrate * lunchRatio;
+            double proteinLunch = protein * lunchRatio;
+            double fatLunch = fat * lunchRatio;
+
+            // 저녁 (30%)
+            double dinnerRatio = 0.3;
+            double caloriesDinner = calories * dinnerRatio;
+            double carbonHydateDinner = carbonHydrate * dinnerRatio;
+            double proteinDinner = protein * dinnerRatio;
+            double fatDinner = fat * dinnerRatio;
+
+//            foodService.findFoodThat
+
+            return new Result<>();
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("GET: /recipe/muscle");
         }
     }
 }

@@ -79,18 +79,18 @@ class FoodRepositoryTest {
     public void test3() throws Exception{
         //given
         //when
-        List<Food> thatHasMoreCarlories = foodRepository.findThatHasMoreCarlories(5);
-        List<Food> thatHasLessCarlories = foodRepository.findThatHasLessCarlories(5);
+        List<Food> thatHasMoreCalories = foodRepository.findThatHasMoreCalories(5);
+        List<Food> thatHasLessCalories = foodRepository.findThatHasLessCalories(5);
 
         //then
-        for (Food thatHasMoreCarlory : thatHasMoreCarlories) {
+        for (Food thatHasMoreCarlory : thatHasMoreCalories) {
             System.out.println("thatHasMoreCarlory = " + thatHasMoreCarlory);
         }
-        for (Food thatHasLessCarlory : thatHasLessCarlories) {
+        for (Food thatHasLessCarlory : thatHasLessCalories) {
             System.out.println("thatHasLessCarlory = " + thatHasLessCarlory);
         }
 
-        assertEquals(thatHasMoreCarlories.size(),2);
-        assertEquals(thatHasLessCarlories.size(),1);
+        assertEquals(thatHasMoreCalories.size(),2);
+        assertEquals(thatHasLessCalories.size(),1);
     }
 }

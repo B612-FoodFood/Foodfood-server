@@ -9,6 +9,8 @@ import B612.foodfood.exception.NoDataExistException;
 import B612.foodfood.repository.FoodRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,12 +69,12 @@ public class FoodService {
         return findFood.get();
     }
 
-    public List<Food> findFoodThatHasMoreCarlories(double calories) {
-        return foodRepository.findThatHasMoreCarlories(calories);
+    public List<Food> findFoodThatHasMoreCalories(double calories) {
+        return foodRepository.findThatHasMoreCalories(calories);
     }
 
-    public List<Food> findFoodThatHasLessCarlories(double calories) {
-        return foodRepository.findThatHasLessCarlories(calories);
+    public List<Food> findFoodThatHasLessCalories(double calories) {
+        return foodRepository.findThatHasLessCalories(calories);
     }
 
     public List<Food> findFoodThatHasMoreCarbonHydrate(double carbonHydrate) {
@@ -112,5 +114,77 @@ public class FoodService {
 
     public List<Food> findFoodByCategory(Category category) {
         return foodRepository.findByCategory(category);
+    }
+
+    public List<Food> findFoodBetweenTwoCalories(double minCalories, double maxCalories, int pageSize) {
+        if (minCalories > maxCalories) {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodBetweenTwoCalories(double minCalories, double maxCalories, int pageSize)\n" +
+                    "발생원인: 사잇값 지정이 잘못되었습니다.");
+            throw new AppException(INVALID_VALUE_ASSIGNMENT,
+                    "사잇값 지정이 잘못되었습니다.");
+        }
+        Pageable pageable = Pageable.ofSize(pageSize);
+        return foodRepository.findThatBetweenTwoCalories(minCalories, maxCalories, pageable);
+    }
+
+    public List<Food> findFoodBetweenTwoCarbonHydrate(double minCarbonHydrate, double maxCarbonHydrate, int pageSize) {
+        if (minCarbonHydrate > maxCarbonHydrate) {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodBetweenTwoCarbonHydrate(double minCarbonHydrate, double maxCarbonHydrate, int pageSize)\n" +
+                    "발생원인: 사잇값 지정이 잘못되었습니다.");
+            throw new AppException(INVALID_VALUE_ASSIGNMENT,
+                    "사잇값 지정이 잘못되었습니다.");
+        }
+        Pageable pageable = Pageable.ofSize(pageSize);
+        return foodRepository.findThatBetweenTwoCarbonHydate(minCarbonHydrate, maxCarbonHydrate, pageable);
+    }
+
+    public List<Food> findFoodBetweenTwoProtein(double minProtein, double maxProtein, int pageSize) {
+        if (minProtein > maxProtein) {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodBetweenTwoProtein(double minProtein, double maxProtein, int pageSize)\n" +
+                    "발생원인: 사잇값 지정이 잘못되었습니다.");
+            throw new AppException(INVALID_VALUE_ASSIGNMENT,
+                    "사잇값 지정이 잘못되었습니다.");
+        }
+        Pageable pageable = Pageable.ofSize(pageSize);
+        return foodRepository.findThatBetweenTwoProtein(minProtein, maxProtein, pageable);
+    }
+
+    public List<Food> findFoodBetweenTwoFat(double minFat, double maxFat, int pageSize) {
+        if (minFat > maxFat) {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodBetweenTwoFat(double minFat, double maxFat, int pageSize)\n" +
+                    "발생원인: 사잇값 지정이 잘못되었습니다.");
+            throw new AppException(INVALID_VALUE_ASSIGNMENT,
+                    "사잇값 지정이 잘못되었습니다.");
+        }
+        Pageable pageable = Pageable.ofSize(pageSize);
+        return foodRepository.findThatBetweenTwoFat(minFat, maxFat, pageable);
+    }
+
+    public List<Food> findFoodBetweenTwoNutrition(double minCalories, double maxCalories,
+                                                  double minCarbonHydrate, double maxCarbonHydrate,
+                                                  double minProtein, double maxProtein,
+                                                  double minFat, double maxFat,
+                                                  int pageSize) {
+        if (minCalories > maxCalories ||
+                minCarbonHydrate > maxCarbonHydrate ||
+                minProtein > maxProtein || minFat > maxFat)
+        {
+            log.error("오류 발생\n" +
+                    "발생위치: FoodService.findFoodBetweenTwoNutrition(...)\n" +
+                    "발생원인: 사잇값 지정이 잘못되었습니다.");
+            throw new AppException(INVALID_VALUE_ASSIGNMENT,
+                    "사잇값 지정이 잘못되었습니다.");
+        }
+
+        Pageable pageable = Pageable.ofSize(pageSize);
+        return foodRepository.findThatBetweenTwoNutrition(minCalories, maxCalories,
+                minCarbonHydrate, maxCarbonHydrate,
+                minProtein, maxProtein,
+                minFat, maxFat,
+                pageable);
     }
 }
