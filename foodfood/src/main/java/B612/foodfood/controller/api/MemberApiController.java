@@ -536,7 +536,7 @@ public class MemberApiController {
     }
 
 
-    @GetMapping("/recipe/muscle")
+    @GetMapping("/member/recipe/muscle")
     public Result<MemberRecipeMuscleResponse> recommendMuscleRecoveryFood(Authentication authentication) {
         try {
             String username = authentication.getName();
@@ -551,27 +551,40 @@ public class MemberApiController {
             // 아침 (30%)
             double morningRatio = 0.3;
             double caloriesMorning = calories * morningRatio;
-            double carbonHydateMorning = carbonHydrate * morningRatio;
+            double carbonHydrateMorning = carbonHydrate * morningRatio;
             double proteinMorning = protein * morningRatio;
             double fatMorning = fat * morningRatio;
 
             // 점심 (40%)
             double lunchRatio = 0.4;
             double caloriesLunch = calories * lunchRatio;
-            double carbonHydateLunch = carbonHydrate * lunchRatio;
+            double carbonHydrateLunch = carbonHydrate * lunchRatio;
             double proteinLunch = protein * lunchRatio;
             double fatLunch = fat * lunchRatio;
 
             // 저녁 (30%)
             double dinnerRatio = 0.3;
             double caloriesDinner = calories * dinnerRatio;
-            double carbonHydateDinner = carbonHydrate * dinnerRatio;
+            double carbonHydrateDinner = carbonHydrate * dinnerRatio;
             double proteinDinner = protein * dinnerRatio;
             double fatDinner = fat * dinnerRatio;
 
-//            foodService.findFoodThat
+            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesMorning * 0.9, caloriesMorning * 1.1, 0, carbonHydrateMorning * 1.1, proteinMorning * 0.9, proteinMorning * 1.1, 0, fatLunch * 1.1, 6);
+            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.9, caloriesLunch * 1.1, 0, carbonHydrateLunch * 1.1, proteinLunch * 0.9, proteinLunch * 1.1, 0, fatLunch * 1.1, 6);
+            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.9, caloriesDinner * 1.1, 0, carbonHydrateDinner * 1.1, proteinDinner * 0.9, proteinDinner * 1.1, 0, fatDinner * 1.1, 6);
 
-            return new Result<>();
+            MemberRecipeMuscleResponse value = new MemberRecipeMuscleResponse();
+
+            value.addBreakFasts(breakFastFoods);
+            value.addLunches(lunchFoods);
+            value.addDinners(dinnerFoods);
+
+            System.out.println("size: " + breakFastFoods.size());
+            for (Food dinnerFood : dinnerFoods) {
+                System.out.println("dinnerFood = " + dinnerFood);
+            }
+
+            return new Result<>(HttpStatus.OK,null,value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
