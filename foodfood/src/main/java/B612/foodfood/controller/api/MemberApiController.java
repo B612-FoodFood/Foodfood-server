@@ -569,9 +569,9 @@ public class MemberApiController {
             double proteinDinner = protein * dinnerRatio;
             double fatDinner = fat * dinnerRatio;
 
-            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesMorning * 0.9, caloriesMorning * 1.1, 0, carbonHydrateMorning * 1.1, proteinMorning * 0.9, proteinMorning * 1.1, 0, fatLunch * 1.1, 6);
-            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.9, caloriesLunch * 1.1, 0, carbonHydrateLunch * 1.1, proteinLunch * 0.9, proteinLunch * 1.1, 0, fatLunch * 1.1, 6);
-            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.9, caloriesDinner * 1.1, 0, carbonHydrateDinner * 1.1, proteinDinner * 0.9, proteinDinner * 1.1, 0, fatDinner * 1.1, 6);
+            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesMorning * 0.5, caloriesMorning * 1.1, 0, carbonHydrateMorning * 1.1, proteinMorning * 0.9, proteinMorning * 1.1, 0, fatLunch * 1.1, 6);
+            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.5, caloriesLunch * 1.1, 0, carbonHydrateLunch * 1.1, proteinLunch * 0.9, proteinLunch * 1.1, 0, fatLunch * 1.1, 6);
+            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.5, caloriesDinner * 1.1, 0, carbonHydrateDinner * 1.1, proteinDinner * 0.9, proteinDinner * 1.1, 0, fatDinner * 1.1, 6);
 
             MemberRecipeMuscleResponse value = new MemberRecipeMuscleResponse();
 

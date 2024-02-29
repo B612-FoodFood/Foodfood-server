@@ -85,6 +85,7 @@ class FoodServiceTest {
     }
 
     @Test
+    @DisplayName("세가지 영양소로 추천 음식 조회")
     public void test5() throws Exception {
         //given
         List<Food> foodBetweenTwoNutrition =
