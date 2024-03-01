@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -536,8 +535,8 @@ public class MemberApiController {
     }
 
 
-    @GetMapping("/member/recipe/muscle")
-    public Result<MemberRecipeMuscleResponse> recommendMuscleRecoveryFood(Authentication authentication) {
+    @GetMapping("/member/recipe/highProtein")
+    public Result<MemberRecipeResponse> recommendHighProteinFood(Authentication authentication) {
         try {
             String username = authentication.getName();
             Member member = memberService.findMemberByLogInUsername(username);
@@ -548,12 +547,12 @@ public class MemberApiController {
             double fat = member.getRecommendedFat();
             double calories = member.getRecommendedCalories();
 
-            // 아침 (30%)
-            double morningRatio = 0.3;
-            double caloriesMorning = calories * morningRatio;
-            double carbonHydrateMorning = carbonHydrate * morningRatio;
-            double proteinMorning = protein * morningRatio;
-            double fatMorning = fat * morningRatio;
+            // 아침 (27%)
+            double breakFastRatio = 0.27;
+            double caloriesBreakFast = calories * breakFastRatio;
+            double carbonHydrateBreakFast = carbonHydrate * breakFastRatio;
+            double proteinBreakFast = protein * breakFastRatio;
+            double fatBreakFast = fat * breakFastRatio;
 
             // 점심 (40%)
             double lunchRatio = 0.4;
@@ -562,33 +561,170 @@ public class MemberApiController {
             double proteinLunch = protein * lunchRatio;
             double fatLunch = fat * lunchRatio;
 
-            // 저녁 (30%)
-            double dinnerRatio = 0.3;
+            // 저녁 (33%)
+            double dinnerRatio = 0.33;
             double caloriesDinner = calories * dinnerRatio;
             double carbonHydrateDinner = carbonHydrate * dinnerRatio;
             double proteinDinner = protein * dinnerRatio;
             double fatDinner = fat * dinnerRatio;
 
-            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesMorning * 0.5, caloriesMorning * 1.1, 0, carbonHydrateMorning * 1.1, proteinMorning * 0.9, proteinMorning * 1.1, 0, fatLunch * 1.1, 6);
-            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.5, caloriesLunch * 1.1, 0, carbonHydrateLunch * 1.1, proteinLunch * 0.9, proteinLunch * 1.1, 0, fatLunch * 1.1, 6);
-            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.5, caloriesDinner * 1.1, 0, carbonHydrateDinner * 1.1, proteinDinner * 0.9, proteinDinner * 1.1, 0, fatDinner * 1.1, 6);
+            // 일품 요리 추천 (0.5~ 1.1, protein:0.7 ~ 1.2)
+            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesBreakFast * 0.5, caloriesBreakFast * 1.1,
+                    carbonHydrateBreakFast * 0.5, carbonHydrateBreakFast * 1.1,
+                    proteinBreakFast * 0.7, proteinBreakFast * 1.2,
+                    fatBreakFast * 0.5, fatBreakFast * 1.1,
+                    6);
+            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.5, caloriesLunch * 1.1,
+                    carbonHydrateLunch * 0.5, carbonHydrateLunch * 1.1,
+                    proteinLunch * 0.7, proteinLunch * 1.2,
+                    fatLunch * 0.5, fatLunch * 1.1,
+                    6);
+            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.5, caloriesDinner * 1.1,
+                    carbonHydrateDinner * 0.5, carbonHydrateDinner * 1.1,
+                    proteinDinner * 0.7, proteinDinner * 1.2,
+                    fatDinner * 0.5, fatDinner * 1.1,
+                    6);
 
-            MemberRecipeMuscleResponse value = new MemberRecipeMuscleResponse();
+            MemberRecipeResponse value = new MemberRecipeResponse();
 
             value.addBreakFasts(breakFastFoods);
             value.addLunches(lunchFoods);
             value.addDinners(dinnerFoods);
 
-            System.out.println("size: " + breakFastFoods.size());
-            for (Food dinnerFood : dinnerFoods) {
-                System.out.println("dinnerFood = " + dinnerFood);
-            }
-
-            return new Result<>(HttpStatus.OK,null,value);
+            return new Result<>(HttpStatus.OK, null, value);
         } catch (AppException e) {
             return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
         } finally {
-            log.info("GET: /recipe/muscle");
+            log.info("GET: /api/v1/member/recipe/highProtein");
         }
     }
+
+    @GetMapping("/member/recipe/lowFat")
+    public Result<MemberRecipeResponse> recommendLowFatFood(Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(username);
+
+            // 권장 탄단지 + 칼로리
+            double carbonHydrate = member.getRecommendedCarbonHydrate();
+            double protein = member.getRecommendedProtein();
+            double fat = member.getRecommendedFat();
+            double calories = member.getRecommendedCalories();
+
+            // 아침 (27%)
+            double breakFastRatio = 0.27;
+            double caloriesBreakFast = calories * breakFastRatio;
+            double carbonHydrateBreakFast = carbonHydrate * breakFastRatio;
+            double proteinBreakFast = protein * breakFastRatio;
+            double fatBreakFast = fat * breakFastRatio;
+
+            // 점심 (40%)
+            double lunchRatio = 0.4;
+            double caloriesLunch = calories * lunchRatio;
+            double carbonHydrateLunch = carbonHydrate * lunchRatio;
+            double proteinLunch = protein * lunchRatio;
+            double fatLunch = fat * lunchRatio;
+
+            // 저녁 (33%)
+            double dinnerRatio = 0.33;
+            double caloriesDinner = calories * dinnerRatio;
+            double carbonHydrateDinner = carbonHydrate * dinnerRatio;
+            double proteinDinner = protein * dinnerRatio;
+            double fatDinner = fat * dinnerRatio;
+
+            // 일품 요리 추천 (kcal:0.5 ~ 1.1, cb:0.5 ~ 1.1, protein:0.5 ~ 1.1, fat:0 ~ 0.7)
+            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesBreakFast * 0.5, caloriesBreakFast * 1.1,
+                    carbonHydrateBreakFast * 0.5, carbonHydrateBreakFast * 1.1,
+                    proteinBreakFast * 0.5, proteinBreakFast * 1.1,
+                    fatBreakFast * 0, fatBreakFast * 0.6,
+                    6);
+            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.5, caloriesLunch * 1.1,
+                    carbonHydrateLunch * 0.5, carbonHydrateLunch * 1.1,
+                    proteinLunch * 0.5, proteinLunch * 1.1,
+                    fatLunch * 0, fatLunch * 0.6,
+                    6);
+            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.5, caloriesDinner * 1.1,
+                    carbonHydrateDinner * 0.5, carbonHydrateDinner * 1.1,
+                    proteinDinner * 0.5, proteinDinner * 1.1,
+                    fatDinner * 0, fatDinner * 0.6,
+                    6);
+
+            MemberRecipeResponse value = new MemberRecipeResponse();
+
+            value.addBreakFasts(breakFastFoods);
+            value.addLunches(lunchFoods);
+            value.addDinners(dinnerFoods);
+
+            return new Result<>(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("GET: /api/v1/member/recipe/lowFat");
+        }
+    }
+
+    @GetMapping("/member/recipe/lowCarbon-highProtein")
+    public Result<MemberRecipeResponse> recommendLowCarbonHighProteinFood(Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            Member member = memberService.findMemberByLogInUsername(username);
+
+            // 권장 탄단지 + 칼로리
+            double carbonHydrate = member.getRecommendedCarbonHydrate();
+            double protein = member.getRecommendedProtein();
+            double fat = member.getRecommendedFat();
+            double calories = member.getRecommendedCalories();
+
+            // 아침 (27%)
+            double breakFastRatio = 0.27;
+            double caloriesBreakFast = calories * breakFastRatio;
+            double carbonHydrateBreakFast = carbonHydrate * breakFastRatio;
+            double proteinBreakFast = protein * breakFastRatio;
+            double fatBreakFast = fat * breakFastRatio;
+
+            // 점심 (40%)
+            double lunchRatio = 0.4;
+            double caloriesLunch = calories * lunchRatio;
+            double carbonHydrateLunch = carbonHydrate * lunchRatio;
+            double proteinLunch = protein * lunchRatio;
+            double fatLunch = fat * lunchRatio;
+
+            // 저녁 (33%)
+            double dinnerRatio = 0.33;
+            double caloriesDinner = calories * dinnerRatio;
+            double carbonHydrateDinner = carbonHydrate * dinnerRatio;
+            double proteinDinner = protein * dinnerRatio;
+            double fatDinner = fat * dinnerRatio;
+
+            // 일품 요리 추천 (kcal:0.5 ~ 1.1, cb:0 ~ 0.6, protein:0.7 ~ 1.2, fat:0.5 ~ 1.1)
+            List<Food> breakFastFoods = foodService.findFoodBetweenTwoNutrition(caloriesBreakFast * 0.5, caloriesBreakFast * 1.1,
+                    carbonHydrateBreakFast * 0, carbonHydrateBreakFast * 0.6,
+                    proteinBreakFast * 0.7, proteinBreakFast * 1.2,
+                    fatBreakFast * 0.5, fatBreakFast * 1.1,
+                    6);
+            List<Food> lunchFoods = foodService.findFoodBetweenTwoNutrition(caloriesLunch * 0.5, caloriesLunch * 1.1,
+                    carbonHydrateLunch * 0, carbonHydrateLunch * 0.6,
+                    proteinLunch * 0.7, proteinLunch * 1.2,
+                    fatLunch * 0.5, fatLunch * 1.1,
+                    6);
+            List<Food> dinnerFoods = foodService.findFoodBetweenTwoNutrition(caloriesDinner * 0.5, caloriesDinner * 1.1,
+                    carbonHydrateDinner * 0, carbonHydrateDinner * 0.6,
+                    proteinDinner * 0.7, proteinDinner * 1.2,
+                    fatDinner * 0.5, fatDinner * 1.1,
+                    6);
+
+            MemberRecipeResponse value = new MemberRecipeResponse();
+
+            value.addBreakFasts(breakFastFoods);
+            value.addLunches(lunchFoods);
+            value.addDinners(dinnerFoods);
+
+            return new Result<>(HttpStatus.OK, null, value);
+        } catch (AppException e) {
+            return new Result<>(e.getErrorCode().getHttpStatus(), e.getMessage(), null);
+        } finally {
+            log.info("GET: /api/v1/member/recipe/lowCarbon-highProtein");
+        }
+    }
+
 }
