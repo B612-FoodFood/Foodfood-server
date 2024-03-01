@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberRecipeMuscleResponse {
+public class MemberRecipeResponse {
 
     private List<FoodDto> breakFast = new ArrayList<>();
     private List<FoodDto> lunch = new ArrayList<>();
