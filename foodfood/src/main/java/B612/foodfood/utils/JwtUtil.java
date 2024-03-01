@@ -19,10 +19,10 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwt.token.expireAccessTokenTimeMs}")
-    private long expireTimeMs;  // 엑세스 토큰 만료 시간: 1시간
+    private long expireTimeMs;  // 엑세스 토큰 만료 시간
 
     @Value("${jwt.token.expireRefreshTokenTimeMs}")
-    private long refreshTokenExpireTimeMs;  // 리프레시 토큰 만료 시간: 7일
+    private long refreshTokenExpireTimeMs;  // 리프레시 토큰 만료 시간
 
     /**
      * token 추출 메서드
